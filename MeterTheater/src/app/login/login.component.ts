@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
 
   login(name: string){
     this.user.name = name;
-    this.router.navigateByUrl('theater')
+    this.router.navigateByUrl('home')
   }
 
 }

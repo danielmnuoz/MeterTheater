@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Meter } from '../meter';
 import { Socket } from '../socket'
 import { SocketService } from '../socket.service';
@@ -16,7 +16,13 @@ export class TheaterComponent implements OnInit {
     this.getSockets();
   }
 
+  @Output() onSelectSocket = new EventEmitter<Socket>();
+
   sockets: Socket[] = [];
+
+  selectSocket(socket: Socket){
+    this.onSelectSocket.emit(socket)
+  }
 
   getSockets(): void {
     this.socketService.getSockets()
