@@ -1,5 +1,8 @@
 <div *ngIf="socket; else noSocket">
-    {{socket.owner}}
+    <input #owner (keyup.enter)="updateSocketOwner(owner.value)" value="{{socket.owner}}">
+    <button type="submit" class="btn btn-primary" (click)="updateSocketOwner(owner.value)">Update</button>
+    <button type="submit" class="btn btn-primary" (click)="newSocket(owner.value)">Add</button>
+    <button type="submit" class="btn btn-primary" (click)="deleteSocket()">Delete</button>
 </div>
 <ng-template #noSocket>
     Select a Socket
