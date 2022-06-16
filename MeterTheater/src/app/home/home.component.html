@@ -1,5 +1,3 @@
-<nav>
-    <a routerLink="/profile">Profile</a>
-</nav>
+<app-navigation></app-navigation>
 <app-theater (blur)="selectSocket()" (onSelectSocket)="selectSocket($event)"></app-theater>
 <app-details [socket]="selectedSocket"></app-details>
