@@ -24,14 +24,17 @@ export class DetailsComponent implements OnInit {
     }
   }
 
-  newSocket(owner: string) {
-    var newSocket: Socket = { id: 0, owner: owner, meter: { id: 0, owner: owner, lanID: "0" }, location: 2, floor: 2, voltage: 120, form: "2s" };
-    this.socketService.addSocket(newSocket);
+  newSocket(owner: string): void {
+    var createdSocket: Socket = { id: 47, owner: owner, meter: { id: 0, owner: owner, lanID: "0" }, location: 2, floor: 2, voltage: 120, form: "2s" };
+    this.socketService.addSocket(createdSocket)
+      .subscribe(socket => {
+        console.log(socket.owner)
+      });
   }
 
-  deleteSocket() {
+  deleteSocket(): void {
     if (this.socket) {
-      this.socketService.deleteSocket(this.socket.id)
+      this.socketService.deleteSocket(this.socket.id).subscribe();
     }
   }
 

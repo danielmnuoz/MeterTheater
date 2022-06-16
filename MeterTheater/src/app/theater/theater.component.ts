@@ -29,18 +29,4 @@ export class TheaterComponent implements OnInit {
       .subscribe(sockets => this.sockets = sockets);
   }
 
-  // add(socket: Socket): void {
-  //   name = name.trim();
-  //   if (!name) { return; }
-  //   this.socketService.addSocket({ name } as Socket)
-  //     .subscribe(socket => {
-  //       this.sockets.push(socket);
-  //     });
-  // }
-
-  delete(socket: Socket): void {
-    this.sockets = this.sockets.filter(s => s !== socket);
-    this.socketService.deleteSocket(socket.id).subscribe();
-  }
-
 }
