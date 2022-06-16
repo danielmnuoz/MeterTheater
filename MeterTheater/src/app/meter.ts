@@ -1,5 +1,5 @@
 export interface Meter {
     id: number;
-    lanID?: string;
-    owner?: string;
+    lanID: string;
+    owner: string;
 }

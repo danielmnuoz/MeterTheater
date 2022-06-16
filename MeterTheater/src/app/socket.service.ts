@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Socket } from './socket'
+import { User } from './user'
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
@@ -21,7 +22,10 @@ export class SocketService {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
 
-  // defaultSocket: Socket = {id: 0, owner: '', meter: {lanID: '', owner: ''}, voltage: 0, form: '', floor: 0, location: 0};
+  user: User = {
+    id: 0,
+    name: ''
+  }
 
   /** GET socket by id. Will 404 if id not found */
   getSocketByID(id: number): Observable<Socket> {

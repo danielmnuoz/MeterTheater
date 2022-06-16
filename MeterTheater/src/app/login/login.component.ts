@@ -1,10 +1,12 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { User } from '../user';
 
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { Router } from '@angular/router'
+
+import { SocketService } from '../socket.service';
 
 @Component({
   selector: 'app-login',
@@ -16,22 +18,20 @@ export class LoginComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private location: Location,
-    private router: Router
+    private router: Router,
+    private socketService: SocketService
   ) { }
 
   ngOnInit(): void {
   }
 
-  @Output() onLogin = new EventEmitter<string>();
-
-  user: User = {
-    id: 0,
-    name: 'Name'
-  }
-
-  login(name?: string){
-    this.user.name = name;
-    this.onLogin.emit(name);
+  login(name?: string) {
+    if (name) {
+      this.socketService.user.name = name;
+    } else {
+      this.socketService.user.name = '';
+    }
+    // this.onLogin.emit(name);
     this.router.navigateByUrl('home');
   }
 
