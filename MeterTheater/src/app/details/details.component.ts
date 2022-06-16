@@ -27,9 +27,7 @@ export class DetailsComponent implements OnInit {
   newSocket(owner: string): void {
     var createdSocket: Socket = { id: 47, owner: owner, meter: { id: 0, owner: owner, lanID: "0" }, location: 2, floor: 2, voltage: 120, form: "2s" };
     this.socketService.addSocket(createdSocket)
-      .subscribe(socket => {
-        console.log(socket.owner)
-      });
+      .subscribe();
   }
 
   deleteSocket(): void {
