@@ -15,7 +15,7 @@ export class HomeComponent implements OnInit {
 
   selectedSocket?: Socket;
 
-  selectSocket(socket: Socket){
+  selectSocket(socket?: Socket){
     this.selectedSocket = socket;
   }
 

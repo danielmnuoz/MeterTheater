@@ -1,3 +1,12 @@
-<div *ngIf="socket">
+<div *ngIf="socket; else noSocket">
     {{socket.owner}}
 </div>
+<ng-template #noSocket>
+    Select a Socket
+</ng-template>
+<div *ngIf="socket && socket.meter; else noMeter">
+    {{socket.meter.lanID}}
+</div>
+<ng-template #noMeter>
+    Socket Has No Meter
+</ng-template>

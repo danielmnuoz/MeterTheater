@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { User } from '../user';
 
 import { ActivatedRoute } from '@angular/router';
@@ -22,14 +22,17 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  @Output() onLogin = new EventEmitter<string>();
+
   user: User = {
     id: 0,
     name: 'Name'
   }
 
-  login(name: string){
+  login(name?: string){
     this.user.name = name;
-    this.router.navigateByUrl('home')
+    this.onLogin.emit(name);
+    this.router.navigateByUrl('home');
   }
 
 }

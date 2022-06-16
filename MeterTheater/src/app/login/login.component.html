@@ -1,1 +1,16 @@
-<input #name (keyup.enter)="login(name.value); name.value = ''">
+<div class="container">
+    <div class="sub-container">
+        <div class="user-container">
+            <div class="input-group mb-3">
+                <input #name (keyup.enter)="login(name.value); name.value = ''" type="text" class="form-control"
+                    placeholder="Username" aria-label="Username" aria-describedby="username input">
+            </div>
+        </div>
+        <div class="or-container">
+            or
+        </div>
+        <div class="guest">
+            <input class="btn btn-primary" type="button" value="Login as Guest" (click)="login()">
+        </div>
+    </div>
+</div>

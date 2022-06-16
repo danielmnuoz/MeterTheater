@@ -24,11 +24,23 @@ export class SocketService {
   // defaultSocket: Socket = {id: 0, owner: '', meter: {lanID: '', owner: ''}, voltage: 0, form: '', floor: 0, location: 0};
 
   /** GET socket by id. Will 404 if id not found */
-  getSocket(id: number): Observable<Socket> {
+  getSocketByID(id: number): Observable<Socket> {
     const url = `${this.socketsUrl}/${id}`;
     return this.http.get<Socket>(url).pipe(
       tap(),
-      catchError(this.handleError<Socket>(`getSocket id=${id}`))
+      catchError(this.handleError<Socket>(`getSocketByID id=${id}`))
+    );
+  }
+
+  /* GET sockets whose name contains search term */
+  searchSockets(owner: string): Observable<Socket[]> {
+    if (!owner.trim()) {
+      // if not search term, return empty hero array.
+      return of([]);
+    }
+    return this.http.get<Socket[]>(`${this.socketsUrl}/?owner=${owner}`).pipe(
+      tap(),
+      catchError(this.handleError<Socket[]>('searchSockets', []))
     );
   }
 
