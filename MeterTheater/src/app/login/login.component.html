@@ -1,16 +1,20 @@
 <div class="container">
-    <div class="sub-container">
-        <div class="user-container">
-            <div class="input-group mb-3">
-                <input #name (keyup.enter)="login(name.value); name.value = ''" type="text" class="form-control"
-                    placeholder="Username" aria-label="Username" aria-describedby="username input">
+    <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+        <div class="form-group">
+            <div class="local-center">
+                <div class="input-group mb-3">
+                    <input type="text" placeholder="Username" class="form-control" id="Username" required
+                        [(ngModel)]="loginUser.name" name="name" #name="ngModel" aria-label="Username"
+                        aria-describedby="username input">
+                </div>
+            </div>
+            <div [hidden]="name.valid || name.pristine" class="alert alert-danger">
+                Username is required
+            </div>
+            <div class="local-center">
+                <button type="submit" class="btn btn-success" [disabled]="!loginForm.form.valid"
+                    (click)="login(); loginForm.reset()">Login</button>
             </div>
         </div>
-        <div class="or-container">
-            or
-        </div>
-        <div class="guest">
-            <input class="btn btn-primary" type="button" value="Login as Guest" (click)="login()">
-        </div>
-    </div>
+    </form>
 </div>

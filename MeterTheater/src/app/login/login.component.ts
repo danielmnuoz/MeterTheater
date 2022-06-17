@@ -15,6 +15,8 @@ import { SocketService } from '../socket.service';
 })
 export class LoginComponent implements OnInit {
 
+  submitted = false;
+
   constructor(
     private route: ActivatedRoute,
     private location: Location,
@@ -25,14 +27,22 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  loginUser: User = {
+    id: this.socketService.DEFAULTID,
+    name: this.socketService.DEFAULTNAME
+  }
+
   login(name?: string) {
     if (name) {
       this.socketService.user.name = name;
     } else {
       this.socketService.user.name = '';
     }
-    // this.onLogin.emit(name);
     this.router.navigateByUrl('home');
+  }
+
+  onSubmit(){
+    this.submitted = true;
   }
 
 }

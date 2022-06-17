@@ -22,9 +22,12 @@ export class SocketService {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
 
+  DEFAULTID=-1;
+  DEFAULTNAME='';
+
   user: User = {
-    id: 0,
-    name: ''
+    id: this.DEFAULTID,
+    name: this.DEFAULTNAME
   }
 
   /** GET socket by id. Will 404 if id not found */

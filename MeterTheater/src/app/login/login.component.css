@@ -10,24 +10,12 @@
     align-items: center;
 }
 
-.guest {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 .input-group.mb-3 {
-    width: 200px;
-    margin-bottom: 0px !important;
+    /* width: 200px;
+    margin-bottom: 0px !important; */
 }
 
-.user-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.or-container {
+.local-center {
     display: flex;
     justify-content: center;
     align-items: center;
