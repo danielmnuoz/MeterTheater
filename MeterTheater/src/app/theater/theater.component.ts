@@ -1,7 +1,8 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Meter } from '../meter';
 import { Socket } from '../socket'
 import { SocketService } from '../socket.service';
+import { MeterService } from '../meter.service';
 
 @Component({
   selector: 'app-theater',
@@ -10,23 +11,38 @@ import { SocketService } from '../socket.service';
 })
 export class TheaterComponent implements OnInit {
 
-  constructor(private socketService: SocketService) { }
+  constructor(
+    private socketService: SocketService,
+    private meterService: MeterService
+  ) { }
 
   ngOnInit(): void {
-    this.getSockets();
+    this.getSocketsFloor2();
+    this.getSocketsFloor6();
   }
 
+  sockets2: Socket[] = [];
+  sockets6: Socket[] = [];
+
   @Output() onSelectSocket = new EventEmitter<Socket>();
+  @Output() onSelectMeter = new EventEmitter<Meter>();
 
-  sockets: Socket[] = [];
-
-  selectSocket(socket: Socket){
+  selectSocket(socket: Socket) {
     this.onSelectSocket.emit(socket)
   }
 
-  getSockets(): void {
-    this.socketService.getSockets()
-      .subscribe(sockets => this.sockets = sockets);
+  selectMeter(meter: Meter) {
+    this.onSelectMeter.emit(meter)
+  }
+
+  getSocketsFloor2(): void {
+    this.socketService.searchSocketsByFloor(2)
+      .subscribe(sockets => this.sockets2 = sockets);
+  }
+
+  getSocketsFloor6(): void {
+    this.socketService.searchSocketsByFloor(6)
+      .subscribe(sockets => this.sockets6 = sockets);
   }
 
 }

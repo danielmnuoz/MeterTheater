@@ -1,3 +1,8 @@
-<div class = "theater">
-    <app-theater-slot *ngFor="let socket of sockets" [socket] = "socket" (click)="selectSocket(socket)"></app-theater-slot>
+<div class="theater">
+    Floor 2
+    <app-theater-slot *ngFor="let socket of sockets2" [socket]="socket" (onSelectSocket)="selectSocket($event)"
+        (onSelectMeter)="selectMeter($event)"></app-theater-slot>
+    Floor 6
+    <app-theater-slot *ngFor="let socket of sockets6" [socket]="socket" (onSelectSocket)="selectSocket($event)"
+        (onSelectMeter)="selectMeter($event)"></app-theater-slot>
 </div>

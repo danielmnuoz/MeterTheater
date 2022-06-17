@@ -1,14 +1,15 @@
 <div *ngIf="socket; else noSocket">
-    <input #owner (keyup.enter)="updateSocketOwner(owner.value)" value="{{socket.owner}}">
+    Socket Voltage: {{socket.voltage}}
+    <!-- <input #owner (keyup.enter)="updateSocketOwner(owner.value)" value="{{socket.owner}}">
     <button type="submit" class="btn btn-primary" (click)="updateSocketOwner(owner.value)">Update</button>
     <button type="submit" class="btn btn-primary" (click)="newSocket(owner.value)">Add</button>
-    <button type="submit" class="btn btn-primary" (click)="deleteSocket()">Delete</button>
+    <button type="submit" class="btn btn-primary" (click)="deleteSocket()">Delete</button> -->
 </div>
 <ng-template #noSocket>
     Select a Socket
 </ng-template>
-<div *ngIf="socket && socket.meter; else noMeter">
-    {{socket.meter.lanID}}
+<div *ngIf="meter; else noMeter">
+    Meter Lan ID: {{meter.lanID}}
 </div>
 <ng-template #noMeter>
     Socket Has No Meter

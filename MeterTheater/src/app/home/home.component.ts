@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Socket } from '../socket'
+import { Meter } from '../meter';
 
 @Component({
   selector: 'app-home',
@@ -8,15 +9,23 @@ import { Socket } from '../socket'
 })
 export class HomeComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    
+  ) { }
 
   ngOnInit(): void {
+    
   }
 
   selectedSocket?: Socket;
+  selectedMeter?: Meter;
 
   selectSocket(socket?: Socket){
     this.selectedSocket = socket;
+  }
+
+  selectMeter(meter?: Meter){
+    this.selectedMeter = meter;
   }
 
 }

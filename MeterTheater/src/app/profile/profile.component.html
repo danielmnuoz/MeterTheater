@@ -1,8 +1,15 @@
 <app-navigation></app-navigation>
 <div id="search-component">
+    Owned Socket IDs
     <ul class="search-result">
-        <li *ngFor="let socket of ownedSockets">
-            {{socket.id}}
+        <li *ngFor="let id of ownedSocketIDs">
+            {{id}}
+        </li>
+    </ul>
+    Owned Meter IDs
+    <ul class="search-result">
+        <li *ngFor="let id of ownedMeterIDs">
+            {{id}}
         </li>
     </ul>
 </div>

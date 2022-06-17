@@ -10,11 +10,6 @@
     align-items: center;
 }
 
-.input-group.mb-3 {
-    /* width: 200px;
-    margin-bottom: 0px !important; */
-}
-
 .local-center {
     display: flex;
     justify-content: center;

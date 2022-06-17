@@ -6,7 +6,7 @@ import { Location } from '@angular/common';
 
 import { Router } from '@angular/router'
 
-import { SocketService } from '../socket.service';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-login',
@@ -21,28 +21,19 @@ export class LoginComponent implements OnInit {
     private route: ActivatedRoute,
     private location: Location,
     private router: Router,
-    private socketService: SocketService
+    private userService: UserService
   ) { }
 
   ngOnInit(): void {
   }
 
-  loginUser: User = {
-    id: this.socketService.DEFAULTID,
-    name: this.socketService.DEFAULTNAME
-  }
-
-  login(name?: string) {
-    if (name) {
-      this.socketService.user.name = name;
-    } else {
-      this.socketService.user.name = '';
-    }
-    this.router.navigateByUrl('home');
-  }
+  username: string = ''
 
   onSubmit(){
     this.submitted = true;
+    // TODO: check for user not in db
+    this.userService.searchUserByName(this.username).subscribe(user => this.userService.loginUser = user[0]);
+    this.router.navigateByUrl('home');
   }
 
 }

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Socket } from './socket'
-import { User } from './user'
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
@@ -22,14 +21,6 @@ export class SocketService {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
 
-  DEFAULTID=-1;
-  DEFAULTNAME='';
-
-  user: User = {
-    id: this.DEFAULTID,
-    name: this.DEFAULTNAME
-  }
-
   /** GET socket by id. Will 404 if id not found */
   getSocketByID(id: number): Observable<Socket> {
     const url = `${this.socketsUrl}/${id}`;
@@ -40,12 +31,15 @@ export class SocketService {
   }
 
   /* GET sockets whose name contains search term */
-  searchSockets(owner: string): Observable<Socket[]> {
-    if (!owner.trim()) {
-      // if not search term, return empty hero array.
-      return of([]);
-    }
-    return this.http.get<Socket[]>(`${this.socketsUrl}/?owner=${owner}`).pipe(
+  searchSocketsByUser(userID: number): Observable<Socket[]> {
+    return this.http.get<Socket[]>(`${this.socketsUrl}/?userID=${userID}`).pipe(
+      tap(),
+      catchError(this.handleError<Socket[]>('searchSockets', []))
+    );
+  }
+
+  searchSocketsByFloor(floor: number): Observable<Socket[]> {
+    return this.http.get<Socket[]>(`${this.socketsUrl}/?floor=${floor}`).pipe(
       tap(),
       catchError(this.handleError<Socket[]>('searchSockets', []))
     );

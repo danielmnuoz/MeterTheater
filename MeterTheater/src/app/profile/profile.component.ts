@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Meter } from '../meter';
 import { Socket } from '../socket'
+import { UserService } from '../user.service';
 import { SocketService } from '../socket.service';
+import { MeterService } from '../meter.service';
 
 @Component({
   selector: 'app-profile',
@@ -10,17 +12,19 @@ import { SocketService } from '../socket.service';
 })
 export class ProfileComponent implements OnInit {
 
-  constructor(private socketService: SocketService) { }
+  constructor(
+    private socketService: SocketService,
+    private userService: UserService,
+    private meterService: MeterService
+  ) { }
+
+  // TODO: wait for login to finish before getting sockets/meters
 
   ngOnInit(): void {
-    this.searchSockets()
+
   }
 
-  ownedSockets: Socket[] = [];
-
-  searchSockets(): void {
-    this.socketService.searchSockets(this.socketService.user.name)
-      .subscribe(sockets => this.ownedSockets = sockets);
-  }
+  ownedSocketIDs: number[] = this.userService.loginUser.socketIDs;
+  ownedMeterIDs: number[] = this.userService.loginUser.meterIDs;
 
 }
