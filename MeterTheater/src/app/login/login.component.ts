@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from '../user';
 
-import { ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
-
 import { Router } from '@angular/router'
 
 import { UserService } from '../user.service';
@@ -18,22 +15,38 @@ export class LoginComponent implements OnInit {
   submitted = false;
 
   constructor(
-    private route: ActivatedRoute,
-    private location: Location,
     private router: Router,
     private userService: UserService
   ) { }
 
   ngOnInit(): void {
+    this.userService.resetLoginUser();
   }
 
-  username: string = ''
+  username: string = '';
+  potentialMatches: User[] = [];
+  found: boolean = true;
 
-  onSubmit(){
+  onSubmit() {
+    var username: string = this.username;
+    var found: boolean = false;
     this.submitted = true;
-    // TODO: check for user not in db
-    this.userService.searchUserByName(this.username).subscribe(user => this.userService.loginUser = user[0]);
-    this.router.navigateByUrl('home');
+    this.userService.searchUserByName(username).subscribe(users => {
+      for (var user of users) {
+        if (user.name.length == username.length) {
+          this.userService.loginUser = user;
+          found = true;
+          break;
+        }
+      }
+      if(found){
+        // this should be in subscribe so that the rest of the website waits for user before querying db
+        this.router.navigateByUrl('home');
+      }else{
+        this.found = false;
+      }
+    }
+    );
   }
 
 }

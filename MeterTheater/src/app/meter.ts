@@ -1,5 +1,6 @@
 export interface Meter {
     id: number;
+    userID: number;
     lanID: string;
     form: string;
     floor: number;

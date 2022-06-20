@@ -19,17 +19,34 @@ export class UserService {
 
   DEFAULTID=-1;
   DEFAULTNAME='';
-  
-  loginUser: User = {
+
+  defaultUser: User = {
     id: this.DEFAULTID,
     name: this.DEFAULTNAME,
     meterIDs: [],
     socketIDs: []
   }
+  
+  loginUser: User = this.defaultUser;
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
+
+  loginCheck(): boolean{
+    if(this.loginUser.id == this.defaultUser.id){
+      return false;
+    }else{
+      return true;
+    }
+  }
+
+  resetLoginUser(): void {
+    this.loginUser.id = this.DEFAULTID;
+    this.loginUser.name = this.DEFAULTNAME;
+    this.loginUser.meterIDs = [];
+    this.loginUser.socketIDs = [];    
+  }
 
   /** GET user by id. Will 404 if id not found */
   getUserByID(id: number): Observable<User> {

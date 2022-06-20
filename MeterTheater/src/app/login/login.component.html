@@ -11,6 +11,9 @@
             <div [hidden]="name.valid || name.pristine" class="alert alert-danger">
                 Username is required
             </div>
+            <div [hidden]="found" class="alert alert-danger">
+                User not found
+            </div>
             <div class="local-center">
                 <button type="submit" class="btn btn-success" [disabled]="!loginForm.form.valid">Login</button>
             </div>

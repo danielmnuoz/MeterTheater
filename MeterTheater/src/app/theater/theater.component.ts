@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, OnChanges, SimpleChange, SimpleChanges } from '@angular/core';
 import { Meter } from '../meter';
 import { Socket } from '../socket'
 import { SocketService } from '../socket.service';
@@ -9,7 +9,7 @@ import { MeterService } from '../meter.service';
   templateUrl: './theater.component.html',
   styleUrls: ['./theater.component.css']
 })
-export class TheaterComponent implements OnInit {
+export class TheaterComponent implements OnInit, OnChanges {
 
   constructor(
     private socketService: SocketService,
@@ -21,11 +21,18 @@ export class TheaterComponent implements OnInit {
     this.getSocketsFloor6();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    this.getSocketsFloor2();
+    this.getSocketsFloor6();
+  }
+
   sockets2: Socket[] = [];
   sockets6: Socket[] = [];
 
   @Output() onSelectSocket = new EventEmitter<Socket>();
   @Output() onSelectMeter = new EventEmitter<Meter>();
+  // needs to match other toggle initials (false)
+  @Input() refreshToggle: boolean = false;
 
   selectSocket(socket: Socket) {
     this.onSelectSocket.emit(socket)
