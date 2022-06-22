@@ -8,4 +8,5 @@ export interface Meter {
     lowVoltage: number;
     highVoltage: number;
     serialNumber: number;
+    date: string;
 }

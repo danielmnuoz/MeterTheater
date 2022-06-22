@@ -6,4 +6,5 @@ export interface Socket{
     form: string;
     floor: number;
     location: number;
+    date: string;
 }
