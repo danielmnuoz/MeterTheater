@@ -31,9 +31,9 @@ export class LoginComponent implements OnInit {
     var username: string = this.username;
     var found: boolean = false;
     this.submitted = true;
-    this.userService.searchUserByName(username).subscribe(users => {
+    this.userService.getUsers().subscribe(users => {
       for (var user of users) {
-        if (user.name.length == username.length) {
+        if (user.name.length == username.length && user.name.toLowerCase() === username.toLowerCase()) {
           this.userService.loginUser = user;
           found = true;
           break;

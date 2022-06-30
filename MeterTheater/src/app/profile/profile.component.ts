@@ -24,7 +24,7 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
     if (!this.userService.loginCheck()) {
       this.router.navigateByUrl('login');
-    }else{
+    } else {
       this.getSockets();
       this.getMeters();
     }
@@ -38,15 +38,19 @@ export class ProfileComponent implements OnInit {
   meters: Meter[] = [];
   sockets: Socket[] = [];
 
-  getSockets(){
-    for (var id of this.ownedSocketIDs){
-      this.socketService.getSocketByID(id).subscribe(socket => {this.sockets.push(socket)});
+  getSockets() {
+    if (this.ownedSocketIDs) {
+      for (var id of this.ownedSocketIDs) {
+        this.socketService.getSocketByID(id).subscribe(socket => { this.sockets.push(socket) });
+      }
     }
   }
 
-  getMeters(){
-    for (var id of this.ownedMeterIDs){
-      this.meterService.getMeterByID(id).subscribe(meter => {this.meters.push(meter)});
+  getMeters() {
+    if (this.ownedMeterIDs) {
+      for (var id of this.ownedMeterIDs) {
+        this.meterService.getMeterByID(id).subscribe(meter => { this.meters.push(meter) });
+      }
     }
   }
 
