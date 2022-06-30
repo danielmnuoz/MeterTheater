@@ -48,7 +48,7 @@ body {
 }
 
 .seat.selected {
-  background-color: green;
+  background-color: rgb(14, 163, 1);
 }
 
 .seat.sold {
