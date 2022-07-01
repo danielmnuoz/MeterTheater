@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { User } from './user'
+import { ServerUser } from './serverUser';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
@@ -15,7 +16,8 @@ export class UserService {
     private http: HttpClient
   ) { }
 
-  private usersUrl = 'api/users';
+  private APIURL = 'http://10.1.210.32/api/';
+  private userUrl = 'Users';
 
   DEFAULTID=-1;
   DEFAULTNAME='';
@@ -48,35 +50,57 @@ export class UserService {
     this.loginUser.socketIDs = [];    
   }
 
+  serverUsers2Users(serverUsers: ServerUser[]): User[]{
+    var users: User[]=[];
+    for (var serverUser of serverUsers){
+      users.push(this.serverUser2User(serverUser))
+    }
+    return users;
+  }
+
+  serverUser2User(serverUser: ServerUser): User {
+    return {
+      id: serverUser.userID,
+      name: serverUser.userName
+    } as User;
+  }
+
+  user2ServerUser(user:User): ServerUser {
+    return {
+      userID: user.id,
+      userName: user.name
+    } as ServerUser;
+  }
+
   /** GET user by id. Will 404 if id not found */
   getUserByID(id: number): Observable<User> {
-    const url = `${this.usersUrl}/${id}`;
-    return this.http.get<User>(url).pipe(
-      tap(),
+    const url = `${this.APIURL+this.userUrl}/${id}`;
+    return this.http.get<ServerUser>(url).pipe(
+      map(serverUser => this.serverUser2User(serverUser)),
       catchError(this.handleError<User>(`getUserByID id=${id}`))
     );
   }
 
   /* GET sockets whose name contains search term */
   searchUserByName(name: string): Observable<User[]> {
-    return this.http.get<User[]>(`${this.usersUrl}/?name=${name}`).pipe(
-      tap(),
+    return this.http.get<ServerUser[]>(`${this.APIURL+this.userUrl}/?userName=${name}`).pipe(
+      map(serverUsers=> this.serverUsers2Users(serverUsers)),
       catchError(this.handleError<User[]>('searchUserByName', []))
     );
   }
 
   /** GET users from the server */
   getUsers(): Observable<User[]> {
-    return this.http.get<User[]>(this.usersUrl)
+    return this.http.get<ServerUser[]>(this.APIURL+this.userUrl)
       .pipe(
-        tap(),
+        map(serverUsers=>this.serverUsers2Users(serverUsers)),
         catchError(this.handleError<User[]>('getUsers', []))
       );
   }
 
   /** PUT: update the user on the server */
   updateUser(user: User): Observable<any> {
-    return this.http.put(this.usersUrl, user, this.httpOptions).pipe(
+    return this.http.put(this.APIURL+this.userUrl, this.user2ServerUser(user), this.httpOptions).pipe(
       tap(),
       catchError(this.handleError<any>('updateUser'))
     );
@@ -84,18 +108,17 @@ export class UserService {
 
   /** POST: add a new user to the server */
   addUser(user: User): Observable<User> {
-    return this.http.post<User>(this.usersUrl, user, this.httpOptions).pipe(
-      tap(),
+    return this.http.post<ServerUser>(this.APIURL+this.userUrl, this.user2ServerUser(user), this.httpOptions).pipe(
+      map(serverUser=>this.serverUser2User(serverUser)),
       catchError(this.handleError<User>('addUser'))
     );
   }
 
   /** DELETE: delete the user from the server */
   deleteUser(id: number): Observable<User> {
-    const url = `${this.usersUrl}/${id}`;
-
-    return this.http.delete<User>(url, this.httpOptions).pipe(
-      tap(),
+    const url = `${this.APIURL+this.userUrl}/${id}`;
+    return this.http.delete<ServerUser>(url, this.httpOptions).pipe(
+      map(serverUser=>this.serverUser2User(serverUser)),
       catchError(this.handleError<User>('deleteUser'))
     );
   }

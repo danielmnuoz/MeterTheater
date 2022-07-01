@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { InMemoryDbService, RequestInfo } from 'angular-in-memory-web-api';
 import { Observable } from 'rxjs';
-import { Meter } from './meter';
-import { Socket } from './socket';
-import { User } from './user';
+import { ServerMeter } from './serverMeter';
+import { ServerSocket } from './serverSocket';
+import { ServerUser } from './serverUser';
 
 @Injectable({
   providedIn: 'root'
@@ -11,36 +11,36 @@ import { User } from './user';
 export class InMemoryDataService implements InMemoryDbService {
   // TODO: invalids - ie bad user id
   createDb(reqInfo?: RequestInfo | undefined): {} | Observable<{}> | Promise<{}> {
-    const meters: Meter[] = [
-      {id: 1, lanID: '12345678', floor: 2, form: '2S', location: 1, lowVoltage: 120, highVoltage: 240, serialNumber: 111111111, userID: 1},
-      {id: 2, lanID: '22345678', floor: 2, form: '2S', location: 1, lowVoltage: 120, highVoltage: 240, serialNumber: 222222222, userID: 1},
-      {id: 3, lanID: '32345678', floor: 2, form: '2S', location: 1, lowVoltage: 120, highVoltage: 240, serialNumber: 333333333, userID: 1},
-      {id: 4, lanID: '42345678', floor: 6, form: '2S', location: 1, lowVoltage: 120, highVoltage: 240, serialNumber: 444444444, userID: 2},
-      {id: 5, lanID: '52345678', floor: 6, form: '2S', location: 1, lowVoltage: 120, highVoltage: 240, serialNumber: 555555555, userID: 3}
+    const meter: ServerMeter[] = [
+      {meterID: 1, meterLanID: '12345678', meterSerialNumber: 111111111, meterUserID: 1},
+      {meterID: 2, meterLanID: '22345678', meterSerialNumber: 222222222, meterUserID: 1},
+      {meterID: 3, meterLanID: '32345678', meterSerialNumber: 333333333, meterUserID: 1},
+      {meterID: 4, meterLanID: '42345678', meterSerialNumber: 444444444, meterUserID: 2},
+      {meterID: 5, meterLanID: '52345678', meterSerialNumber: 555555555, meterUserID: 3}
     ];
-    const sockets: Socket[] = [
-      {id: 1, meterID: 1, voltage: 120, form: '2S', location: 1, floor: 2, userID: 1},
-      {id: 2, meterID: 2, voltage: 120, form: '2S', location: 2, floor: 2, userID: 1},
-      {id: 3, meterID: 3, voltage: 120, form: '2S', location: 1, floor: 6, userID: 1},
-      {id: 4, meterID: 4, voltage: 120, form: '2S', location: 2, floor: 6, userID: 2},
-      {id: 5, meterID: 5, voltage: 120, form: '2S', location: 3, floor: 2, userID: 3}
+    const socket: ServerSocket[] = [
+      {socketID: 1, socketMeterID: 1, socketVoltage: 120, socketForm: '2S', socketLab: 2, socketRow: 1, socketCol: 1, socketUserID: 1, socketDate: "6/2/2022"},
+      {socketID: 2, socketMeterID: 2, socketVoltage: 120, socketForm: '2S', socketLab: 2, socketRow: 1, socketCol: 1, socketUserID: 1, socketDate: "6/2/2022"},
+      {socketID: 3, socketMeterID: 3, socketVoltage: 120, socketForm: '2S', socketLab: 2, socketRow: 1, socketCol: 1, socketUserID: 1, socketDate: "6/2/2022"},
+      {socketID: 4, socketMeterID: 4, socketVoltage: 120, socketForm: '2S', socketLab: 6, socketRow: 1, socketCol: 1, socketUserID: 2, socketDate: "6/2/2022"},
+      {socketID: 5, socketMeterID: 5, socketVoltage: 120, socketForm: '2S', socketLab: 6, socketRow: 1, socketCol: 1, socketUserID: 3, socketDate: "6/2/2022"}
     ];
-    const users: User[] = [
-      {id: 1, name: 'name1', meterIDs: [meters[0].id, meters[2].id], socketIDs: [sockets[1].id, sockets[2].id]},
-      {id: 2, name: 'name2', meterIDs: [meters[1].id, meters[3].id], socketIDs: [sockets[0].id, sockets[3].id]},
-      {id: 3, name: 'name3', meterIDs: [meters[4].id], socketIDs: [sockets[4].id]}
+    const user: ServerUser[] = [
+      {userID: 1, userName: 'name1'},
+      {userID: 2, userName: 'name2'},
+      {userID: 3, userName: 'name3'}
     ];
-    return {meters, sockets, users};
+    return {meter, socket, user};
   }
 
-  genSocketId(sockets: Socket[]): number {
-    return sockets.length > 0 ? Math.max(...sockets.map(socket => socket.id)) + 1 : 1;
-  }
-  genMeterId(meters: Meter[]): number {
-    return meters.length > 0 ? Math.max(...meters.map(meter => meter.id)) + 1 : 1;
-  }
-  genUserId(users: User[]): number {
-    return users.length > 0 ? Math.max(...users.map(user => user.id)) + 1 : 1;
-  }
+  // genSocketId(sockets: Socket[]): number {
+  //   return sockets.length > 0 ? Math.max(...sockets.map(socket => socket.id)) + 1 : 1;
+  // }
+  // genMeterId(meters: Meter[]): number {
+  //   return meters.length > 0 ? Math.max(...meters.map(meter => meter.id)) + 1 : 1;
+  // }
+  // genUserId(users: User[]): number {
+  //   return users.length > 0 ? Math.max(...users.map(user => user.id)) + 1 : 1;
+  // }
 
 }

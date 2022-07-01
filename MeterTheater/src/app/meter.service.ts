@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Meter } from './meter'
+import { ServerMeter } from './serverMeter';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
@@ -15,33 +16,60 @@ export class MeterService {
     private http: HttpClient
   ) { }
 
-  private metersUrl = 'api/meters';
+  private APIURL = 'http://10.1.210.32/api/';
+  private meterUrl = 'Meters';
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
 
+  serverMeters2Meters(serverMeters: ServerMeter[]): Meter[]{
+    var meters: Meter[]=[];
+    for (var serverMeter of serverMeters){
+      meters.push(this.serverMeter2Meter(serverMeter))
+    }
+    return meters;
+  }
+
+  serverMeter2Meter(serverMeter: ServerMeter): Meter{
+    return {
+      id: serverMeter.meterID,
+      userID: serverMeter.meterUserID,
+      lanID: serverMeter.meterLanID,
+      serialNumber: serverMeter.meterSerialNumber
+    } as Meter
+  }
+
+  meter2ServerMeter(meter: Meter): ServerMeter{
+    return {
+      meterID: meter.id,
+      meterLanID:meter.lanID,
+      meterSerialNumber:meter.serialNumber,
+      meterUserID:meter.userID
+    } as ServerMeter
+  }
+
   /** GET meter by id. Will 404 if id not found */
   getMeterByID(id: number): Observable<Meter> {
-    const url = `${this.metersUrl}/${id}`;
-    return this.http.get<Meter>(url).pipe(
-      tap(),
+    const url = `${this.APIURL+this.meterUrl}/${id}`;
+    return this.http.get<ServerMeter>(url).pipe(
+      map(serverMeter=>this.serverMeter2Meter(serverMeter)),
       catchError(this.handleError<Meter>(`getMeterByID id=${id}`))
     );
   }
 
   /** GET meters from the server */
   getMeters(): Observable<Meter[]> {
-    return this.http.get<Meter[]>(this.metersUrl)
+    return this.http.get<ServerMeter[]>(this.APIURL+this.meterUrl)
       .pipe(
-        tap(),
+        map(serverMeters=>this.serverMeters2Meters(serverMeters)),
         catchError(this.handleError<Meter[]>('getMeters', []))
       );
   }
 
   /** PUT: update the meter on the server */
   updateMeter(meter: Meter): Observable<any> {
-    return this.http.put(this.metersUrl, meter, this.httpOptions).pipe(
+    return this.http.put(this.APIURL+this.meterUrl, this.meter2ServerMeter(meter), this.httpOptions).pipe(
       tap(),
       catchError(this.handleError<any>('updateMeter'))
     );
@@ -49,18 +77,18 @@ export class MeterService {
 
   /** POST: add a new meter to the server */
   addMeter(meter: Meter): Observable<Meter> {
-    return this.http.post<Meter>(this.metersUrl, meter, this.httpOptions).pipe(
-      tap(),
+    return this.http.post<ServerMeter>(this.APIURL+this.meterUrl, this.meter2ServerMeter(meter), this.httpOptions).pipe(
+      map(serverMeter=>this.serverMeter2Meter(serverMeter)),
       catchError(this.handleError<Meter>('addMeter'))
     );
   }
 
   /** DELETE: delete the meter from the server */
   deleteMeter(id: number): Observable<Meter> {
-    const url = `${this.metersUrl}/${id}`;
+    const url = `${this.APIURL+this.meterUrl}/${id}`;
 
-    return this.http.delete<Meter>(url, this.httpOptions).pipe(
-      tap(),
+    return this.http.delete<ServerMeter>(url, this.httpOptions).pipe(
+      map(serverMeter=>this.serverMeter2Meter(serverMeter)),
       catchError(this.handleError<Meter>('deleteMeter'))
     );
   }

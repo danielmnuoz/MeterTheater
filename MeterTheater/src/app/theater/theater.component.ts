@@ -43,12 +43,12 @@ export class TheaterComponent implements OnInit, OnChanges {
   }
 
   getSocketsFloor2(): void {
-    this.socketService.searchSocketsByFloor(2)
+    this.socketService.searchSocketsByLab(2)
       .subscribe(sockets => this.sockets2 = sockets);
   }
 
   getSocketsFloor6(): void {
-    this.socketService.searchSocketsByFloor(6)
+    this.socketService.searchSocketsByLab(6)
       .subscribe(sockets => this.sockets6 = sockets);
   }
 
