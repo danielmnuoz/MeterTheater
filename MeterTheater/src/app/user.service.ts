@@ -81,14 +81,13 @@ export class UserService {
     );
   }
 
-  /* GET sockets whose name contains search term
-  Does not work */
-  // searchUserByName(name: string): Observable<User[]> {
-  //   return this.http.get<ServerUser[]>(`${this.APIURL+this.userUrl}/?userName=${name}`).pipe(
-  //     map(serverUsers=> this.serverUsers2Users(serverUsers)),
-  //     catchError(this.handleError<User[]>('searchUserByName', []))
-  //   );
-  // }
+  /* GET sockets whose name contains search term */
+  searchUserByName(name: string): Observable<User[]> {
+    return this.http.get<ServerUser[]>(`${this.APIURL+this.userUrl}/?userName=${name}`).pipe(
+      map(serverUsers=> this.serverUsers2Users(serverUsers)),
+      catchError(this.handleError<User[]>('searchUserByName', []))
+    );
+  }
 
   /** GET users from the server */
   getUsers(): Observable<User[]> {
