@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Socket } from '../socket'
 import { Meter } from '../meter';
-import { UserService } from '../user.service';
 import { Router } from '@angular/router';
+import { MeterTheaterDBService } from '../meter-theater-db.service';
 
 @Component({
   selector: 'app-home',
@@ -12,12 +12,12 @@ import { Router } from '@angular/router';
 export class HomeComponent implements OnInit {
 
   constructor(
-    private userService: UserService,
+    private meterTheaterDBService: MeterTheaterDBService,
     private router: Router
   ) { }
 
   ngOnInit(): void {
-    if (!this.userService.loginCheck()) {
+    if (!this.meterTheaterDBService.loginCheck()) {
       this.router.navigateByUrl('login');
     }
   }

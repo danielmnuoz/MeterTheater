@@ -1,11 +1,8 @@
-import { Location } from './location';
-
 export interface Socket{
     id: number;
-    userID: number;
-    meterID: number;
+    userId: number;
+    meterId: number;
     voltage: number;
     form: string;
-    date: string;
-    location: Location;
+    locationId: number;
 }

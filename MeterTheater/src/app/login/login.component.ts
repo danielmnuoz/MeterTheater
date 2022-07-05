@@ -3,7 +3,7 @@ import { User } from '../user';
 
 import { Router } from '@angular/router'
 
-import { UserService } from '../user.service';
+import { MeterTheaterDBService } from '../meter-theater-db.service';
 
 @Component({
   selector: 'app-login',
@@ -16,11 +16,11 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private userService: UserService
+    private meterTheaterDBService: MeterTheaterDBService
   ) { }
 
   ngOnInit(): void {
-    this.userService.resetLoginUser();
+    this.meterTheaterDBService.resetLoginUser();
   }
 
   username: string = '';
@@ -31,10 +31,10 @@ export class LoginComponent implements OnInit {
     var username: string = this.username;
     var found: boolean = false;
     this.submitted = true;
-    this.userService.getUsers().subscribe(users => {
+    this.meterTheaterDBService.searchUserByName(username).subscribe(users => {
       for (var user of users) {
         if (user.name.length == username.length && user.name.toLowerCase() === username.toLowerCase()) {
-          this.userService.loginUser = user;
+          this.meterTheaterDBService.loginUser = user;
           found = true;
           break;
         }

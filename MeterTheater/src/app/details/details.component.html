@@ -1,4 +1,4 @@
-<div *ngIf="socket">
+<div *ngIf="socket && socketUser">
     Current Owner: {{socketUser.name}}
 </div>
 <div *ngIf="socket; else noSocket">
@@ -10,7 +10,7 @@
     </div>
 </ng-template>
 <div *ngIf="meter; else noMeter">
-    Meter Lan ID: {{meter.lanID}}
+    Meter Lan ID: {{meter.lanId}}
 </div>
 <ng-template #noMeter>
     <div>

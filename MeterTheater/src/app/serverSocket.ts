@@ -1,11 +1,8 @@
 export interface ServerSocket{
-    socketID: number;
-    socketMeterID: number;
-    socketUserID: number;
+    socketId: number;
+    socketMeterId: number;
+    socketUserId: number;
     socketForm: string;
-    socketLab: number;
-    socketRow: number;
-    socketCol: number;
-    socketDate: string;
     socketVoltage: number;
+    socketLocationId: number;
 }

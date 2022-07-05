@@ -1,8 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, OnChanges, SimpleChange, SimpleChanges } from '@angular/core';
 import { Meter } from '../meter';
 import { Socket } from '../socket'
-import { SocketService } from '../socket.service';
-import { MeterService } from '../meter.service';
+import { MeterTheaterDBService } from '../meter-theater-db.service';
 
 @Component({
   selector: 'app-theater',
@@ -12,22 +11,18 @@ import { MeterService } from '../meter.service';
 export class TheaterComponent implements OnInit, OnChanges {
 
   constructor(
-    private socketService: SocketService,
-    private meterService: MeterService
+    private meterTheaterDBService: MeterTheaterDBService
   ) { }
 
   ngOnInit(): void {
-    this.getSocketsFloor2();
-    this.getSocketsFloor6();
+    this.getSockets();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.getSocketsFloor2();
-    this.getSocketsFloor6();
+    this.getSockets();
   }
 
-  sockets2: Socket[] = [];
-  sockets6: Socket[] = [];
+  sockets: Socket[] = [];
 
   @Output() onSelectSocket = new EventEmitter<Socket>();
   @Output() onSelectMeter = new EventEmitter<Meter>();
@@ -42,14 +37,10 @@ export class TheaterComponent implements OnInit, OnChanges {
     this.onSelectMeter.emit(meter)
   }
 
-  getSocketsFloor2(): void {
-    this.socketService.searchSocketsByLab(2)
-      .subscribe(sockets => this.sockets2 = sockets);
-  }
-
-  getSocketsFloor6(): void {
-    this.socketService.searchSocketsByLab(6)
-      .subscribe(sockets => this.sockets6 = sockets);
+  // TODO
+  getSockets(): void {
+    this.meterTheaterDBService.getSockets()
+      .subscribe(sockets => this.sockets = sockets);
   }
 
 }

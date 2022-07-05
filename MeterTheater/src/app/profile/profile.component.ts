@@ -2,9 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Meter } from '../meter';
 import { Socket } from '../socket'
 import { User } from '../user';
-import { UserService } from '../user.service';
-import { SocketService } from '../socket.service';
-import { MeterService } from '../meter.service';
+import { MeterTheaterDBService } from '../meter-theater-db.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -15,14 +13,12 @@ import { Router } from '@angular/router';
 export class ProfileComponent implements OnInit {
 
   constructor(
-    private socketService: SocketService,
-    private userService: UserService,
-    private meterService: MeterService,
+    private meterTheaterDBService: MeterTheaterDBService,
     private router: Router
   ) { }
 
   ngOnInit(): void {
-    if (!this.userService.loginCheck()) {
+    if (!this.meterTheaterDBService.loginCheck()) {
       this.router.navigateByUrl('login');
     } else {
       this.getSockets();
@@ -30,28 +26,17 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  user: User = this.userService.loginUser;
-
-  ownedSocketIDs: number[] = this.userService.loginUser.socketIDs;
-  ownedMeterIDs: number[] = this.userService.loginUser.meterIDs;
+  user: User = this.meterTheaterDBService.loginUser;
 
   meters: Meter[] = [];
   sockets: Socket[] = [];
 
   getSockets() {
-    if (this.ownedSocketIDs) {
-      for (var id of this.ownedSocketIDs) {
-        this.socketService.getSocketByID(id).subscribe(socket => { this.sockets.push(socket) });
-      }
-    }
+    this.meterTheaterDBService.searchSocketsByUser(this.user.id).subscribe(sockets => this.sockets = sockets);
   }
 
   getMeters() {
-    if (this.ownedMeterIDs) {
-      for (var id of this.ownedMeterIDs) {
-        this.meterService.getMeterByID(id).subscribe(meter => { this.meters.push(meter) });
-      }
-    }
+    this.meterTheaterDBService.searchMetersByUser(this.user.id).subscribe(meters => this.meters = meters);
   }
 
 }

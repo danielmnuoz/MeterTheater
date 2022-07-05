@@ -1,6 +1,6 @@
 export interface ServerMeter{
-    meterID: number;
-    meterUserID: number;
-    meterLanID: string;
+    meterId: number;
+    meterUserId: number;
+    meterLanId: string;
     meterSerialNumber: number;
 }
