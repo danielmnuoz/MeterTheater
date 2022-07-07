@@ -4,7 +4,7 @@ import { Socket } from '../interfaces/socket';
 import { User } from '../interfaces/user';
 import { MeterTheaterDBService } from '../meter-theater-db.service';
 import { Observable, of } from 'rxjs';
-import { ServerLog } from '../interfaces/serverLog';
+import { Log } from '../interfaces/log';
 
 @Component({
   selector: 'app-details',
@@ -56,7 +56,7 @@ export class DetailsComponent implements OnInit, OnChanges {
         this.socketUser = socketUser;
         if (this.socket) {
           this.meterTheaterDBService.updateSocket(this.socket).subscribe();
-          this.meterTheaterDBService.addLog({ logUserId: this.meterTheaterDBService.loginUser.id, logSocketId: this.socket.id, logMeterId: this.socket.meterId, logDescription: description } as ServerLog).subscribe();
+          this.meterTheaterDBService.addLog({ userId: this.meterTheaterDBService.loginUser.id, socketId: this.socket.id, meterId: this.socket.meterId, description: description } as Log).subscribe();
         }
       });
     }
