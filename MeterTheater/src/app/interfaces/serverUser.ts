@@ -1,4 +1,4 @@
 export interface ServerUser{
-    userId: number;
+    userId?: number;
     userName?: string;
 }

@@ -1,9 +1,10 @@
 import { Component, Input, OnInit, SimpleChanges, OnChanges, Output, EventEmitter } from '@angular/core';
-import { Meter } from '../meter';
-import { Socket } from '../socket';
-import { User } from '../user';
+import { Meter } from '../interfaces/meter';
+import { Socket } from '../interfaces/socket';
+import { User } from '../interfaces/user';
 import { MeterTheaterDBService } from '../meter-theater-db.service';
 import { Observable, of } from 'rxjs';
+import { ServerLog } from '../interfaces/serverLog';
 
 @Component({
   selector: 'app-details',
@@ -48,6 +49,7 @@ export class DetailsComponent implements OnInit, OnChanges {
         this.socketUser = socketUser;
         if (this.socket) {
           this.meterTheaterDBService.updateSocket(this.socket).subscribe();
+          this.meterTheaterDBService.addLog({logUserId: socketUser.id, logSocketId: this.socket.id, logMeterId: this.socket.meterId, logDescription: "Check-out"} as ServerLog).subscribe();
         }
       });
     }

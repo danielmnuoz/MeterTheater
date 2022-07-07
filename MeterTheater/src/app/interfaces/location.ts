@@ -1,5 +1,5 @@
 export interface Location{
-    id: number;
+    id?: number;
     labId?: number;
     tableNumber?: number;
     row?: number;

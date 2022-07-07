@@ -1,5 +1,5 @@
 export interface Socket{
-    id: number;
+    id?: number;
     userId?: number;
     meterId?: number;
     voltage?: number;

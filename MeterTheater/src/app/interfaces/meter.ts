@@ -1,5 +1,5 @@
 export interface Meter {
-    id: number;
+    id?: number;
     userId?: number;
     lanId?: string;
     serialNumber?: number;

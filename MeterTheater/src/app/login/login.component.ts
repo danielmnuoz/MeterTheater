@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from '../user';
+import { User } from '../interfaces/user';
+import { ServerLog } from '../interfaces/serverLog';
 
 import { Router } from '@angular/router'
 
@@ -43,10 +44,19 @@ export class LoginComponent implements OnInit {
         }
       }
       if(found){
+        var log: ServerLog = {
+          logDescription: "Successful Login",
+          logUserId: this.meterTheaterDBService.loginUser.id
+        };
+        this.meterTheaterDBService.addLog(log).subscribe();
         // this should be in subscribe so that the rest of the website waits for user before querying db
         this.router.navigateByUrl('home');
       }else{
         this.found = false;
+        var log: ServerLog = {
+          logDescription: `Failed Login: ${username}`,
+        };
+        this.meterTheaterDBService.addLog(log).subscribe();
       }
     }
     );

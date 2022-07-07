@@ -1,5 +1,5 @@
 export interface ServerLog{
-    logId: number;
+    logId?: number;
     logUserId?: number;
     logTime?: string;
     logDescription?: string;

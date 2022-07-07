@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Meter } from '../meter';
-import { Socket } from '../socket'
-import { User } from '../user';
+import { Meter } from '../interfaces/meter';
+import { Socket } from '../interfaces/socket'
+import { User } from '../interfaces/user';
 import { MeterTheaterDBService } from '../meter-theater-db.service';
 import { Router } from '@angular/router';
 
@@ -32,11 +32,15 @@ export class ProfileComponent implements OnInit {
   sockets: Socket[] = [];
 
   getSockets() {
+    if(this.user.id){
     this.meterTheaterDBService.searchSocketsByUser(this.user.id).subscribe(sockets => this.sockets = sockets);
+    }
   }
 
   getMeters() {
+    if(this.user.id){
     this.meterTheaterDBService.searchMetersByUser(this.user.id).subscribe(meters => this.meters = meters);
+    }
   }
 
 }

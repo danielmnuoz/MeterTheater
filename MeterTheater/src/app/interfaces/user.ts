@@ -1,5 +1,5 @@
 export interface User{
-    id: number;
+    id?: number;
     // assumes name is unique
     name?: string;
 }

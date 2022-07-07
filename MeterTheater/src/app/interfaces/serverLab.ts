@@ -1,5 +1,5 @@
 export interface ServerLab{
-    labId: number;
+    labId?: number;
     labName?: number;
     labFloor?: number;
     labNumber?: number;

@@ -1,5 +1,5 @@
 export interface ServerSocket{
-    socketId: number;
+    socketId?: number;
     socketMeterId?: number;
     socketUserId?: number;
     socketForm?: string;
