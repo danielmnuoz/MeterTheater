@@ -2,13 +2,15 @@ import { Injectable } from '@angular/core';
 import { User } from './interfaces/user'
 import { Socket } from './interfaces/socket';
 import { Meter } from './interfaces/meter';
-import { Location } from './interfaces/location';
 import { ServerUser } from './interfaces/serverUser';
 import { ServerSocket } from './interfaces/serverSocket';
 import { ServerMeter } from './interfaces/serverMeter';
 import { ServerLocation } from './interfaces/serverLocation';
 import { ServerLab } from './interfaces/serverLab';
 import { ServerLog } from './interfaces/serverLog';
+import { Location } from './interfaces/location';
+import { Lab } from './interfaces/lab';
+import { Log } from './interfaces/log';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
@@ -39,7 +41,7 @@ export class MeterTheaterDBService {
   loginUser: User = this.DEFAULT_USER;
 
   httpOptions = {
-    headers: new HttpHeaders({'Content-Type': 'application/json'})
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
 
   loginCheck(): boolean {
@@ -52,6 +54,90 @@ export class MeterTheaterDBService {
 
   resetLoginUser(): void {
     this.loginUser = this.DEFAULT_USER
+  }
+
+  serverLabs2Labs(serverLabs: ServerLab[]): Lab[] {
+    var labs: Lab[] = [];
+    for (var serverLab of serverLabs) {
+      labs.push(this.serverLab2Lab(serverLab))
+    }
+    return labs;
+  }
+
+  serverLab2Lab(serverLab: ServerLab): Lab {
+    return {
+      id: serverLab.labId,
+      floor: serverLab.labFloor,
+      name: serverLab.labName,
+      number: serverLab.labNumber,
+    } as Lab;
+  }
+
+  lab2ServerLab(log: Lab): ServerLab {
+    return {
+      labId: log.id,
+      labNumber: log.number,
+      labName: log.name,
+      labFloor: log.floor
+    } as ServerLab;
+  }
+
+  serverLogs2Logs(serverLogs: ServerLog[]): Log[] {
+    var logs: Log[] = [];
+    for (var serverLog of serverLogs) {
+      logs.push(this.serverLog2Log(serverLog))
+    }
+    return logs;
+  }
+
+  serverLog2Log(serverLog: ServerLog): Log {
+    return {
+      id: serverLog.logId,
+      userId: serverLog.logUserId,
+      time: serverLog.logTime,
+      socketId: serverLog.logSocketId,
+      meterId: serverLog.logMeterId,
+      description: serverLog.logDescription
+    } as Log;
+  }
+
+  log2ServerLog(log: Log): ServerLog {
+    return {
+      logId: log.id,
+      logDescription: log.description,
+      logMeterId: log.meterId,
+      logSocketId: log.socketId,
+      logTime: log.time,
+      logUserId: log.userId
+    } as ServerLog;
+  }
+
+  serverLocations2Locations(serverLocations: ServerLocation[]): Location[] {
+    var locations: Location[] = [];
+    for (var serverLocation of serverLocations) {
+      locations.push(this.serverLocation2Location(serverLocation))
+    }
+    return locations;
+  }
+
+  serverLocation2Location(serverLocation: ServerLocation): Location {
+    return {
+      id: serverLocation.locationId,
+      labId: serverLocation.locationLabId,
+      row: serverLocation.locationRow,
+      col: serverLocation.locationCol,
+      tableNumber: serverLocation.locationTableNumber
+    } as Location;
+  }
+
+  location2ServerLocation(location: Location): ServerLocation {
+    return {
+      locationId: location.id,
+      locationCol: location.col,
+      locationLabId: location.labId,
+      locationRow: location.row,
+      locationTableNumber: location.tableNumber
+    } as ServerLocation;
   }
 
   serverUsers2Users(serverUsers: ServerUser[]): User[] {
@@ -132,19 +218,39 @@ export class MeterTheaterDBService {
     } as ServerMeter
   }
 
-  /** GET logs from the server */
-  getLogs(): Observable<ServerLog[]> {
-    return this.http.get<ServerLog[]>(this.APIURL+this.LOGURL)
-    .pipe(
-      catchError(this.handleError<ServerLog[]>('getLogs',[]))
+  /** GET location by id. Will 404 if id not found */
+  getLocationById(id: number): Observable<Location> {
+    const url = `${this.APIURL + this.LOCATIONURL}/${id}`;
+    return this.http.get<ServerLocation>(url).pipe(
+      map(serverLocation => this.serverLocation2Location(serverLocation)),
+      catchError(this.handleError<Location>(`getLocationById id=${id}`))
     );
+  }
+
+  /** GET location by id. Will 404 if id not found */
+  getLabById(id: number): Observable<Lab> {
+    const url = `${this.APIURL + this.LABURL}/${id}`;
+    return this.http.get<ServerLab>(url).pipe(
+      map(serverLab => this.serverLab2Lab(serverLab)),
+      catchError(this.handleError<Lab>(`getLabById id=${id}`))
+    );
+  }
+
+  /** GET logs from the server */
+  getLogs(): Observable<Log[]> {
+    return this.http.get<ServerLog[]>(this.APIURL + this.LOGURL)
+      .pipe(
+        map(serverLogs => this.serverLogs2Logs(serverLogs)),
+        catchError(this.handleError<Log[]>('getLogs', []))
+      );
   }
 
   /** POST: add a new log to the server */
   // Server sets the time
-  addLog(log: ServerLog): Observable<ServerLog> {
-    return this.http.post<ServerLog>(this.APIURL + this.LOGURL, log, this.httpOptions).pipe(
-      catchError(this.handleError<ServerLog>('addLog'))
+  addLog(log: Log): Observable<Log> {
+    return this.http.post<ServerLog>(this.APIURL + this.LOGURL, this.log2ServerLog(log), this.httpOptions).pipe(
+      map(serverLog => this.serverLog2Log(serverLog)),
+      catchError(this.handleError<Log>('addLog'))
     );
   }
 
