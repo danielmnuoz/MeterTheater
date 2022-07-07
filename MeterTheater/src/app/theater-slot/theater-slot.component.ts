@@ -17,7 +17,7 @@ export class TheaterSlotComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.getMeterByID();
+    this.getMeterById();
   }
 
   meter?: Meter;
@@ -26,9 +26,9 @@ export class TheaterSlotComponent implements OnInit, OnChanges {
   @Output() onSelectMeter = new EventEmitter<Meter>();
   @Output() onSelectSocket = new EventEmitter<Socket>();
 
-  getMeterByID() {
+  getMeterById() {
     if (this.socket && this.socket.meterId) {
-      this.meterTheaterDBService.getMeterByID(this.socket.meterId).subscribe(meter => this.meter = meter);
+      this.meterTheaterDBService.getMeterById(this.socket.meterId).subscribe(meter => this.meter = meter);
     }
   }
 

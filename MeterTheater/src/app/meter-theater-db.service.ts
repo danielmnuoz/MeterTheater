@@ -42,7 +42,7 @@ export class MeterTheaterDBService {
   loginUser: User = this.DEFAULT_USER;
 
   httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    headers: new HttpHeaders({'Content-Type': 'application/json'})
   };
 
   loginCheck(): boolean {
@@ -136,11 +136,11 @@ export class MeterTheaterDBService {
   }
 
   /** GET user by id. Will 404 if id not found */
-  getUserByID(id: number): Observable<User> {
+  getUserById(id: number): Observable<User> {
     const url = `${this.APIURL + this.userUrl}/${id}`;
     return this.http.get<ServerUser>(url).pipe(
       map(serverUser => this.serverUser2User(serverUser)),
-      catchError(this.handleError<User>(`getUserByID id=${id}`))
+      catchError(this.handleError<User>(`getUserById id=${id}`))
     );
   }
 
@@ -163,7 +163,9 @@ export class MeterTheaterDBService {
 
   /** PUT: update the user on the server */
   updateUser(user: User): Observable<any> {
-    return this.http.put(this.APIURL + this.userUrl, this.user2ServerUser(user), this.httpOptions).pipe(
+    var id = user.id;
+    const url = `${this.APIURL + this.userUrl}/${id}`;
+    return this.http.put(url, this.user2ServerUser(user), this.httpOptions).pipe(
       tap(),
       catchError(this.handleError<any>('updateUser'))
     );
@@ -187,17 +189,17 @@ export class MeterTheaterDBService {
   }
 
   /** GET socket by id. Will 404 if id not found */
-  getSocketByID(id: number): Observable<Socket> {
+  getSocketById(id: number): Observable<Socket> {
     const url = `${this.APIURL + this.socketUrl}/${id}`;
     return this.http.get<ServerSocket>(url).pipe(
       map(serverSocket => this.serverSocket2Socket(serverSocket)),
-      catchError(this.handleError<Socket>(`getSocketByID id=${id}`))
+      catchError(this.handleError<Socket>(`getSocketById id=${id}`))
     );
   }
 
   /* GET sockets whose name contains search term */
-  searchSocketsByUser(userID: number): Observable<Socket[]> {
-    return this.http.get<ServerSocket[]>(`${this.APIURL + this.socketUrl}/?socketUserID=${userID}`).pipe(
+  searchSocketsByUser(userId: number): Observable<Socket[]> {
+    return this.http.get<ServerSocket[]>(`${this.APIURL + this.socketUrl}/?socketUserId=${userId}`).pipe(
       map(serverSockets => this.serverSockets2Sockets(serverSockets)),
       catchError(this.handleError<Socket[]>('searchSockets', []))
     );
@@ -214,7 +216,9 @@ export class MeterTheaterDBService {
 
   /** PUT: update the socket on the server */
   updateSocket(socket: Socket): Observable<any> {
-    return this.http.put(this.APIURL + this.socketUrl, this.socket2ServerSocket(socket), this.httpOptions).pipe(
+    var id = socket.id;
+    const url = `${this.APIURL + this.socketUrl}/${id}`;
+    return this.http.put(url, this.socket2ServerSocket(socket), this.httpOptions).pipe(
       tap(),
       catchError(this.handleError<any>('updateSocket'))
     );
@@ -231,7 +235,6 @@ export class MeterTheaterDBService {
   /** DELETE: delete the socket from the server */
   deleteSocket(id: number): Observable<Socket> {
     const url = `${this.APIURL + this.socketUrl}/${id}`;
-
     return this.http.delete<ServerSocket>(url, this.httpOptions).pipe(
       map(serverSocket => this.serverSocket2Socket(serverSocket)),
       catchError(this.handleError<Socket>('deleteSocket'))
@@ -239,19 +242,19 @@ export class MeterTheaterDBService {
   }
 
   /* GET meters whose name contains search term */
-  searchMetersByUser(userID: number): Observable<Meter[]> {
-    return this.http.get<ServerMeter[]>(`${this.APIURL + this.meterUrl}/?meterUserID=${userID}`).pipe(
+  searchMetersByUser(userId: number): Observable<Meter[]> {
+    return this.http.get<ServerMeter[]>(`${this.APIURL + this.meterUrl}/?meterUserId=${userId}`).pipe(
       map(serverMeters => this.serverMeters2Meters(serverMeters)),
       catchError(this.handleError<Meter[]>('searchMeters', []))
     );
   }
 
   /** GET meter by id. Will 404 if id not found */
-  getMeterByID(id: number): Observable<Meter> {
+  getMeterById(id: number): Observable<Meter> {
     const url = `${this.APIURL + this.meterUrl}/${id}`;
     return this.http.get<ServerMeter>(url).pipe(
       map(serverMeter => this.serverMeter2Meter(serverMeter)),
-      catchError(this.handleError<Meter>(`getMeterByID id=${id}`))
+      catchError(this.handleError<Meter>(`getMeterById id=${id}`))
     );
   }
 
@@ -266,7 +269,9 @@ export class MeterTheaterDBService {
 
   /** PUT: update the meter on the server */
   updateMeter(meter: Meter): Observable<any> {
-    return this.http.put(this.APIURL + this.meterUrl, this.meter2ServerMeter(meter), this.httpOptions).pipe(
+    var id = meter.id;
+    const url = `${this.APIURL + this.meterUrl}/${id}`;
+    return this.http.put(url, this.meter2ServerMeter(meter), this.httpOptions).pipe(
       tap(),
       catchError(this.handleError<any>('updateMeter'))
     );
@@ -283,7 +288,6 @@ export class MeterTheaterDBService {
   /** DELETE: delete the meter from the server */
   deleteMeter(id: number): Observable<Meter> {
     const url = `${this.APIURL + this.meterUrl}/${id}`;
-
     return this.http.delete<ServerMeter>(url, this.httpOptions).pipe(
       map(serverMeter => this.serverMeter2Meter(serverMeter)),
       catchError(this.handleError<Meter>('deleteMeter'))

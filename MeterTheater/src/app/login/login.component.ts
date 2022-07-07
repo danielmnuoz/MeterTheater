@@ -33,6 +33,9 @@ export class LoginComponent implements OnInit {
     this.submitted = true;
     this.meterTheaterDBService.searchUserByName(username).subscribe(users => {
       for (var user of users) {
+        if(!user.name){
+          continue;
+        }
         if (user.name.length == username.length && user.name.toLowerCase() === username.toLowerCase()) {
           this.meterTheaterDBService.loginUser = user;
           found = true;
