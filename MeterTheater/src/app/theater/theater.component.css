@@ -4,7 +4,7 @@
   box-sizing: border-box;
 }
 
-body {
+body{
   background-color: #9b4848;
   color: #fff;
   display: flex;
@@ -37,8 +37,8 @@ body {
   margin-bottom: 30px;
 }
 
-.seat {
-  background-color: #444451;
+.seat{
+  background-color: #fff;
   height: 26px;
   width: 32px;
   margin: 3px;
@@ -50,9 +50,11 @@ body {
 .seat.selected {
   background-color: rgb(14, 163, 1);
 }
-
-.seat.sold {
-  background-color: #fff;
+.seat.owned{
+  background-color:rgb(105, 1, 131);
+}
+.seat.occupied {
+  background-color: #444451;
 }
 
 .seat:nth-of-type(2) {
@@ -63,12 +65,12 @@ body {
   margin-left: 18px;
 }
 
-.seat:not(.sold):hover {
+.seat:not(.occupied):hover {
   cursor: pointer;
   transform: scale(1.2);
 }
 
-.showcase .seat:not(.sold):hover {
+.showcase .seat:not(.occupied):hover {
   cursor: default;
   transform: scale(1);
 }
