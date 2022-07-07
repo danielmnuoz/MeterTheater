@@ -31,12 +31,9 @@ export class MeterTheaterDBService {
   private LOGURL = 'Logs';
   private LOCATIONURL = 'Locations';
 
-  DEFAULTID = -1;
-  DEFAULTNAME = '';
-
   DEFAULT_USER: User = {
-    id: this.DEFAULTID,
-    name: this.DEFAULTNAME
+    id: undefined,
+    name: undefined
   }
 
   loginUser: User = this.DEFAULT_USER;

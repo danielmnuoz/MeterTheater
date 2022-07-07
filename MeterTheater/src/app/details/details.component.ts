@@ -25,6 +25,7 @@ export class DetailsComponent implements OnInit, OnChanges {
   }
 
   socketUser: User = this.meterTheaterDBService.DEFAULT_USER;
+  loginUser: User = this.meterTheaterDBService.loginUser;
 
   @Input() socket?: Socket;
   @Input() meter?: Meter;
@@ -34,24 +35,39 @@ export class DetailsComponent implements OnInit, OnChanges {
     if (this.socket && this.socket.userId) {
       return this.meterTheaterDBService.getUserById(this.socket.userId);
     } else {
-      // should never happen - case not handled
       return of(this.meterTheaterDBService.DEFAULT_USER);
     }
   }
+
   // TODO: wait for all to finish before profile? also before update theater?
-  updateSocketUser() {
+  updateSocketUser(out: boolean) {
     if (this.socket) {
       if (!this.meterTheaterDBService.loginCheck()) {
         return;
       }
-      this.socket.userId = this.meterTheaterDBService.loginUser.id;
+      if (out) {
+        this.socket.userId = this.meterTheaterDBService.loginUser.id;
+        var description: string = "Check-out";
+      } else {
+        this.socket.userId = undefined;
+        var description: string = "Check-in";
+      }
       this.getUser().subscribe(socketUser => {
         this.socketUser = socketUser;
         if (this.socket) {
           this.meterTheaterDBService.updateSocket(this.socket).subscribe();
-          this.meterTheaterDBService.addLog({logUserId: socketUser.id, logSocketId: this.socket.id, logMeterId: this.socket.meterId, logDescription: "Check-out"} as ServerLog).subscribe();
+          this.meterTheaterDBService.addLog({ logUserId: this.meterTheaterDBService.loginUser.id, logSocketId: this.socket.id, logMeterId: this.socket.meterId, logDescription: description } as ServerLog).subscribe();
         }
       });
     }
   }
+
+  checkOut() {
+    this.updateSocketUser(true);
+  }
+
+  checkIn() {
+    this.updateSocketUser(false);
+  }
+
 }

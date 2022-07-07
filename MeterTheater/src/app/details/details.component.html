@@ -18,5 +18,10 @@
     </div>
 </ng-template>
 <div *ngIf="socket">
-    <button class="btn btn-primary" (click)="updateSocketUser()">Take Socket</button>
+    <div *ngIf="socket.userId==loginUser.id">
+        <button class="btn btn-primary" (click)="checkIn()">Check-in</button>
+    </div>
+    <div *ngIf="!socket.userId">
+        <button class="btn btn-primary" (click)="checkOut()">Checkout</button>
+    </div>
 </div>
