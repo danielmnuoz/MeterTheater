@@ -47,7 +47,7 @@ export class DetailsComponent implements OnInit, OnChanges {
       }
       if (out) {
         this.socket.userId = this.meterTheaterDBService.loginUser.id;
-        var description: string = "Check-out";
+        var description: string = "Checkout";
       } else {
         this.socket.userId = undefined;
         var description: string = "Check-in";
