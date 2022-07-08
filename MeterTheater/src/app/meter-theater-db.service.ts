@@ -29,7 +29,7 @@ export class MeterTheaterDBService {
 
   constructor(private http: HttpClient) { }
 
-  private APIURL = 'http://10.1.210.32/api/';
+  private APIURL = 'http://10.1.210.32:8001/api/';
   private USERURL = 'Users';
   private SOCKETURL = 'Sockets';
   private METERURL = 'Meters';
