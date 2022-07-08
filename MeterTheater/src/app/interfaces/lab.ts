@@ -1,6 +1,6 @@
-export interface Lab{
-    id?: number;
-    name?: number;
-    floor?: number;
-    number?: number;
-}
+// export interface Lab{
+//     id?: number;
+//     name?: number;
+//     floor?: number;
+//     number?: number;
+// }

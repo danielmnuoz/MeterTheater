@@ -8,9 +8,13 @@ import { ServerMeter } from './interfaces/serverMeter';
 import { ServerLocation } from './interfaces/serverLocation';
 import { ServerLab } from './interfaces/serverLab';
 import { ServerLog } from './interfaces/serverLog';
-import { Location } from './interfaces/location';
-import { Lab } from './interfaces/lab';
+// import { Location } from './interfaces/location';
+// import { Lab } from './interfaces/lab';
 import { Log } from './interfaces/log';
+import { ServerExtendedLab } from './interfaces/serverExtendedLab';
+import { ServerExtendedLocation } from './interfaces/serverExtendedLocation';
+import { ExtendedLab } from './interfaces/extendedLab';
+import { ExtendedLocation } from './interfaces/extendedLocation';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
@@ -56,31 +60,31 @@ export class MeterTheaterDBService {
     this.loginUser = this.DEFAULT_USER
   }
 
-  serverLabs2Labs(serverLabs: ServerLab[]): Lab[] {
-    var labs: Lab[] = [];
-    for (var serverLab of serverLabs) {
-      labs.push(this.serverLab2Lab(serverLab))
-    }
-    return labs;
-  }
+  // serverLabs2Labs(serverLabs: ServerLab[]): Lab[] {
+  //   var labs: Lab[] = [];
+  //   for (var serverLab of serverLabs) {
+  //     labs.push(this.serverLab2Lab(serverLab))
+  //   }
+  //   return labs;
+  // }
 
-  serverLab2Lab(serverLab: ServerLab): Lab {
-    return {
-      id: serverLab.labId,
-      floor: serverLab.labFloor,
-      name: serverLab.labName,
-      number: serverLab.labNumber,
-    } as Lab;
-  }
+  // serverLab2Lab(serverLab: ServerLab): Lab {
+  //   return {
+  //     id: serverLab.labId,
+  //     floor: serverLab.labFloor,
+  //     name: serverLab.labName,
+  //     number: serverLab.labNumber,
+  //   } as Lab;
+  // }
 
-  lab2ServerLab(log: Lab): ServerLab {
-    return {
-      labId: log.id,
-      labNumber: log.number,
-      labName: log.name,
-      labFloor: log.floor
-    } as ServerLab;
-  }
+  // lab2ServerLab(log: Lab): ServerLab {
+  //   return {
+  //     labId: log.id,
+  //     labNumber: log.number,
+  //     labName: log.name,
+  //     labFloor: log.floor
+  //   } as ServerLab;
+  // }
 
   serverLogs2Logs(serverLogs: ServerLog[]): Log[] {
     var logs: Log[] = [];
@@ -112,33 +116,33 @@ export class MeterTheaterDBService {
     } as ServerLog;
   }
 
-  serverLocations2Locations(serverLocations: ServerLocation[]): Location[] {
-    var locations: Location[] = [];
-    for (var serverLocation of serverLocations) {
-      locations.push(this.serverLocation2Location(serverLocation))
-    }
-    return locations;
-  }
+  // serverLocations2Locations(serverLocations: ServerLocation[]): Location[] {
+  //   var locations: Location[] = [];
+  //   for (var serverLocation of serverLocations) {
+  //     locations.push(this.serverLocation2Location(serverLocation))
+  //   }
+  //   return locations;
+  // }
 
-  serverLocation2Location(serverLocation: ServerLocation): Location {
-    return {
-      id: serverLocation.locationId,
-      labId: serverLocation.locationLabId,
-      row: serverLocation.locationRow,
-      col: serverLocation.locationCol,
-      tableNumber: serverLocation.locationTableNumber
-    } as Location;
-  }
+  // serverLocation2Location(serverLocation: ServerLocation): Location {
+  //   return {
+  //     id: serverLocation.locationId,
+  //     labId: serverLocation.locationLabId,
+  //     row: serverLocation.locationRow,
+  //     col: serverLocation.locationCol,
+  //     tableNumber: serverLocation.locationTableNumber
+  //   } as Location;
+  // }
 
-  location2ServerLocation(location: Location): ServerLocation {
-    return {
-      locationId: location.id,
-      locationCol: location.col,
-      locationLabId: location.labId,
-      locationRow: location.row,
-      locationTableNumber: location.tableNumber
-    } as ServerLocation;
-  }
+  // location2ServerLocation(location: Location): ServerLocation {
+  //   return {
+  //     locationId: location.id,
+  //     locationCol: location.col,
+  //     locationLabId: location.labId,
+  //     locationRow: location.row,
+  //     locationTableNumber: location.tableNumber
+  //   } as ServerLocation;
+  // }
 
   serverUsers2Users(serverUsers: ServerUser[]): User[] {
     var users: User[] = [];
@@ -218,23 +222,70 @@ export class MeterTheaterDBService {
     } as ServerMeter
   }
 
-  /** GET location by id. Will 404 if id not found */
-  getLocationById(id: number): Observable<Location> {
-    const url = `${this.APIURL + this.LOCATIONURL}/${id}`;
-    return this.http.get<ServerLocation>(url).pipe(
-      map(serverLocation => this.serverLocation2Location(serverLocation)),
-      catchError(this.handleError<Location>(`getLocationById id=${id}`))
-    );
+  serverExtendedLocation2ExtendedLocation(serverExtendedLocation: ServerExtendedLocation): ExtendedLocation {
+    return {
+      id: serverExtendedLocation.locationId,
+      tableNumber: serverExtendedLocation.locationTableNumber,
+      row: serverExtendedLocation.locationRow,
+      col: serverExtendedLocation.locationCol,
+      labId: serverExtendedLocation.locationLabId,
+      sockets: serverExtendedLocation.sockets ? this.serverSockets2Sockets(serverExtendedLocation.sockets) : undefined
+    }
   }
 
-  /** GET location by id. Will 404 if id not found */
-  getLabById(id: number): Observable<Lab> {
-    const url = `${this.APIURL + this.LABURL}/${id}`;
-    return this.http.get<ServerLab>(url).pipe(
-      map(serverLab => this.serverLab2Lab(serverLab)),
-      catchError(this.handleError<Lab>(`getLabById id=${id}`))
-    );
+  serverExtendedLocations2ExtendedLocations(serverExtendedLocations: ServerExtendedLocation[]): ExtendedLocation[] {
+    var extendedLocations: ExtendedLocation[] = [];
+    for (var serverExtendedLocation of serverExtendedLocations){
+      extendedLocations.push(this.serverExtendedLocation2ExtendedLocation(serverExtendedLocation));
+    }
+    return extendedLocations;
   }
+
+  serverExtendedLab2ExtendedLab(serverExtendedLab: ServerExtendedLab): ExtendedLab {
+    return {
+      id: serverExtendedLab.labId,
+      floor: serverExtendedLab.labFloor,
+      number: serverExtendedLab.labNumber,
+      name: serverExtendedLab.labName,
+      locations: serverExtendedLab.locations ? this.serverExtendedLocations2ExtendedLocations(serverExtendedLab.locations) : undefined
+    }
+  }
+
+  serverExtendedLabs2ExtendedLabs(serverExtendedLabs: ServerExtendedLab[]): ExtendedLab[] {
+    var extendedLabs: ExtendedLab[] = [];
+    for(var serverExtendedLab of serverExtendedLabs){
+      extendedLabs.push(this.serverExtendedLab2ExtendedLab(serverExtendedLab));
+    }
+    return extendedLabs;
+  }
+
+  /** GET extendedLabs from the server */
+  getExtendedLabs(): Observable<ExtendedLab[]> {
+    const url = `${this.APIURL + this.LABURL}/?extend=true`;
+    return this.http.get<ServerExtendedLab[]>(url)
+      .pipe(
+        map(serverExtendedLabs => this.serverExtendedLabs2ExtendedLabs(serverExtendedLabs)),
+        catchError(this.handleError<ExtendedLab[]>('getExtendedLabs', []))
+      );
+  }
+
+  // /** GET location by id. Will 404 if id not found */
+  // getLocationById(id: number): Observable<Location> {
+  //   const url = `${this.APIURL + this.LOCATIONURL}/${id}`;
+  //   return this.http.get<ServerLocation>(url).pipe(
+  //     map(serverLocation => this.serverLocation2Location(serverLocation)),
+  //     catchError(this.handleError<Location>(`getLocationById id=${id}`))
+  //   );
+  // }
+
+  // /** GET location by id. Will 404 if id not found */
+  // getLabById(id: number): Observable<Lab> {
+  //   const url = `${this.APIURL + this.LABURL}/${id}`;
+  //   return this.http.get<ServerLab>(url).pipe(
+  //     map(serverLab => this.serverLab2Lab(serverLab)),
+  //     catchError(this.handleError<Lab>(`getLabById id=${id}`))
+  //   );
+  // }
 
   /** GET logs from the server */
   getLogs(): Observable<Log[]> {
