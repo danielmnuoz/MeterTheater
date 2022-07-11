@@ -41,13 +41,6 @@ export class TheaterComponent implements OnInit, OnChanges {
     this.onSelectMeter.emit(meter)
   }
 
-  changeFloor(floor: number | undefined): void {
-    if (floor) {
-      this.floor = floor;
-      console.log(floor);
-    }
-  }
-
   // TODO - sort extendedLabs? and other stuff
   getSocketInfos(): void {
     this.meterTheaterDBService.getLabs().subscribe(labs => {
