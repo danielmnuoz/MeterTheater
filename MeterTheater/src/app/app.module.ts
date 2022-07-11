@@ -19,6 +19,7 @@ import { DetailsComponent } from './details/details.component';
 import { ProfileComponent } from './profile/profile.component';
 import { NavigationComponent } from './navigation/navigation.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatSelectModule} from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
+    MatSelectModule,
     BrowserAnimationsModule,
     // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
     // and returns simulated server responses.
