@@ -40,20 +40,17 @@
 
 .seat{
   background-color: #fff;
-  height: 26px;
-  width: 32px;
-  margin: 3px;
+  height: 82px;
+  width: 69px;
+  margin: 6px;
   font-size: 50px;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+  border-radius:10px;
 }
 
-.seat.selected {
+.seat.owned {
   background-color: rgb(14, 163, 1);
 }
-.seat.owned{
-  background-color:rgb(105, 1, 131);
-}
+
 .seat.occupied {
   background-color: #444451;
 }
@@ -101,12 +98,14 @@
   margin-right: auto;
 }
 
-
-
 p.text{
     margin: 5px 0;
 }
-
+p.casetext{
+  margin-left:2px;
+  font-size:15px;
+  color:rgb(255, 255, 255)
+}
 p.text span{
     color: rgb(158, 248, 158);
 }
