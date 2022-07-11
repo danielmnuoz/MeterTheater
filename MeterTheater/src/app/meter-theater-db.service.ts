@@ -15,6 +15,8 @@ import { ServerExtendedLab } from './interfaces/serverExtendedLab';
 import { ServerExtendedLocation } from './interfaces/serverExtendedLocation';
 import { ExtendedLab } from './interfaces/extendedLab';
 import { ExtendedLocation } from './interfaces/extendedLocation';
+import { Lab } from './interfaces/lab';
+import { Table } from './interfaces/table';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
@@ -85,6 +87,79 @@ export class MeterTheaterDBService {
   //     labFloor: log.floor
   //   } as ServerLab;
   // }
+
+  extendedLabs2Labs(extendedLabs: ExtendedLab []): Lab[]{
+    var labs: Lab[] = [];
+    for (var extendedLab of extendedLabs) {
+      labs.push(this.extendedLab2Lab(extendedLab))
+    }
+    return labs;
+  }
+  
+  extendedLab2Lab(extendedLab: ExtendedLab): Lab {
+    var ret: Lab = {
+      id: extendedLab.id,
+      name: extendedLab.name,
+      floor: extendedLab.floor,
+      number: extendedLab.number
+    };
+    var tables: Table[] = [];
+    if (extendedLab.locations == undefined) {
+      return ret;
+    }
+    var locs = extendedLab.locations.sort((a, b) => {
+      if (a.tableNumber && b.tableNumber && a.tableNumber > b.tableNumber) {
+        return 1;
+      }
+      if (a.tableNumber && b.tableNumber && a.tableNumber < b.tableNumber) {
+        return -1;
+      }
+      if (a.row && b.row && a.row > b.row) {
+        return 1
+      } else if (a.row && b.row && a.row < b.row) {
+        return -1
+      } else if (a.row && b.row && a.row == b.row && a.col && b.col && a.col > b.col) {
+        return 1
+      } else if (a.row && b.row && a.row == b.row && a.col && b.col && a.col < b.col) {
+        return -1
+      }
+      return 0
+    });
+    var row: Socket[] = [];
+    var table: Table = {} as Table;
+    for (var loc of locs) {
+      if (loc.tableNumber == undefined) {
+        continue;
+      }
+      if (table.tableNumber == undefined) {
+        table = {
+          tableNumber: loc.tableNumber,
+          sockets: []
+        };
+      }
+      if (loc.col == 1 && row.length != 0) {
+        // Always has sockets
+        if (table.sockets) {
+          table.sockets.push(row);
+          row = [];
+        }
+      }
+      if (table.tableNumber != loc.tableNumber) {
+        tables.push(table);
+        table.sockets = [];
+        table.tableNumber = loc.tableNumber
+      }
+      if (loc.sockets) {
+        for (var socket of loc.sockets) {
+          row.push(socket);
+        }
+      }
+    }
+    table.sockets?.push(row);
+    tables.push(table);
+    ret.tables = tables;
+    return ret;
+  }
 
   serverLogs2Logs(serverLogs: ServerLog[]): Log[] {
     var logs: Log[] = [];
@@ -235,7 +310,7 @@ export class MeterTheaterDBService {
 
   serverExtendedLocations2ExtendedLocations(serverExtendedLocations: ServerExtendedLocation[]): ExtendedLocation[] {
     var extendedLocations: ExtendedLocation[] = [];
-    for (var serverExtendedLocation of serverExtendedLocations){
+    for (var serverExtendedLocation of serverExtendedLocations) {
       extendedLocations.push(this.serverExtendedLocation2ExtendedLocation(serverExtendedLocation));
     }
     return extendedLocations;
@@ -253,19 +328,19 @@ export class MeterTheaterDBService {
 
   serverExtendedLabs2ExtendedLabs(serverExtendedLabs: ServerExtendedLab[]): ExtendedLab[] {
     var extendedLabs: ExtendedLab[] = [];
-    for(var serverExtendedLab of serverExtendedLabs){
+    for (var serverExtendedLab of serverExtendedLabs) {
       extendedLabs.push(this.serverExtendedLab2ExtendedLab(serverExtendedLab));
     }
     return extendedLabs;
   }
 
-  /** GET extendedLabs from the server */
-  getExtendedLabs(): Observable<ExtendedLab[]> {
+  /** GET labs from the server */
+  getLabs(): Observable<Lab[]> {
     const url = `${this.APIURL + this.LABURL}/?extend=true`;
     return this.http.get<ServerExtendedLab[]>(url)
       .pipe(
-        map(serverExtendedLabs => this.serverExtendedLabs2ExtendedLabs(serverExtendedLabs)),
-        catchError(this.handleError<ExtendedLab[]>('getExtendedLabs', []))
+        map(serverExtendedLabs => this.extendedLabs2Labs(this.serverExtendedLabs2ExtendedLabs(serverExtendedLabs))),
+        catchError(this.handleError<Lab[]>('getLabs', []))
       );
   }
 

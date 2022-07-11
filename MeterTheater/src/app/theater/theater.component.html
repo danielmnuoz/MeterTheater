@@ -1,4 +1,4 @@
-<div class = "fakebody">
+<!-- <div class="fakebody">
   <div class="movie-container">
     <label>Pick a floor:</label>
     <select id="floor">
@@ -94,15 +94,17 @@
   <p class="text">
     You have selected <span id="count">0</span> sockets
   </p>
-</div>
+</div> -->
 
 
 <div class="theater">
-  <div *ngFor="let extendedLab of extendedLabs">
-    <div *ngFor="let location of extendedLab.locations">
-      <div *ngIf="location.col == 1" class = "newRow">I am a new row, format me</div>
-      <app-theater-slot *ngFor="let socket of location.sockets" [socket]="socket" (onSelectSocket)="selectSocket($event)"
-        (onSelectMeter)="selectMeter($event)"></app-theater-slot>
+  <div *ngFor="let lab of labs">
+    Floor: {{lab.floor}}
+    <div *ngFor="let table of lab.tables">
+      <div class="row" *ngFor="let row of table.sockets">
+        <app-theater-slot class="slot" *ngFor="let socket of row" [socket]="socket" (onSelectSocket)="selectSocket($event)"
+          (onSelectMeter)="selectMeter($event)"></app-theater-slot>
+      </div>
     </div>
   </div>
 </div>

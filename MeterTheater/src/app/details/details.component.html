@@ -21,7 +21,7 @@
     <div *ngIf="socket.userId==loginUser.id">
         <button class="btn btn-primary" (click)="checkIn()">Check-in</button>
     </div>
-    <div *ngIf="!socket.userId">
+    <div *ngIf="socket.userId == undefined">
         <button class="btn btn-primary" (click)="checkOut()">Checkout</button>
     </div>
 </div>
