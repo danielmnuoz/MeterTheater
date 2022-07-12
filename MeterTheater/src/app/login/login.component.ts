@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from '../user';
+import { User } from '../interfaces/user';
+import { Log } from '../interfaces/log';
 
 import { Router } from '@angular/router'
 
-import { UserService } from '../user.service';
+import { MeterTheaterDBService } from '../meter-theater-db.service';
 
 @Component({
   selector: 'app-login',
@@ -16,11 +17,11 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private userService: UserService
+    private meterTheaterDBService: MeterTheaterDBService
   ) { }
 
   ngOnInit(): void {
-    this.userService.resetLoginUser();
+    this.meterTheaterDBService.resetLoginUser();
   }
 
   username: string = '';
@@ -31,19 +32,31 @@ export class LoginComponent implements OnInit {
     var username: string = this.username;
     var found: boolean = false;
     this.submitted = true;
-    this.userService.getUsers().subscribe(users => {
+    this.meterTheaterDBService.searchUserByName(username).subscribe(users => {
       for (var user of users) {
+        if(user.name == undefined){
+          continue;
+        }
         if (user.name.length == username.length && user.name.toLowerCase() === username.toLowerCase()) {
-          this.userService.loginUser = user;
+          this.meterTheaterDBService.loginUser = user;
           found = true;
           break;
         }
       }
       if(found){
+        var log: Log = {
+          description: "Successful Login",
+          userId: this.meterTheaterDBService.loginUser.id
+        };
+        this.meterTheaterDBService.addLog(log).subscribe();
         // this should be in subscribe so that the rest of the website waits for user before querying db
         this.router.navigateByUrl('home');
       }else{
         this.found = false;
+        var log: Log = {
+          description: `Failed Login: ${username}`,
+        };
+        this.meterTheaterDBService.addLog(log).subscribe();
       }
     }
     );

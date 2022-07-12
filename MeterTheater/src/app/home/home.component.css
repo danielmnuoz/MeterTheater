@@ -1,0 +1,10 @@
+#theaterpage {
+    float:left;
+    width:75%;
+    minheight:100%;
+}
+#detailpage {
+    float:right;
+    width:25%;
+    min-height:100%;
+}

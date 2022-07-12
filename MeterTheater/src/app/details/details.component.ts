@@ -1,11 +1,10 @@
 import { Component, Input, OnInit, SimpleChanges, OnChanges, Output, EventEmitter } from '@angular/core';
-import { Meter } from '../meter';
-import { Socket } from '../socket';
-import { User } from '../user';
-import { MeterService } from '../meter.service';
-import { SocketService } from '../socket.service';
-import { UserService } from '../user.service';
+import { Meter } from '../interfaces/meter';
+import { Socket } from '../interfaces/socket';
+import { User } from '../interfaces/user';
+import { MeterTheaterDBService } from '../meter-theater-db.service';
 import { Observable, of } from 'rxjs';
+import { Log } from '../interfaces/log';
 
 @Component({
   selector: 'app-details',
@@ -15,56 +14,60 @@ import { Observable, of } from 'rxjs';
 export class DetailsComponent implements OnInit, OnChanges {
 
   constructor(
-    private meterService: MeterService,
-    private socketService: SocketService,
-    private userService: UserService
+    private meterTheaterDBService: MeterTheaterDBService
   ) { }
 
   ngOnInit(): void {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.updateSelectedSocketUser().subscribe(socketUser => this.socketUser = socketUser);
+    this.getUser().subscribe(socketUser => this.socketUser = socketUser);
   }
 
-  socketUser: User = this.userService.defaultUser;
+  socketUser: User = this.meterTheaterDBService.DEFAULT_USER;
+  loginUser: User = this.meterTheaterDBService.loginUser;
 
   @Input() socket?: Socket;
   @Input() meter?: Meter;
   @Output() onUpdateSocketUser = new EventEmitter<User>();
 
-  updateSelectedSocketUser(): Observable<User> {
-    if (this.socket) {
-      return this.userService.getUserByID(this.socket.userID);
+  getUser(): Observable<User> {
+    if (this.socket && this.socket.userId) {
+      return this.meterTheaterDBService.getUserById(this.socket.userId);
     } else {
-      return of(this.userService.defaultUser);
+      return of(this.meterTheaterDBService.DEFAULT_USER);
     }
   }
+
   // TODO: wait for all to finish before profile? also before update theater?
-  updateSocketUser() {
+  updateSocketUser(out: boolean) {
     if (this.socket) {
-      var oldUserID = this.socket.userID;
-      var socketID = this.socket.id;
-      this.socket.userID = this.userService.loginUser.id;
-      this.updateSelectedSocketUser().subscribe(socketUser => {
+      if (!this.meterTheaterDBService.loginCheck()) {
+        return;
+      }
+      if (out) {
+        this.socket.userId = this.meterTheaterDBService.loginUser.id;
+        var description: string = "Checkout";
+      } else {
+        this.socket.userId = undefined;
+        var description: string = "Check-in";
+      }
+      this.getUser().subscribe(socketUser => {
         this.socketUser = socketUser;
         if (this.socket) {
-          this.socketService.updateSocket(this.socket).subscribe(_ => {
-            this.userService.loginUser.socketIDs.push(socketID);
-            this.userService.updateUser(this.userService.loginUser).subscribe(_ => {
-              this.userService.getUserByID(oldUserID).subscribe(oldUser => {
-                var ind = oldUser.socketIDs.indexOf(socketID);
-                if (ind > -1) {
-                  oldUser.socketIDs.splice(ind, 1)
-                  this.userService.updateUser(oldUser).subscribe(_ => {
-                    this.onUpdateSocketUser.emit(this.socketUser);
-                  });
-                }
-              });
-            });
-          })
+          this.meterTheaterDBService.updateSocket(this.socket).subscribe();
+          this.meterTheaterDBService.addLog({ userId: this.meterTheaterDBService.loginUser.id, socketId: this.socket.id, meterId: this.socket.meterId, description: description } as Log).subscribe();
         }
       });
     }
   }
+
+  checkOut() {
+    this.updateSocketUser(true);
+  }
+
+  checkIn() {
+    this.updateSocketUser(false);
+  }
+
 }

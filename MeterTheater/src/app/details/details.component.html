@@ -1,4 +1,4 @@
-<div *ngIf="socket">
+<div *ngIf="socket && socketUser">
     Current Owner: {{socketUser.name}}
 </div>
 <div *ngIf="socket; else noSocket">
@@ -10,7 +10,7 @@
     </div>
 </ng-template>
 <div *ngIf="meter; else noMeter">
-    Meter Lan ID: {{meter.lanID}}
+    Meter Lan Id: {{meter.lanId}}
 </div>
 <ng-template #noMeter>
     <div>
@@ -18,5 +18,10 @@
     </div>
 </ng-template>
 <div *ngIf="socket">
-    <button class="btn btn-primary" (click)="updateSocketUser()">Take Socket</button>
+    <div *ngIf="socket.userId==loginUser.id">
+        <button class="btn btn-primary" (click)="checkIn()">Check-in</button>
+    </div>
+    <div *ngIf="socket.userId == undefined">
+        <button class="btn btn-primary" (click)="checkOut()">Checkout</button>
+    </div>
 </div>

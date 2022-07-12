@@ -1,33 +1,32 @@
 import { Component, EventEmitter, Input, OnInit, Output, OnChanges, SimpleChange, SimpleChanges } from '@angular/core';
-import { Meter } from '../meter';
-import { Socket } from '../socket'
-import { SocketService } from '../socket.service';
-import { MeterService } from '../meter.service';
+import { Meter } from '../interfaces/meter';
+import { Socket } from '../interfaces/socket'
+import { MeterTheaterDBService } from '../meter-theater-db.service';
+import { Lab } from '../interfaces/lab';
+import { Table } from '../interfaces/table';
 
 @Component({
   selector: 'app-theater',
   templateUrl: './theater.component.html',
   styleUrls: ['./theater.component.css']
 })
+
 export class TheaterComponent implements OnInit, OnChanges {
 
   constructor(
-    private socketService: SocketService,
-    private meterService: MeterService
+    private meterTheaterDBService: MeterTheaterDBService
   ) { }
 
   ngOnInit(): void {
-    this.getSocketsFloor2();
-    this.getSocketsFloor6();
+    this.getSocketInfos();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.getSocketsFloor2();
-    this.getSocketsFloor6();
+    this.getSocketInfos();
   }
 
-  sockets2: Socket[] = [];
-  sockets6: Socket[] = [];
+  labs: Lab[] = [];
+  selectedLab?: Lab;
 
   @Output() onSelectSocket = new EventEmitter<Socket>();
   @Output() onSelectMeter = new EventEmitter<Meter>();
@@ -42,14 +41,14 @@ export class TheaterComponent implements OnInit, OnChanges {
     this.onSelectMeter.emit(meter)
   }
 
-  getSocketsFloor2(): void {
-    this.socketService.searchSocketsByLab(2)
-      .subscribe(sockets => this.sockets2 = sockets);
-  }
-
-  getSocketsFloor6(): void {
-    this.socketService.searchSocketsByLab(6)
-      .subscribe(sockets => this.sockets6 = sockets);
+  // TODO - sort extendedLabs? and other stuff
+  getSocketInfos(): void {
+    this.meterTheaterDBService.getLabs().subscribe(labs => {
+      this.labs = labs;
+      if (this.labs && this.labs.length >= 1) {
+        this.selectedLab = this.labs[0];
+      }
+    });
   }
 
 }

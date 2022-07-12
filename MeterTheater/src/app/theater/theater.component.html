@@ -1,115 +1,98 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Movie Socket Booking</title>
-    </head>
-    <body>
-        <div class="movie-container">
-          <label>Pick a floor:</label>
-          <select id="floor">
-            <option value="2">Floor 2</option>
-            <option value="6">Floor 6</option>
-          </select>
-        </div>
-    
-        <ul class="showcase">
-          <li>
-            <div class="seat"></div>
-            <small>N/A</small>
-          </li>
-          <li>
-            <div class="seat selected"></div>
-            <small>Selected</small>
-          </li>
-          <li>
-            <div class="seat occupied"></div>
-            <small>Occupied</small>
-          </li>
-        </ul>
-    
-        <div class="container">
-          <div class="screen"></div>
-    
-          <div class="row">
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-          </div>
-          <div class="row">
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat occupied"></div>
-            <div class="seat occupied"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-          </div>
-          <div class="row">
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat occupied"></div>
-            <div class="seat occupied"></div>
-          </div>
-          <div class="row">
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-          </div>
-          <div class="row">
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat occupied"></div>
-            <div class="seat occupied"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-          </div>
-          <div class="row">
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat occupied"></div>
-            <div class="seat occupied"></div>
-            <div class="seat occupied"></div>
-            <div class="seat"></div>
-          </div>
-        </div>
-    
-        <p class="text">
-          You have selected <span id="count">0</span> sockets
-        </p>
-    
-        <script src="script.js"></script>
-      </body>
+<!-- <div class="fakebody">
+  <div class="movie-container">
+    <label>Pick a floor:</label>
+    <select id="floor">
+      <option value="2">Floor 2</option>
+      <option value="6">Floor 6</option>
+    </select>
+  </div>
 
+  <ul class="showcase">
+    <li>
+      <div class="seat"></div>
+      <p class="casetext">Available</p>
+    </li>
+    <li>
+      <div class="seat occupied"></div>
+      <p class="casetext">Occupied</p>
+    </li>
+    <li>
+      <div class="seat owned"></div>
+      <p class="casetext">Owned</p>
+    </li>
+  </ul>
 
+  <div class="subcontainer">
+    <div class="screen"></div>
+
+    <div class="row">
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+
+    </div>
+    <div class="row">
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat occupied"></div>
+      <div class="seat occupied"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+    </div>
+    <div class="row">
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat occupied"></div>
+      <div class="seat occupied"></div>
+    </div>
+    <div class="row">
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+    </div>
+    <div class="row">
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat occupied"></div>
+      <div class="seat occupied"></div>
+      <div class="seat"></div>
+    </div>
+  </div>
+
+  <p class="text">
+    You have selected <span id="count">0</span> sockets
+  </p>
+</div> -->
 
 
 <div class="theater">
-    Floor 2
-    <app-theater-slot *ngFor="let socket of sockets2" [socket]="socket" (onSelectSocket)="selectSocket($event)"
-        (onSelectMeter)="selectMeter($event)"></app-theater-slot>
-    Floor 6
-    <app-theater-slot *ngFor="let socket of sockets6" [socket]="socket" (onSelectSocket)="selectSocket($event)"
-        (onSelectMeter)="selectMeter($event)"></app-theater-slot>
+  <select placeholder="Lab" [(ngModel)]="selectedLab">
+    <option *ngFor="let lab of labs" [ngValue]="lab">
+      {{lab.name}}
+    </option>
+  </select>
+  <div *ngFor="let lab of labs">
+    <div *ngIf="selectedLab && lab.id == selectedLab.id">
+      <div *ngFor="let table of lab.tables">
+        <div class="row" *ngFor="let row of table.sockets">
+          <app-theater-slot class="slot" *ngFor="let socket of row" [socket]="socket"
+            (onSelectSocket)="selectSocket($event)" (onSelectMeter)="selectMeter($event)"></app-theater-slot>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-</html>

@@ -1,3 +1,8 @@
 <app-navigation></app-navigation>
-<app-theater [refreshToggle] = "toggle" (onSelectSocket)="selectSocket($event)" (onSelectMeter)="selectMeter($event)"></app-theater>
-<app-details [socket]="selectedSocket" [meter]="selectedMeter" (onUpdateSocketUser)="updateInfo()"></app-details>
+<div id="theaterpage">
+    <app-theater [refreshToggle]="toggle" (onSelectSocket)="selectSocket($event)" (onSelectMeter)="selectMeter($event)">
+    </app-theater>
+</div>
+<div id="detailpage">
+    <app-details [socket]="selectedSocket" [meter]="selectedMeter" (onUpdateSocketUser)="updateInfo()"></app-details>
+</div>

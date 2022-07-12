@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
-import { Meter } from '../meter';
-import { Socket } from '../socket';
-import { MeterService } from '../meter.service';
+import { Meter } from '../interfaces/meter';
+import { Socket } from '../interfaces/socket';
+import { MeterTheaterDBService } from '../meter-theater-db.service';
 
 @Component({
   selector: 'app-theater-slot',
@@ -10,14 +10,14 @@ import { MeterService } from '../meter.service';
 })
 export class TheaterSlotComponent implements OnInit, OnChanges {
 
-  constructor(private meterService: MeterService) { }
+  constructor(private meterTheaterDBService: MeterTheaterDBService) { }
 
   ngOnInit(): void {
 
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.getMeterByID();
+    this.getMeterById();
   }
 
   meter?: Meter;
@@ -26,9 +26,9 @@ export class TheaterSlotComponent implements OnInit, OnChanges {
   @Output() onSelectMeter = new EventEmitter<Meter>();
   @Output() onSelectSocket = new EventEmitter<Socket>();
 
-  getMeterByID() {
-    if (this.socket) {
-      this.meterService.getMeterByID(this.socket.meterID).subscribe(meter => this.meter = meter);
+  getMeterById() {
+    if (this.socket && this.socket.meterId) {
+      this.meterTheaterDBService.getMeterById(this.socket.meterId).subscribe(meter => this.meter = meter);
     }
   }
 

@@ -1,10 +1,11 @@
-@import url("https://fonts.googleapis.com/css?family=Lato&display=swap");
+/* @import url("https://fonts.googleapis.com/css?family=Lato&display=swap");
 
 * {
   box-sizing: border-box;
 }
 
-body {
+
+.fakebody{
   background-color: #9b4848;
   color: #fff;
   display: flex;
@@ -29,30 +30,29 @@ body {
   padding: 5px 15px 5px 15px;
   -moz-appearance: none;
   -webkit-appearance: none;
-  appearance: none;
+  appearance: auto;
 }
 
-.container {
+.subcontainer {
   perspective: 1000px;
   margin-bottom: 30px;
 }
 
-.seat {
-  background-color: #444451;
-  height: 26px;
-  width: 32px;
-  margin: 3px;
+.seat{
+  background-color: #fff;
+  height: 82px;
+  width: 69px;
+  margin: 6px;
   font-size: 50px;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+  border-radius:10px;
 }
 
-.seat.selected {
+.seat.owned {
   background-color: rgb(14, 163, 1);
 }
 
-.seat.sold {
-  background-color: #fff;
+.seat.occupied {
+  background-color: #444451;
 }
 
 .seat:nth-of-type(2) {
@@ -63,12 +63,12 @@ body {
   margin-left: 18px;
 }
 
-.seat:not(.sold):hover {
+.seat:not(.occupied):hover {
   cursor: pointer;
   transform: scale(1.2);
 }
 
-.showcase .seat:not(.sold):hover {
+.showcase .seat:not(.occupied):hover {
   cursor: default;
   transform: scale(1);
 }
@@ -94,15 +94,26 @@ body {
 }
 
 .row {
-  display: flex;
+  margin-left: auto;
+  margin-right: auto;
 }
-
-
 
 p.text{
     margin: 5px 0;
 }
-
+p.casetext{
+  margin-left:2px;
+  font-size:15px;
+  color:rgb(255, 255, 255)
+}
 p.text span{
     color: rgb(158, 248, 158);
+} */
+
+.row{
+  display: flex;
+}
+
+.slot{
+  width: 100px;
 }
