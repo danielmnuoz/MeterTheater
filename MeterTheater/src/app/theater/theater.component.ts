@@ -26,7 +26,7 @@ export class TheaterComponent implements OnInit, OnChanges {
   }
 
   labs: Lab[] = [];
-  floor: number = 2;
+  selectedLab?: Lab;
 
   @Output() onSelectSocket = new EventEmitter<Socket>();
   @Output() onSelectMeter = new EventEmitter<Meter>();
@@ -45,6 +45,9 @@ export class TheaterComponent implements OnInit, OnChanges {
   getSocketInfos(): void {
     this.meterTheaterDBService.getLabs().subscribe(labs => {
       this.labs = labs;
+      if (this.labs && this.labs.length >= 1) {
+        this.selectedLab = this.labs[0];
+      }
     });
   }
 

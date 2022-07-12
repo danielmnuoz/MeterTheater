@@ -80,13 +80,13 @@
 
 
 <div class="theater">
-  <select placeholder="Floor" [(ngModel)]="floor" name="floor">
-    <option *ngFor="let lab of labs" [value]="lab.floor">
-      Floor: {{lab.floor}}
+  <select placeholder="Lab" [(ngModel)]="selectedLab">
+    <option *ngFor="let lab of labs" [ngValue]="lab">
+      {{lab.name}}
     </option>
   </select>
   <div *ngFor="let lab of labs">
-    <div *ngIf="lab.floor == floor">
+    <div *ngIf="selectedLab && lab.id == selectedLab.id">
       <div *ngFor="let table of lab.tables">
         <div class="row" *ngFor="let row of table.sockets">
           <app-theater-slot class="slot" *ngFor="let socket of row" [socket]="socket"

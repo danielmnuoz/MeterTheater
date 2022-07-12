@@ -8,8 +8,6 @@ import { ServerMeter } from './interfaces/serverMeter';
 import { ServerLocation } from './interfaces/serverLocation';
 import { ServerLab } from './interfaces/serverLab';
 import { ServerLog } from './interfaces/serverLog';
-// import { Location } from './interfaces/location';
-// import { Lab } from './interfaces/lab';
 import { Log } from './interfaces/log';
 import { ServerExtendedLab } from './interfaces/serverExtendedLab';
 import { ServerExtendedLocation } from './interfaces/serverExtendedLocation';
