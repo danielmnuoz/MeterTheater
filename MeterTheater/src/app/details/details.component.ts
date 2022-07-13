@@ -70,4 +70,13 @@ export class DetailsComponent implements OnInit, OnChanges {
     this.updateSocketUser(false);
   }
 
+  onSubmit() {
+    if(this.socket && this.socket.userId == undefined){
+      this.checkOut();
+    }
+    if(this.socket && this.socket.userId == this.loginUser.id){
+      this.checkIn();
+    }
+  }
+
 }

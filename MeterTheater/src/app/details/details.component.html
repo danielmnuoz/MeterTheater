@@ -1,27 +1,37 @@
 <div *ngIf="socket && socketUser">
-    Current Owner: {{socketUser.name}}
+  Current Owner: {{socketUser.name}}
 </div>
 <div *ngIf="socket; else noSocket">
-    Selected Socket Form: {{socket.form}}
+  Socket Form: {{socket.form}}
+  Socket Voltage: {{socket.voltage}}
 </div>
 <ng-template #noSocket>
-    <div>
-        Select a Socket
-    </div>
+  <div>
+    Select a Socket
+  </div>
 </ng-template>
 <div *ngIf="meter; else noMeter">
-    Meter Lan Id: {{meter.lanId}}
+  Meter Lan Id: {{meter.lanId}}
+  Meter Serial Number: {{meter.serialNumber}}
 </div>
 <ng-template #noMeter>
-    <div>
-        Socket Has No Meter
-    </div>
+  <div>
+    Socket Has No Meter
+  </div>
 </ng-template>
-<div *ngIf="socket">
-    <div *ngIf="socket.userId==loginUser.id">
-        <button class="btn btn-primary" (click)="checkIn()">Check-in</button>
+<!-- <form (ngSubmit)="onSubmit(); detailsForm.reset()" #detailsForm="ngForm">
+  <div class="form-group">
+    <div class="input-group mb-3">
+      <input type="text" placeholder="Socket Form" class="form-control" id="Socket Form" [(ngModel)]="username"
+        form="form" #form="ngModel" aria-label="Socket Form" aria-describedby="socket form input">
     </div>
-    <div *ngIf="socket.userId == undefined">
-        <button class="btn btn-primary" (click)="checkOut()">Checkout</button>
+    <div *ngIf="socket">
+      <div *ngIf="socket.userId==loginUser.id">
+        <button type="submit" class="btn btn-primary" [disabled]="!detailsForm.form.valid">Check-in</button>
+      </div>
+      <div *ngIf="socket.userId == undefined">
+        <button type="submit" class="btn btn-primary" [disabled]="!detailsForm.form.valid">Checkout</button>
+      </div>
     </div>
-</div>
+  </div>
+</form> -->

@@ -93,7 +93,7 @@ export class MeterTheaterDBService {
     }
     return labs;
   }
-  
+
   extendedLab2Lab(extendedLab: ExtendedLab): Lab {
     var ret: Lab = {
       id: extendedLab.id,
@@ -366,6 +366,15 @@ export class MeterTheaterDBService {
       .pipe(
         map(serverLogs => this.serverLogs2Logs(serverLogs)),
         catchError(this.handleError<Log[]>('getLogs', []))
+      );
+  }
+
+  /** GET matching last log from the server */
+  getLastLog(userId: number | undefined = undefined, socketId: number | undefined = undefined, meterId: number | undefined = undefined): Observable<Log> {
+    return this.http.get<ServerLog>(this.APIURL + this.LOGURL+`/last/?logUserId=${userId}&logSocketId=${socketId}&logMeterId=${meterId}`)
+      .pipe(
+        map(serverLog => this.serverLog2Log(serverLog)),
+        catchError(this.handleError<Log>('getLastLog'))
       );
   }
 
