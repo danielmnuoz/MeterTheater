@@ -32,9 +32,9 @@ export class TheaterSlotComponent implements OnInit, OnChanges {
     }
   }
 
-  selectSlot(socket?: Socket, meter?: Meter){
-    this.onSelectMeter.emit(meter);
-    this.onSelectSocket.emit(socket);
+  selectSlot(){
+    this.onSelectMeter.emit(this.meter);
+    this.onSelectSocket.emit(this.socket);
   }
 
 }

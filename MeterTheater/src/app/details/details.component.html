@@ -19,11 +19,11 @@
     Socket Has No Meter
   </div>
 </ng-template>
-<!-- <form (ngSubmit)="onSubmit(); detailsForm.reset()" #detailsForm="ngForm">
+<form (ngSubmit)="onSubmit(); detailsForm.reset()" #detailsForm="ngForm">
   <div class="form-group">
     <div class="input-group mb-3">
-      <input type="text" placeholder="Socket Form" class="form-control" id="Socket Form" [(ngModel)]="username"
-        form="form" #form="ngModel" aria-label="Socket Form" aria-describedby="socket form input">
+      <input type="text" placeholder="Meter Serial Number" class="form-control" [(ngModel)]="meterSerialNumber"
+        name="meterSerialNumber" #name="ngModel" aria-label="Meter Serial Number" aria-describedby="Meter Serial Number Input">
     </div>
     <div *ngIf="socket">
       <div *ngIf="socket.userId==loginUser.id">
@@ -34,4 +34,4 @@
       </div>
     </div>
   </div>
-</form> -->
+</form>

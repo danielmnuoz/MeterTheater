@@ -5,4 +5,7 @@ export interface ServerSocket{
     socketForm?: string;
     socketVoltage?: number;
     socketLocationId?: number;
+    socketCheckOutTime?: string;
+    socketCheckInTime?: string;
+    socketDuration?: number;
 }

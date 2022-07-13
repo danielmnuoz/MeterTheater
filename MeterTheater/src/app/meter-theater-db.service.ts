@@ -188,7 +188,10 @@ export class MeterTheaterDBService {
       userId: serverSocket.socketUserId,
       form: serverSocket.socketForm,
       voltage: serverSocket.socketVoltage,
-      locationId: serverSocket.socketLocationId
+      locationId: serverSocket.socketLocationId,
+      checkOutTime: serverSocket.socketCheckOutTime,
+      checkInTime: serverSocket.socketCheckInTime,
+      duration: serverSocket.socketDuration
     } as Socket
   }
 
@@ -199,7 +202,10 @@ export class MeterTheaterDBService {
       socketMeterId: socket.meterId,
       socketUserId: socket.userId,
       socketVoltage: socket.voltage,
-      socketLocationId: socket.locationId
+      socketLocationId: socket.locationId,
+      socketCheckInTime: socket.checkInTime,
+      socketCheckOutTime: socket.checkOutTime,
+      socketDuration: socket.duration
     } as ServerSocket
   }
 
@@ -394,6 +400,24 @@ export class MeterTheaterDBService {
         map(serverSockets => this.serverSockets2Sockets(serverSockets)),
         catchError(this.handleError<Socket[]>('getSockets', []))
       );
+  }
+
+  checkOutSocket(socket: Socket): Observable<any> {
+    var id = socket.id;
+    const url = `${this.APIURL + this.SOCKETURL}/${id}/?time=out`;
+    return this.http.put(url, this.socket2ServerSocket(socket), this.httpOptions).pipe(
+      tap(),
+      catchError(this.handleError<any>('updateSocket'))
+    );
+  }
+
+  checkInSocket(socket: Socket): Observable<any> {
+    var id = socket.id;
+    const url = `${this.APIURL + this.SOCKETURL}/${id}/?time=in`;
+    return this.http.put(url, this.socket2ServerSocket(socket), this.httpOptions).pipe(
+      tap(),
+      catchError(this.handleError<any>('updateSocket'))
+    );
   }
 
   /** PUT: update the socket on the server */

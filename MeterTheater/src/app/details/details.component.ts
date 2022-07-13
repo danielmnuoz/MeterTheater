@@ -22,14 +22,23 @@ export class DetailsComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.getUser().subscribe(socketUser => this.socketUser = socketUser);
+    this.setInputs();
   }
 
   socketUser: User = this.meterTheaterDBService.DEFAULT_USER;
   loginUser: User = this.meterTheaterDBService.loginUser;
+  meterSerialNumber?: number;
+  meterLanID?: string;
+
 
   @Input() socket?: Socket;
   @Input() meter?: Meter;
   @Output() onUpdateSocketUser = new EventEmitter<User>();
+
+  setInputs() {
+    this.meterSerialNumber = this.meter?.serialNumber;
+    this.meterLanID = this.meter?.lanId;
+  }
 
   getUser(): Observable<User> {
     if (this.socket && this.socket.userId) {
@@ -45,20 +54,38 @@ export class DetailsComponent implements OnInit, OnChanges {
       if (!this.meterTheaterDBService.loginCheck()) {
         return;
       }
+      console.log(this.socket);
       if (out) {
         this.socket.userId = this.meterTheaterDBService.loginUser.id;
         var description: string = "Checkout";
+        this.getUser().subscribe(socketUser => {
+          this.socketUser = socketUser;
+          if (this.socket) {
+            this.meterTheaterDBService.checkOutSocket(this.socket).subscribe(_ => {
+              this.onUpdateSocketUser.emit(this.socketUser);
+              if (this.socket?.id) {
+                this.meterTheaterDBService.getSocketById(this.socket.id).subscribe(socket => this.socket = socket);
+              }
+            });
+            this.meterTheaterDBService.addLog({ userId: this.meterTheaterDBService.loginUser.id, socketId: this.socket.id, meterId: this.socket.meterId, description: description } as Log).subscribe();
+          }
+        });
       } else {
         this.socket.userId = undefined;
         var description: string = "Check-in";
+        this.getUser().subscribe(socketUser => {
+          this.socketUser = socketUser;
+          if (this.socket) {
+            this.meterTheaterDBService.checkInSocket(this.socket).subscribe(_ => {
+              this.onUpdateSocketUser.emit(this.socketUser);
+              if (this.socket?.id) {
+                this.meterTheaterDBService.getSocketById(this.socket.id).subscribe(socket => this.socket = socket);
+              }
+            });
+            this.meterTheaterDBService.addLog({ userId: this.meterTheaterDBService.loginUser.id, socketId: this.socket.id, meterId: this.socket.meterId, description: description } as Log).subscribe();
+          }
+        });
       }
-      this.getUser().subscribe(socketUser => {
-        this.socketUser = socketUser;
-        if (this.socket) {
-          this.meterTheaterDBService.updateSocket(this.socket).subscribe();
-          this.meterTheaterDBService.addLog({ userId: this.meterTheaterDBService.loginUser.id, socketId: this.socket.id, meterId: this.socket.meterId, description: description } as Log).subscribe();
-        }
-      });
     }
   }
 
@@ -71,10 +98,10 @@ export class DetailsComponent implements OnInit, OnChanges {
   }
 
   onSubmit() {
-    if(this.socket && this.socket.userId == undefined){
+    if (this.socket && this.socket.userId == undefined) {
       this.checkOut();
     }
-    if(this.socket && this.socket.userId == this.loginUser.id){
+    else if (this.socket && this.socket.userId == this.loginUser.id) {
       this.checkIn();
     }
   }
