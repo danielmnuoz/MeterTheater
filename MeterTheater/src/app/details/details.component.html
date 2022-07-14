@@ -3,35 +3,36 @@
 </div>
 <div *ngIf="socket; else noSocket">
   Socket Form: {{socket.form}}
+  <br>
   Socket Voltage: {{socket.voltage}}
+  <form (ngSubmit)="onSubmit(); detailsForm.reset()" #detailsForm="ngForm">
+    <div class="form-group">
+      <mat-form-field>
+        <input matInput [disabled]="!out" placeholder="Meter Serial Number" class="form-control"
+          [(ngModel)]="meterSerialNumber" name="Meter Serial Number" aria-label="Meter Serial Number"
+          aria-describedby="Meter Serial Number Input">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput [disabled]="!out" placeholder="Meter LAN ID" class="form-control" [(ngModel)]="meterLanId"
+          name="Meter LAN ID" aria-label="Meter LAN ID" aria-describedby="Meter LAN ID Input">
+      </mat-form-field>
+      <mat-form-field matTooltip="The number of days until the socket will be automatically returned.">
+        <input matInput [disabled]="!out" placeholder="Socket Duration" class="form-control" [(ngModel)]="duration"
+          name="Socket Duration" aria-label="Socket Duration" aria-describedby="Socket Duration Input">
+      </mat-form-field>
+      <div *ngIf="socket">
+        <div *ngIf="!out">
+          <button type="submit" class="btn btn-primary">Check-in</button>
+        </div>
+        <div *ngIf="out">
+          <button type="submit" class="btn btn-primary">Checkout</button>
+        </div>
+      </div>
+    </div>
+  </form>
 </div>
 <ng-template #noSocket>
   <div>
     Select a Socket
   </div>
 </ng-template>
-<div *ngIf="meter; else noMeter">
-  Meter Lan Id: {{meter.lanId}}
-  Meter Serial Number: {{meter.serialNumber}}
-</div>
-<ng-template #noMeter>
-  <div>
-    Socket Has No Meter
-  </div>
-</ng-template>
-<form (ngSubmit)="onSubmit(); detailsForm.reset()" #detailsForm="ngForm">
-  <div class="form-group">
-    <div class="input-group mb-3">
-      <input type="text" placeholder="Meter Serial Number" class="form-control" [(ngModel)]="meterSerialNumber"
-        name="meterSerialNumber" #name="ngModel" aria-label="Meter Serial Number" aria-describedby="Meter Serial Number Input">
-    </div>
-    <div *ngIf="socket">
-      <div *ngIf="socket.userId==loginUser.id">
-        <button type="submit" class="btn btn-primary" [disabled]="!detailsForm.form.valid">Check-in</button>
-      </div>
-      <div *ngIf="socket.userId == undefined">
-        <button type="submit" class="btn btn-primary" [disabled]="!detailsForm.form.valid">Checkout</button>
-      </div>
-    </div>
-  </div>
-</form>

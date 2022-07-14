@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import { Observable, of } from 'rxjs';
 import { Meter } from '../interfaces/meter';
 import { Socket } from '../interfaces/socket';
 import { MeterTheaterDBService } from '../meter-theater-db.service';
@@ -17,24 +18,35 @@ export class TheaterSlotComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.getMeterById();
+    this.getMeterById().subscribe(meter => this.meter = meter);
   }
 
   meter?: Meter;
+  toggle: boolean = false;
 
   @Input() socket?: Socket;
   @Output() onSelectMeter = new EventEmitter<Meter>();
   @Output() onSelectSocket = new EventEmitter<Socket>();
+  @Output() onSelect = new EventEmitter<boolean>();
 
-  getMeterById() {
+  getMeterById(): Observable<Meter | undefined> {
     if (this.socket && this.socket.meterId) {
-      this.meterTheaterDBService.getMeterById(this.socket.meterId).subscribe(meter => this.meter = meter);
+      return this.meterTheaterDBService.getMeterById(this.socket.meterId);
+    } else {
+      return of(undefined);
     }
   }
 
-  selectSlot(){
-    this.onSelectMeter.emit(this.meter);
-    this.onSelectSocket.emit(this.socket);
+  selectSlot() {
+    this.getMeterById().subscribe(meter => {
+      this.meter = meter;
+      this.toggle = !this.toggle;
+      this.onSelect.emit(this.toggle);
+      this.onSelectMeter.emit(this.meter);
+      this.onSelectSocket.emit(this.socket);
+    });
   }
+
+
 
 }

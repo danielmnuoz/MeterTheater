@@ -26,6 +26,7 @@ export class HomeComponent implements OnInit {
   toggle: boolean = false;
   selectedSocket?: Socket;
   selectedMeter?: Meter;
+  detailsToggle: boolean = false;
 
   selectSocket(socket?: Socket) {
     this.selectedSocket = socket;
@@ -34,9 +35,13 @@ export class HomeComponent implements OnInit {
   selectMeter(meter?: Meter) {
     this.selectedMeter = meter;
   }
-  
+
   updateInfo(){
     this.toggle=!this.toggle;
+  }
+
+  updateDetails(){
+    this.detailsToggle = !this.detailsToggle;
   }
 
 }
