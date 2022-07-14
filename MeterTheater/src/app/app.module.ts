@@ -19,7 +19,9 @@ import { DetailsComponent } from './details/details.component';
 import { ProfileComponent } from './profile/profile.component';
 import { NavigationComponent } from './navigation/navigation.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {MatSelectModule} from '@angular/material/select';
+import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -39,6 +41,8 @@ import {MatSelectModule} from '@angular/material/select';
     HttpClientModule,
     FormsModule,
     MatSelectModule,
+    MatInputModule,
+    MatTooltipModule,
     BrowserAnimationsModule,
     // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
     // and returns simulated server responses.
