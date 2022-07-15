@@ -90,7 +90,7 @@
       {{table.name}}
       <div class="row" *ngFor="let row of table.sockets">
         <app-theater-slot class="slot" *ngFor="let socket of row" [socket]="socket"
-          (onSelectSocket)="selectSocket($event)" (onSelectMeter)="selectMeter($event)" (onSelect)="selectUpdate()">
+          (onSelectSocket)="selectSocket($event)" (onSelectMeter)="selectMeter($event)">
         </app-theater-slot>
       </div>
     </div>

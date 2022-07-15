@@ -59,7 +59,7 @@ export class MeterTheaterDBService {
     this.loginUser = this.DEFAULT_USER
   }
 
-  extendedLabs2Labs(extendedLabs: ExtendedLab []): Lab[]{
+  extendedLabs2Labs(extendedLabs: ExtendedLab[]): Lab[] {
     var labs: Lab[] = [];
     for (var extendedLab of extendedLabs) {
       labs.push(this.extendedLab2Lab(extendedLab))
@@ -75,7 +75,7 @@ export class MeterTheaterDBService {
     }
   }
 
-  extendedTables2Tables(extendedTables: ExtendedTable[]): Table[]{
+  extendedTables2Tables(extendedTables: ExtendedTable[]): Table[] {
     var tables: Table[] = [];
     for (var extendedTable of extendedTables) {
       tables.push(this.extendedTable2Table(extendedTable))
@@ -243,8 +243,8 @@ export class MeterTheaterDBService {
     return extendedTables;
   }
 
-  serverExtendedTable2ExtendedTable(serverExtendedTable: ServerExtendedTable): ExtendedTable{
-    return{
+  serverExtendedTable2ExtendedTable(serverExtendedTable: ServerExtendedTable): ExtendedTable {
+    return {
       id: serverExtendedTable.tableId,
       name: serverExtendedTable.tableName,
       labId: serverExtendedTable.tableLabId,
@@ -307,7 +307,7 @@ export class MeterTheaterDBService {
 
   /** GET matching last log from the server */
   getLastLog(userId: number | undefined = undefined, socketId: number | undefined = undefined, meterId: number | undefined = undefined): Observable<Log> {
-    return this.http.get<ServerLog>(this.APIURL + this.LOGURL+`/last/?logUserId=${userId}&logSocketId=${socketId}&logMeterId=${meterId}`)
+    return this.http.get<ServerLog>(this.APIURL + this.LOGURL + `/last/?logUserId=${userId}&logSocketId=${socketId}&logMeterId=${meterId}`)
       .pipe(
         map(serverLog => this.serverLog2Log(serverLog)),
         catchError(this.handleError<Log>('getLastLog'))
@@ -400,6 +400,14 @@ export class MeterTheaterDBService {
         map(serverSockets => this.serverSockets2Sockets(serverSockets)),
         catchError(this.handleError<Socket[]>('getSockets', []))
       );
+  }
+
+  getUserSockets(userId: number): Observable<Socket[]> {
+    const url = `${this.APIURL + this.SOCKETURL}/?socketUserID=${userId}`;
+    return this.http.get<ServerSocket[]>(url).pipe(
+      map(serverSockets => this.serverSockets2Sockets(serverSockets)),
+      catchError(this.handleError<Socket[]>('getUserSockets', []))
+    );
   }
 
   checkOutSocket(socket: Socket): Observable<any> {

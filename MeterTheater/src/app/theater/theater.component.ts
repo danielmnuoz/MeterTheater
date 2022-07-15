@@ -28,8 +28,6 @@ export class TheaterComponent implements OnInit, OnChanges {
   labs: Lab[] = [];
   selectedLab?: Lab;
 
-  toggle: boolean = false;
-
   @Output() onSelectSocket = new EventEmitter<Socket>();
   @Output() onSelectMeter = new EventEmitter<Meter>();
   @Output() onSelect = new EventEmitter<boolean>();
@@ -52,11 +50,6 @@ export class TheaterComponent implements OnInit, OnChanges {
         this.selectedLab = this.labs[0];
       }
     });
-  }
-
-  selectUpdate(): void{
-    this.toggle = !this.toggle;
-    this.onSelect.emit(this.toggle);
   }
 
 }
