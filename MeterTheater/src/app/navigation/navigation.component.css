@@ -1,14 +1,13 @@
-.navbar{
+.bar{
     overflow: hidden;
     border-bottom-style: solid;
     border-bottom-color: #7ab800 ;
     background-color: #f3f4f4;
-    position: fixed;
+    /* position: fixed; */
     top: 0;
     width: 100%;
-    height: 9vh;
 }
-.navbar a{
+.bar a{
     float:left;
     display: block;
     color: #636466;
@@ -17,7 +16,7 @@
     padding: 14px 16px;
     font-size: 17px;
 }
- .navbar a:hover{
+ .bar a:hover{
     color: #7ab800;
     transform: scale(1.1);
 } 
