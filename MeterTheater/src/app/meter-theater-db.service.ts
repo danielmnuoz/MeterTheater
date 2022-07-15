@@ -459,7 +459,15 @@ export class MeterTheaterDBService {
   searchMetersByUser(userId: number): Observable<Meter[]> {
     return this.http.get<ServerMeter[]>(`${this.APIURL + this.METERURL}/?meterUserId=${userId}`).pipe(
       map(serverMeters => this.serverMeters2Meters(serverMeters)),
-      catchError(this.handleError<Meter[]>('searchMeters', []))
+      catchError(this.handleError<Meter[]>('searchMetersByUser', []))
+    );
+  }
+
+  /* GET meters whose name contains search term */
+  searchMetersByLanId(lanId: string): Observable<Meter[]> {
+    return this.http.get<ServerMeter[]>(`${this.APIURL + this.METERURL}/?meterLanId=${lanId}`).pipe(
+      map(serverMeters => this.serverMeters2Meters(serverMeters)),
+      catchError(this.handleError<Meter[]>('searchMetersByLanId', []))
     );
   }
 

@@ -8,18 +8,14 @@
   <form (ngSubmit)="onSubmit()" #detailsForm="ngForm">
     <div class="form-group">
       <mat-form-field>
-        <input matInput type="number" [disabled]="!out" placeholder="Meter Serial Number" class="form-control"
-          [(ngModel)]="meterSerialNumber" name="Meter Serial Number" aria-label="Meter Serial Number"
-          aria-describedby="Meter Serial Number Input">
+        <input matInput type="text" [disabled]="out == false || out == undefined" placeholder="Meter LAN ID"
+          class="form-control" [(ngModel)]="meterLanId" name="Meter LAN ID" aria-label="Meter LAN ID"
+          aria-describedby="Meter LAN ID Input">
       </mat-form-field>
       <mat-form-field>
-        <input matInput type="text" [disabled]="!out" placeholder="Meter LAN ID" class="form-control"
-          [(ngModel)]="meterLanId" name="Meter LAN ID" aria-label="Meter LAN ID" aria-describedby="Meter LAN ID Input">
-      </mat-form-field>
-      <mat-form-field>
-        <input matTooltip="Days until Check-in" matInput type="number" [disabled]="!out" placeholder="Socket Duration"
-          class="form-control" [(ngModel)]="duration" name="Socket Duration" aria-label="Socket Duration"
-          aria-describedby="Socket Duration Input">
+        <input matTooltip="Days until Check-in" matInput type="number" [disabled]="out == false || out == undefined"
+          placeholder="Socket Duration (days)" class="form-control" [(ngModel)]="duration" name="Socket Duration"
+          aria-label="Socket Duration" aria-describedby="Socket Duration Input">
       </mat-form-field>
       <div *ngIf="errorTexts.length != 0">
         <div *ngFor="let errorText of errorTexts">
@@ -27,7 +23,7 @@
         </div>
       </div>
       <div *ngIf="socket">
-        <div *ngIf="!out">
+        <div *ngIf="out == false">
           <button type="submit" class="btn btn-primary">Check-in</button>
         </div>
         <div *ngIf="out">
