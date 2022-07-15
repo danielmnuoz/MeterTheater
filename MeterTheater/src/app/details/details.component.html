@@ -5,21 +5,27 @@
   Socket Form: {{socket.form}}
   <br>
   Socket Voltage: {{socket.voltage}}
-  <form (ngSubmit)="onSubmit(); detailsForm.reset()" #detailsForm="ngForm">
+  <form (ngSubmit)="onSubmit()" #detailsForm="ngForm">
     <div class="form-group">
       <mat-form-field>
-        <input matInput [disabled]="!out" placeholder="Meter Serial Number" class="form-control"
+        <input matInput type="number" [disabled]="!out" placeholder="Meter Serial Number" class="form-control"
           [(ngModel)]="meterSerialNumber" name="Meter Serial Number" aria-label="Meter Serial Number"
           aria-describedby="Meter Serial Number Input">
       </mat-form-field>
       <mat-form-field>
-        <input matInput [disabled]="!out" placeholder="Meter LAN ID" class="form-control" [(ngModel)]="meterLanId"
-          name="Meter LAN ID" aria-label="Meter LAN ID" aria-describedby="Meter LAN ID Input">
+        <input matInput type="text" [disabled]="!out" placeholder="Meter LAN ID" class="form-control"
+          [(ngModel)]="meterLanId" name="Meter LAN ID" aria-label="Meter LAN ID" aria-describedby="Meter LAN ID Input">
       </mat-form-field>
-      <mat-form-field matTooltip="The number of days until the socket will be automatically returned.">
-        <input matInput [disabled]="!out" placeholder="Socket Duration" class="form-control" [(ngModel)]="duration"
-          name="Socket Duration" aria-label="Socket Duration" aria-describedby="Socket Duration Input">
+      <mat-form-field>
+        <input matTooltip="Days until Check-in" matInput type="number" [disabled]="!out" placeholder="Socket Duration"
+          class="form-control" [(ngModel)]="duration" name="Socket Duration" aria-label="Socket Duration"
+          aria-describedby="Socket Duration Input">
       </mat-form-field>
+      <div *ngIf="errorTexts.length != 0">
+        <div *ngFor="let errorText of errorTexts">
+          {{errorText}}
+        </div>
+      </div>
       <div *ngIf="socket">
         <div *ngIf="!out">
           <button type="submit" class="btn btn-primary">Check-in</button>

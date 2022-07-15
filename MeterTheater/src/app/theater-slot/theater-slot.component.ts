@@ -22,12 +22,10 @@ export class TheaterSlotComponent implements OnInit, OnChanges {
   }
 
   meter?: Meter;
-  toggle: boolean = false;
 
   @Input() socket?: Socket;
   @Output() onSelectMeter = new EventEmitter<Meter>();
   @Output() onSelectSocket = new EventEmitter<Socket>();
-  @Output() onSelect = new EventEmitter<boolean>();
 
   getMeterById(): Observable<Meter | undefined> {
     if (this.socket && this.socket.meterId) {
@@ -38,15 +36,8 @@ export class TheaterSlotComponent implements OnInit, OnChanges {
   }
 
   selectSlot() {
-    this.getMeterById().subscribe(meter => {
-      this.meter = meter;
-      this.toggle = !this.toggle;
-      this.onSelect.emit(this.toggle);
-      this.onSelectMeter.emit(this.meter);
-      this.onSelectSocket.emit(this.socket);
-    });
+    this.onSelectSocket.emit(this.socket);
+    this.onSelectMeter.emit(this.meter);
   }
-
-
 
 }

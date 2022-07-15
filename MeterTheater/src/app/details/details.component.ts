@@ -33,30 +33,33 @@ export class DetailsComponent implements OnInit, OnChanges {
   meterSerialNumber?: number;
   meterLanId?: string;
   duration?: number;
+  errorTexts: string[] = [];
 
-  @Input() refreshToggle: boolean = false;
   @Input() socket?: Socket;
   @Input() meter?: Meter;
   @Output() onUpdate = new EventEmitter<boolean>();
 
-  setInits() {
-    if(this.socket != undefined){
-      this.duration = this.socket.duration;
-    }else{
-      this.duration = undefined;
-    }
-    if(this.meter != undefined){
-      this.meterSerialNumber = this.meter.serialNumber;
-      this.meterLanId = this.meter.lanId;
-    }else{
-      this.meterSerialNumber = undefined;
-      this.meterLanId = undefined;
+  setInits(skipForm: boolean = false) {
+    if (!skipForm) {
+      if (this.socket != undefined) {
+        this.duration = this.socket.duration;
+      } else {
+        this.duration = undefined;
+      }
+      if (this.meter != undefined) {
+        this.meterSerialNumber = this.meter.serialNumber;
+        this.meterLanId = this.meter.lanId;
+      } else {
+        this.meterSerialNumber = undefined;
+        this.meterLanId = undefined;
+      }
     }
     if (this.socket?.userId == this.loginUser.id) {
       this.out = false;
     } else {
       this.out = true;
     }
+    this.errorTexts = [];
   }
 
   getUser(): Observable<User> {
@@ -67,21 +70,24 @@ export class DetailsComponent implements OnInit, OnChanges {
     }
   }
 
-  checkOut() {
+  checkOut(duration: number | undefined, meterSerialNumber: number | undefined, meterLanId: string | undefined) {
     if (this.socket) {
       this.socket.userId = this.meterTheaterDBService.loginUser.id;
-      this.socket.duration = this.duration;
+      if (duration == undefined) {
+        this.socket.duration = 7;
+      } else {
+        this.socket.duration = duration;
+      }
       var description: string = "Checkout";
       this.socketUser = this.meterTheaterDBService.loginUser;
-      this.meterTheaterDBService.addMeter({ userId: this.meterTheaterDBService.loginUser.id, lanId: this.meterLanId, serialNumber: this.meterSerialNumber } as Meter).subscribe(meter => {
-        this.meter = meter;
+      this.meterTheaterDBService.addMeter({ userId: this.meterTheaterDBService.loginUser.id, lanId: meterLanId, serialNumber: meterSerialNumber } as Meter).subscribe(meter => {
         if (this.socket) {
-          this.socket.meterId = this.meter.id;
+          this.socket.meterId = meter.id;
           this.meterTheaterDBService.checkOutSocket(this.socket).subscribe(_ => {
             if (this.socket?.id) {
               this.meterTheaterDBService.getSocketById(this.socket.id).subscribe(socket => {
                 this.socket = socket;
-                this.setInits();
+                this.setInits(true);
                 this.toggleUpdate();
               });
             }
@@ -97,6 +103,7 @@ export class DetailsComponent implements OnInit, OnChanges {
       this.socket.userId = undefined;
       this.socket.duration = undefined;
       this.socket.meterId = undefined;
+      this.meter = undefined;
       var description: string = "Check-in";
       this.socketUser = this.meterTheaterDBService.DEFAULT_USER;
       if (this.socket) {
@@ -104,7 +111,6 @@ export class DetailsComponent implements OnInit, OnChanges {
           if (this.socket?.id) {
             this.meterTheaterDBService.getSocketById(this.socket.id).subscribe(socket => {
               this.socket = socket;
-              this.meter = undefined;
               this.setInits();
               this.toggleUpdate();
             });
@@ -116,20 +122,38 @@ export class DetailsComponent implements OnInit, OnChanges {
   }
 
   onSubmit() {
+    this.errorTexts = [];
     if (!this.meterTheaterDBService.loginCheck()) {
+      this.errorTexts.push("Invalid Login");
       return;
     }
-    if (this.out == true) {
-      this.checkOut();
-    }
-    else if (this.out == false) {
+    if (this.out == false) {
       this.checkIn();
+    }
+    var duration = this.duration;
+    var meterSerialNumber = this.meterSerialNumber;
+    var meterLanId = this.meterLanId;
+    if (this.meterTheaterDBService.loginUser.id != undefined) {
+      this.meterTheaterDBService.getUserSockets(this.meterTheaterDBService.loginUser.id).subscribe(sockets => {
+        if (sockets.length >= 5) {
+          this.errorTexts.push("5 or more sockets are already owned.")
+        }
+        if (duration && (duration <= 0 || duration > 14)) {
+          this.errorTexts.push("Duration must be between 1 and 14 days.");
+        }
+        if (this.errorTexts.length != 0) {
+          return;
+        }
+        if (this.out == true) {
+          this.checkOut(duration, meterSerialNumber, meterLanId);
+        }
+      })
+    } else {
+      this.errorTexts.push("Invalid Login");
     }
   }
 
   toggleUpdate() {
-    this.setInits();
-    this.toggle = !this.toggle;
     this.onUpdate.emit(this.toggle);
   }
 
