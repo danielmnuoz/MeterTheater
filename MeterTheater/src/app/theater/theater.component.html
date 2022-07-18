@@ -80,14 +80,12 @@
 
 
 <div class="theater">
-  <mat-label>Pick a Floor: </mat-label>
-  <mat-form-field>
-    <mat-select placeholder="Lab" (change)="setSelectedTable()" [(ngModel)]="selectedLab">
-      <mat-option *ngFor="let lab of labs" [value]="lab">
-        {{lab.name}}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+  <label>Pick a Lab: </label>
+  <select placeholder="Lab" (change)="setSelectedTable()" [(ngModel)]="selectedLab">
+    <option *ngFor="let lab of labs" [ngValue]="lab">
+      {{lab.name}}
+    </option>
+  </select>
   <div *ngIf="selectedLab">
     <label>Pick a Wall:</label>
     <mat-button-toggle-group name="table" aria-label="wall choice" [(ngModel)]="selectedTable">
