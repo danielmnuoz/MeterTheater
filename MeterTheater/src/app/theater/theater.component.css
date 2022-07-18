@@ -126,13 +126,14 @@ p.text span{
 }
 .socket{
   background-color: #7ab800;
-  height: 32px;
-  width: 29px;
+  height: 4vh;
+  width: 4vh;
   margin: 5px;
   border-radius:10px;
 }
 .casetext{
   font-weight: bold;
+  font-size: 1vw;
 }
 .socket.owned{
   background-color: #33647f;
