@@ -24,6 +24,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import {MatChipsModule} from '@angular/material/chips';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
     MatInputModule,
     MatTooltipModule,
     MatButtonToggleModule,
+    MatChipsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
     // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
