@@ -2,3 +2,13 @@
   border-width: 2px;
   border-style: solid;
 }
+.socketbutton{
+  background-color: #7ab800;
+  height: 82px;
+  width: 69px;
+  margin: 5px;
+  border-radius:10px;
+}
+.socket{
+  font-size:large;
+}

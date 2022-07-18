@@ -80,11 +80,26 @@
 
 
 <div class="theater">
+  <label>Pick a Floor: </label> 
   <select placeholder="Lab" [(ngModel)]="selectedLab">
     <option *ngFor="let lab of labs" [ngValue]="lab">
       {{lab.name}}
     </option>
   </select>
+  <div class="key">
+    <li>
+      <div class="socket"></div>
+      <p class ="casetext">Available</p>
+    </li>
+    <li>
+      <div class="socket occupied"></div>
+      <p class="casetext">Occupied</p>
+    </li>
+    <li>
+      <div class="socket owned"></div>
+      <p class="casetext">Owned</p>
+    </li>
+  </div>
   <div *ngIf="selectedLab">
     <div *ngFor="let table of selectedLab.tables">
       {{table.name}}
