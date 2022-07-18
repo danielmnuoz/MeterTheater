@@ -17,11 +17,11 @@
           placeholder="Socket Duration (days)" class="form-control" [(ngModel)]="duration" name="Socket Duration"
           aria-label="Socket Duration" aria-describedby="Socket Duration Input">
       </mat-form-field>
-      <div *ngIf="errorTexts.length != 0">
+      <mat-error *ngIf="errorTexts.length != 0">
         <div *ngFor="let errorText of errorTexts">
           {{errorText}}
         </div>
-      </div>
+      </mat-error>
       <div *ngIf="socket">
         <div *ngIf="out == false">
           <button type="submit" class="btn btn-primary">Check-in</button>
