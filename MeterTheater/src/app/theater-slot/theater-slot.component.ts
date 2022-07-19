@@ -14,14 +14,16 @@ export class TheaterSlotComponent implements OnInit, OnChanges {
   constructor(private meterTheaterDBService: MeterTheaterDBService) { }
 
   ngOnInit(): void {
-
+    this.loginUserId = this.meterTheaterDBService.loginUser.id;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     this.getMeterById().subscribe(meter => this.meter = meter);
+    this.loginUserId = this.meterTheaterDBService.loginUser.id;
   }
 
   meter?: Meter;
+  loginUserId?: number;
 
   @Input() socket?: Socket;
   @Output() onSelectMeter = new EventEmitter<Meter>();

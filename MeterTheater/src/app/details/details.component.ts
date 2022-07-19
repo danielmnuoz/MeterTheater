@@ -5,6 +5,7 @@ import { User } from '../interfaces/user';
 import { MeterTheaterDBService } from '../meter-theater-db.service';
 import { Observable, of } from 'rxjs';
 import { Log } from '../interfaces/log';
+import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-details',
@@ -14,7 +15,8 @@ import { Log } from '../interfaces/log';
 export class DetailsComponent implements OnInit, OnChanges {
 
   constructor(
-    private meterTheaterDBService: MeterTheaterDBService
+    private meterTheaterDBService: MeterTheaterDBService,
+    private fb: FormBuilder
   ) { }
 
   ngOnInit(): void {
@@ -30,27 +32,18 @@ export class DetailsComponent implements OnInit, OnChanges {
   out?: boolean;
   socketUser: User = this.meterTheaterDBService.DEFAULT_USER;
   loginUser: User = this.meterTheaterDBService.loginUser;
-  meterLanId?: string;
-  duration?: number;
-  errorTexts: string[] = [];
+  countError: boolean = false;
 
   @Input() socket?: Socket;
   @Input() meter?: Meter;
   @Output() onUpdate = new EventEmitter<boolean>();
 
+  detailsForm = this.fb.group({
+    meterLanId: [this.meter?.lanId, [Validators.pattern("[a-zA-Z0-9]*"), Validators.minLength(8), Validators.maxLength(8)]],
+    duration: [this.socket?.duration, [Validators.pattern("[1-9][0-9]*"), Validators.min(1), Validators.max(14), Validators.required]]
+  });
+
   setInits(skipForm: boolean = false) {
-    if (!skipForm) {
-      if (this.socket != undefined) {
-        this.duration = this.socket.duration;
-      } else {
-        this.duration = undefined;
-      }
-      if (this.meter != undefined) {
-        this.meterLanId = this.meter.lanId;
-      } else {
-        this.meterLanId = undefined;
-      }
-    }
     if (this.socket?.userId == this.loginUser.id) {
       this.out = false;
     } else if (this.socket?.userId == undefined) {
@@ -58,7 +51,25 @@ export class DetailsComponent implements OnInit, OnChanges {
     } else {
       this.out = undefined;
     }
-    this.errorTexts = [];
+    if (this.out != true) {
+      this.detailsForm.get('duration')?.disable()
+      this.detailsForm.get('meterLanId')?.disable()
+    } else {
+      this.detailsForm.get('duration')?.enable()
+      this.detailsForm.get('meterLanId')?.enable()
+    }
+    if (!skipForm) {
+      if (this.socket != undefined) {
+        this.detailsForm.get('duration')?.setValue(this.socket.duration);
+      } else {
+        this.detailsForm.get('duration')?.setValue(undefined);
+      }
+      if (this.meter != undefined) {
+        this.detailsForm.get('meterLanId')?.setValue(this.meter.lanId);
+      } else {
+        this.detailsForm.get('meterLanId')?.setValue(undefined);
+      }
+    }
   }
 
   getUser(): Observable<User> {
@@ -72,11 +83,7 @@ export class DetailsComponent implements OnInit, OnChanges {
   checkOut(duration: number | undefined, meterLanId: string | undefined) {
     if (this.socket) {
       this.socket.userId = this.meterTheaterDBService.loginUser.id;
-      if (duration == undefined) {
-        this.socket.duration = 7;
-      } else {
-        this.socket.duration = duration;
-      }
+      this.socket.duration = duration;
       this.socketUser = this.meterTheaterDBService.loginUser;
       if (meterLanId != undefined) {
         this.meterTheaterDBService.searchMetersByLanId(meterLanId).subscribe(meters => {
@@ -164,33 +171,26 @@ export class DetailsComponent implements OnInit, OnChanges {
   }
 
   onSubmit() {
-    this.errorTexts = [];
     if (!this.meterTheaterDBService.loginCheck()) {
-      this.errorTexts.push("Invalid Login");
       return;
     }
     if (this.out == false) {
       this.checkIn();
     }
-    var duration = this.duration;
-    var meterLanId = this.meterLanId;
+    var duration: number | undefined = this.detailsForm.get('duration')?.value?.valueOf();
+    var meterLanId = this.detailsForm.get('meterLanId')?.value?.toString();
     if (this.meterTheaterDBService.loginUser.id != undefined) {
       this.meterTheaterDBService.getUserSockets(this.meterTheaterDBService.loginUser.id).subscribe(sockets => {
         if (sockets.length >= 5) {
-          this.errorTexts.push("5 or more sockets are already owned.")
-        }
-        if (duration && (duration <= 0 || duration > 14)) {
-          this.errorTexts.push("Duration must be between 1 and 14 days.");
-        }
-        if (this.errorTexts.length != 0) {
+          this.countError = true;
           return;
+        } else {
+          this.countError = false;
         }
         if (this.out == true) {
           this.checkOut(duration, meterLanId);
         }
       })
-    } else {
-      this.errorTexts.push("Invalid Login");
     }
   }
 

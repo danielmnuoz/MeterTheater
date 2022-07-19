@@ -81,14 +81,15 @@
 
 <div class="theater">
   <mat-label>Pick a Lab: </mat-label>
-  <mat-button-toggle-group placeholder="Lab" (change)="setSelectedTable()" [(ngModel)]="selectedLab">
+  <mat-button-toggle-group appearance="legacy" placeholder="Lab" (change)="setSelectedTable()"
+    [(ngModel)]="selectedLab">
     <mat-button-toggle *ngFor="let lab of labs" [value]="lab">
       {{lab.name}}
     </mat-button-toggle>
   </mat-button-toggle-group>
   <div *ngIf="selectedLab">
-    <mat-label>Pick a Wall:</mat-label>
-    <mat-button-toggle-group name="table" aria-label="wall choice" [(ngModel)]="selectedTable">
+    <mat-label>Pick a Wall: </mat-label>
+    <mat-button-toggle-group appearance="legacy" name="table" aria-label="wall choice" [(ngModel)]="selectedTable">
       <mat-button-toggle *ngFor="let table of selectedLab.tables" [value]="table">{{table.name}}</mat-button-toggle>
     </mat-button-toggle-group>
   </div>
