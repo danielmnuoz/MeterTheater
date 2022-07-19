@@ -4,11 +4,21 @@
 }
 .socketbutton{
   background-color: #7ab800;
-  height: 82px;
-  width: 69px;
+  height: 80px;
+  width: 70px;
   margin: 5px;
-  border-radius:10px;
+  border-radius:15px;
+  font-size:15px;
+  text-align: center;
+  padding: 20px;
 }
-.socket{
-  font-size:large;
+.socketbutton.owned{
+  background-color: #33647f;
+}
+.socketbutton.occupied{
+  background-color: #636466;
+}
+.socketbutton:not(.occupied):hover{
+  transform: scale(1.2);
+  cursor: grab;
 }

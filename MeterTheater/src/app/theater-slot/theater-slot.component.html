@@ -1,7 +1,19 @@
-<div class="socketbutton" (click)="selectSlot()">
-    <div class="socket" *ngIf="socket">
-        {{socket.form}}
-        <br>
-        {{socket.voltage}}
+<div (click)="selectSlot()">
+    <div *ngIf="socket != undefined">
+        <div class ="socketbutton" *ngIf="socket.userId == undefined">
+            {{socket.form}}
+            <br>
+            {{socket.voltage}}
+        </div>
+        <div class="socketbutton owned" *ngIf="socket.userId == loginUserId">
+            {{socket.form}}
+            <br>
+            {{socket.voltage}}
+        </div>
+        <div class="socketbutton occupied" *ngIf="socket.userId != undefined && socket.userId != loginUserId">
+            {{socket.form}}
+            <br>
+            {{socket.voltage}}
+        </div>
     </div>
 </div>
