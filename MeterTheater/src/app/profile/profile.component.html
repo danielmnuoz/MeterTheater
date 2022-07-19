@@ -1,20 +1,19 @@
 <app-navigation></app-navigation>
 <div class="user">
-    {{user.name}}
+  {{user.name}}
 </div>
 <div id="search-component">
-    Owned Socket Information
-    <ul class="search-result">
-        <li *ngFor="let socket of sockets">
-            Socket Form: {{socket.form}}
-            Socket Voltage: {{socket.voltage}}
-        </li>
-    </ul>
-    Owned Meter Information
-    <ul class="search-result">
-        <li *ngFor="let meter of meters">
-            Meter Lan Id: {{meter.lanId}}
-            Meter Serial Number: {{meter.serialNumber}}
-        </li>
-    </ul>
+  Owned Socket Information
+  <ul class="search-result">
+    <li *ngFor="let socket of sockets">
+      Socket Form: {{socket.form}}
+      Socket Voltage: {{socket.voltage}}
+    </li>
+  </ul>
+  Owned Meter Information
+  <ul class="search-result">
+    <li *ngFor="let meter of meters">
+      Meter Lan Id: {{meter.lanId}}
+    </li>
+  </ul>
 </div>

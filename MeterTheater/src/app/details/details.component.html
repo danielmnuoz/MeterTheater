@@ -27,7 +27,7 @@
     <div class="verticalPadding"></div>
     <div *ngIf="socket">
       <div *ngIf="out == false">
-        <button [disabled]="!detailsForm.valid" type="submit" class="btn btn-primary">Check-in</button>
+        <button type="submit" class="btn btn-primary">Check-in</button>
       </div>
       <div *ngIf="out == true">
         <button [disabled]="!detailsForm.valid" type="submit" class="btn btn-primary">Checkout</button>

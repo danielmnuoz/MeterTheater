@@ -39,11 +39,12 @@ export class DetailsComponent implements OnInit, OnChanges {
   @Output() onUpdate = new EventEmitter<boolean>();
 
   detailsForm = this.fb.group({
-    meterLanId: [this.meter?.lanId, [Validators.pattern("[a-zA-Z0-9]*"), Validators.minLength(8), Validators.maxLength(8)]],
+    meterLanId: [this.meter?.lanId, [Validators.pattern("[a-fA-F0-9]*"), Validators.minLength(8), Validators.maxLength(8)]],
     duration: [this.socket?.duration, [Validators.pattern("[1-9][0-9]*"), Validators.min(1), Validators.max(14), Validators.required]]
   });
 
   setInits(skipForm: boolean = false) {
+    this.countError = false;
     if (this.socket?.userId == this.loginUser.id) {
       this.out = false;
     } else if (this.socket?.userId == undefined) {
