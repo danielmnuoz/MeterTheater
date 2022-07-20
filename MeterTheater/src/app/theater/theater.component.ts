@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, OnChanges, SimpleChange, SimpleChanges } from '@angular/core';
 import { Meter } from '../interfaces/meter';
 import { Socket } from '../interfaces/socket'
+import { LocSocket } from '../interfaces/locSocket';
 import { MeterTheaterDBService } from '../meter-theater-db.service';
 import { Lab } from '../interfaces/lab';
 import { Table } from '../interfaces/table';
@@ -29,13 +30,13 @@ export class TheaterComponent implements OnInit, OnChanges {
   selectedLab?: Lab;
   selectedTable?: Table;
 
-  @Output() onSelectSocket = new EventEmitter<Socket>();
+  @Output() onSelectSocket = new EventEmitter<LocSocket>();
   @Output() onSelectMeter = new EventEmitter<Meter>();
   @Output() onSelect = new EventEmitter<boolean>();
   // needs to match other toggle initials (false)
   @Input() refreshToggle: boolean = false;
 
-  selectSocket(socket: Socket) {
+  selectSocket(socket: LocSocket) {
     this.onSelectSocket.emit(socket)
   }
 
@@ -53,7 +54,6 @@ export class TheaterComponent implements OnInit, OnChanges {
     }
   }
 
-  // TODO - sort extendedLabs? and other stuff
   getSocketInfos(): void {
     this.meterTheaterDBService.getLabs().subscribe(labs => {
       this.labs = labs;

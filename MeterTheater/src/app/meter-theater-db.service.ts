@@ -15,6 +15,7 @@ import { ServerExtendedTable } from './interfaces/serverExtendedTable';
 import { ExtendedTable } from './interfaces/extendedTable';
 import { Lab } from './interfaces/lab';
 import { Table } from './interfaces/table';
+import { LocSocket } from './interfaces/locSocket';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
@@ -59,6 +60,20 @@ export class MeterTheaterDBService {
     this.loginUser = this.DEFAULT_USER
   }
 
+  // TODO
+  coords2string(row: number | undefined, col: number | undefined): string {
+    var ret: string = '';
+    if (row == undefined || col == undefined) {
+      return ret
+    }
+    if (row <= 26) {
+      ret = String.fromCharCode(65 + ((row - 1)));
+    } else {
+      ret = row.toString() + '_'
+    }
+    return ret + col
+  }
+
   extendedLabs2Labs(extendedLabs: ExtendedLab[]): Lab[] {
     var labs: Lab[] = [];
     for (var extendedLab of extendedLabs) {
@@ -71,19 +86,20 @@ export class MeterTheaterDBService {
     return {
       id: extendedLab.id,
       name: extendedLab.name,
-      tables: extendedLab.tables ? this.extendedTables2Tables(extendedLab.tables) : undefined
+      tables: extendedLab.tables ? this.extendedTables2Tables(extendedLab.tables, extendedLab.name) : undefined
     }
   }
 
-  extendedTables2Tables(extendedTables: ExtendedTable[]): Table[] {
+  extendedTables2Tables(extendedTables: ExtendedTable[], labName: string | undefined): Table[] {
     var tables: Table[] = [];
     for (var extendedTable of extendedTables) {
-      tables.push(this.extendedTable2Table(extendedTable))
+      tables.push(this.extendedTable2Table(extendedTable, labName))
     }
     return tables;
   }
 
-  extendedTable2Table(extendedTable: ExtendedTable): Table {
+  // TODO
+  extendedTable2Table(extendedTable: ExtendedTable, labName: string | undefined): Table {
     var ret: Table = {
       id: extendedTable.id,
       name: extendedTable.name,
@@ -103,18 +119,53 @@ export class MeterTheaterDBService {
       }
       return 0
     });
-    var row: Socket[] = [];
-    var sockets: Socket[][] = [];
+    var row: (LocSocket | undefined)[] = [];
+    var sockets: (LocSocket | undefined)[][] = [];
+    var prevLoc: ExtendedLocation | undefined = undefined;
     for (var loc of locs) {
+      if ((loc.row != undefined && loc.col != undefined) && (prevLoc == undefined || ((prevLoc != undefined && prevLoc.row != undefined && prevLoc.col != undefined) && (loc.row > prevLoc.row + 1 || loc.col > prevLoc.col + 1 || (loc.col < prevLoc.col && loc.col != 1))))) {
+        var i: number;
+        if (prevLoc != undefined && prevLoc.row != undefined && (loc.row > prevLoc.row + 1)) {
+          i = prevLoc.row + 1;
+          sockets.push(row);
+          row = [];
+        } else if (prevLoc == undefined) {
+          i = 1;
+        } else {
+          i = loc.row;
+        }
+        for (; i < loc.row; i++) {
+          sockets.push([]);
+        }
+        if (prevLoc != undefined && prevLoc.col != undefined && prevLoc.row != undefined) {
+          if (loc.col > prevLoc.col + 1 && loc.row == prevLoc.row) {
+            i = prevLoc.col + 1;
+          } else if (loc.row > prevLoc.row && loc.col != 1) {
+            sockets.push(row);
+            row = [];
+            i = 1;
+          } else {
+            i = loc.col;
+          }
+        } else if (prevLoc == undefined) {
+          i = 1;
+        } else {
+          i = loc.col;
+        }
+        for (; i < loc.col; i++) {
+          row.push(undefined);
+        }
+      }
       if (loc.col == 1 && row.length != 0) {
         sockets.push(row);
         row = [];
       }
       if (loc.sockets) {
         for (var socket of loc.sockets) {
-          row.push(socket);
+          row.push({ socket: socket, row: loc.row, col: loc.col, tableName: extendedTable.name, labName: labName, coord: this.coords2string(loc.row, loc.col) } as LocSocket);
         }
       }
+      prevLoc = loc;
     }
     sockets.push(row);
     ret.sockets = sockets;

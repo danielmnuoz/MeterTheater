@@ -7,13 +7,37 @@
     Owned Socket Information
   </div>
   <div class="local-center">
-    <mat-table [dataSource]="sockets" class="mat-elevation-z8 max-table">
+    <mat-table [dataSource]="sockets" class="mat-elevation-z8 max-sockets">
+      <ng-container matColumnDef="labName">
+        <mat-header-cell *matHeaderCellDef>
+          Lab
+        </mat-header-cell>
+        <mat-cell *matCellDef="let socket">
+          {{socket.labName}}
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="tableName">
+        <mat-header-cell *matHeaderCellDef>
+          Table
+        </mat-header-cell>
+        <mat-cell *matCellDef="let socket">
+          {{socket.tableName}}
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="coord">
+        <mat-header-cell *matHeaderCellDef>
+          Slot
+        </mat-header-cell>
+        <mat-cell *matCellDef="let socket">
+          {{socket.coord}}
+        </mat-cell>
+      </ng-container>
       <ng-container matColumnDef="form">
         <mat-header-cell *matHeaderCellDef>
           Form
         </mat-header-cell>
         <mat-cell *matCellDef="let socket">
-          {{socket.form}}
+          {{socket.socket.form}}
         </mat-cell>
       </ng-container>
       <ng-container matColumnDef="voltage">
@@ -21,18 +45,26 @@
           Voltage (V)
         </mat-header-cell>
         <mat-cell *matCellDef="let socket">
-          {{socket.voltage}}
+          {{socket.socket.voltage}}
         </mat-cell>
       </ng-container>
-      <mat-header-row *matHeaderRowDef="['form', 'voltage']"></mat-header-row>
-      <mat-row *matRowDef="let socket; columns: ['form', 'voltage']"></mat-row>
+      <ng-container matColumnDef="duration">
+        <mat-header-cell *matHeaderCellDef>
+          Socket Duration (days)
+        </mat-header-cell>
+        <mat-cell *matCellDef="let socket">
+          {{socket.socket.duration}}
+        </mat-cell>
+      </ng-container>
+      <mat-header-row *matHeaderRowDef="['labName','tableName','coord','form', 'voltage','duration']"></mat-header-row>
+      <mat-row *matRowDef="let socket; columns: ['labName','tableName','coord','form', 'voltage','duration']"></mat-row>
     </mat-table>
   </div>
   <div class="local-center h5">
     Owned Meter Information
   </div>
   <div class="local-center">
-    <mat-table [dataSource]="meters" class="mat-elevation-z8 max-table">
+    <mat-table [dataSource]="meters" class="mat-elevation-z8 max-meters">
       <ng-container matColumnDef="lanId">
         <mat-header-cell *matHeaderCellDef>
           Lan ID

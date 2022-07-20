@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Socket } from '../interfaces/socket'
+import { LocSocket } from '../interfaces/locSocket';
 import { Meter } from '../interfaces/meter';
 import { Router } from '@angular/router';
 import { MeterTheaterDBService } from '../meter-theater-db.service';
@@ -24,10 +24,10 @@ export class HomeComponent implements OnInit {
 
   // needs to match other toggle initials (false)
   toggle: boolean = false;
-  selectedSocket?: Socket;
+  selectedSocket?: LocSocket;
   selectedMeter?: Meter;
 
-  selectSocket(socket?: Socket) {
+  selectSocket(socket?: LocSocket) {
     this.selectedSocket = socket;
   }
 
@@ -35,8 +35,8 @@ export class HomeComponent implements OnInit {
     this.selectedMeter = meter;
   }
 
-  updateInfo(){
-    this.toggle=!this.toggle;
+  updateInfo() {
+    this.toggle = !this.toggle;
   }
 
 }
