@@ -1,7 +1,8 @@
+
 #theaterpage {
     float:left;
     width:75%;
-    minheight:100%;
+    min-height:100%;
 }
 #detailpage {
     float:right;

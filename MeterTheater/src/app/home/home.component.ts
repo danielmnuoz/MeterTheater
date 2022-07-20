@@ -34,7 +34,7 @@ export class HomeComponent implements OnInit {
   selectMeter(meter?: Meter) {
     this.selectedMeter = meter;
   }
-  
+
   updateInfo(){
     this.toggle=!this.toggle;
   }

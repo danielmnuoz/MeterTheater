@@ -5,4 +5,7 @@ export interface Socket{
     voltage?: number;
     form?: string;
     locationId?: number;
+    checkOutTime?: string;
+    checkInTime?: string;
+    duration?: number;
 }

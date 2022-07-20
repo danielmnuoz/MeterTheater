@@ -43,4 +43,10 @@ export class ProfileComponent implements OnInit {
     }
   }
 
+  getLabs() {
+    this.meterTheaterDBService.getLabs().subscribe(labs => {
+
+    });
+  }
+
 }

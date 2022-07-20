@@ -1,0 +1,24 @@
+.container{
+  border-width: 2px;
+  border-style: solid;
+}
+.socketbutton{
+  background-color: #7ab800;
+  height: 80px;
+  width: 70px;
+  margin: 5px;
+  border-radius:15px;
+  font-size:15px;
+  text-align: center;
+  padding: 20px;
+}
+.socketbutton.owned{
+  background-color: #33647f;
+}
+.socketbutton.occupied{
+  background-color: #636466;
+}
+.socketbutton:not(.occupied):hover{
+  transform: scale(1.2);
+  cursor: grab;
+}

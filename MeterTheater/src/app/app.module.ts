@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { FormsModule } from '@angular/forms'; // <-- NgModel lives here
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -19,7 +20,13 @@ import { DetailsComponent } from './details/details.component';
 import { ProfileComponent } from './profile/profile.component';
 import { NavigationComponent } from './navigation/navigation.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {MatSelectModule} from '@angular/material/select';
+import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
   declarations: [
@@ -39,6 +46,13 @@ import {MatSelectModule} from '@angular/material/select';
     HttpClientModule,
     FormsModule,
     MatSelectModule,
+    MatInputModule,
+    MatTooltipModule,
+    MatButtonToggleModule,
+    MatChipsModule,
+    MatTabsModule,
+    MatTableModule,
+    ReactiveFormsModule,
     BrowserAnimationsModule,
     // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
     // and returns simulated server responses.

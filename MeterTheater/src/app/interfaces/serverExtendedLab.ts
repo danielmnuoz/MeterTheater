@@ -1,9 +1,7 @@
-import { ServerExtendedLocation } from "./serverExtendedLocation";
+import { ServerExtendedTable } from "./serverExtendedTable";
 
 export interface ServerExtendedLab{
     labId?: number;
     labName?: string;
-    labFloor?: number;
-    labNumber?: number;
-    locations?: ServerExtendedLocation[];
+    tables?: ServerExtendedTable[];
 }

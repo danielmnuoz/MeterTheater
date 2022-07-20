@@ -1,27 +1,44 @@
 <div *ngIf="socket && socketUser">
-    Current Owner: {{socketUser.name}}
+  Current Owner: {{socketUser.name}}
+  <div *ngIf="out == false || out == undefined">Socket Checkout Date: {{socket.checkOutTime | date}}</div>
 </div>
 <div *ngIf="socket; else noSocket">
-    Selected Socket Form: {{socket.form}}
+  Socket Form: {{socket.form}}
+  <br>
+  Socket Voltage: {{socket.voltage}}
+  <form (ngSubmit)="onSubmit()" [formGroup]="detailsForm">
+    <mat-form-field>
+      <input type="text" matInput placeholder="Meter LAN ID" name="Meter LAN ID" aria-label="Meter LAN ID"
+        aria-describedby="Meter LAN ID Input" formControlName="meterLanId">
+      <mat-error *ngIf="detailsForm.get('meterLanId')?.errors?.['pattern']">Must enter hex value</mat-error>
+      <mat-error
+        *ngIf="detailsForm.get('meterLanId')?.errors?.['maxlength'] || detailsForm.get('meterLanId')?.errors?.['minlength']">
+        Must be 8 characters in length</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input type="text" matTooltip="Days until Check-in" matInput placeholder="Socket Duration (days)"
+        name="Socket Duration" aria-label="Socket Duration" aria-describedby="Socket Duration Input"
+        formControlName="duration">
+      <mat-error
+        *ngIf="detailsForm.get('duration')?.errors?.['pattern'] || detailsForm.get('duration')?.errors?.['min']">Must
+        enter positive integer</mat-error>
+      <mat-error *ngIf="detailsForm.get('duration')?.errors?.['required']">Field is required</mat-error>
+      <mat-error *ngIf="detailsForm.get('duration')?.errors?.['max']">Must be less than or equal to 14</mat-error>
+    </mat-form-field>
+    <div class="verticalPadding"></div>
+    <div *ngIf="socket">
+      <div *ngIf="out == false">
+        <button type="submit" class="btn btn-primary">Check-in</button>
+      </div>
+      <div *ngIf="out == true">
+        <button [disabled]="!detailsForm.valid" type="submit" class="btn btn-primary">Checkout</button>
+        <mat-error *ngIf="countError">5 sockets are already owned</mat-error>
+      </div>
+    </div>
+  </form>
 </div>
 <ng-template #noSocket>
-    <div>
-        Select a Socket
-    </div>
+  <div>
+    Select a Socket
+  </div>
 </ng-template>
-<div *ngIf="meter; else noMeter">
-    Meter Lan Id: {{meter.lanId}}
-</div>
-<ng-template #noMeter>
-    <div>
-        Socket Has No Meter
-    </div>
-</ng-template>
-<div *ngIf="socket">
-    <div *ngIf="socket.userId==loginUser.id">
-        <button class="btn btn-primary" (click)="checkIn()">Check-in</button>
-    </div>
-    <div *ngIf="socket.userId == undefined">
-        <button class="btn btn-primary" (click)="checkOut()">Checkout</button>
-    </div>
-</div>
