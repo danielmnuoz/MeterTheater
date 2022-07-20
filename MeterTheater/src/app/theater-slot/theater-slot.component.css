@@ -20,5 +20,5 @@
 }
 .socketbutton:not(.occupied):hover{
   transform: scale(1.2);
-  cursor: grab;
+  cursor: pointer;
 }
