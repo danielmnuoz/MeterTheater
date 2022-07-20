@@ -3,17 +3,17 @@
         <div class ="socketbutton" *ngIf="socket.userId == undefined">
             {{socket.form}}
             <br>
-            {{socket.voltage}}
+            {{socket.voltage}}V
         </div>
         <div class="socketbutton owned" *ngIf="socket.userId == loginUserId">
             {{socket.form}}
             <br>
-            {{socket.voltage}}
+            {{socket.voltage}}V
         </div>
         <div class="socketbutton occupied" *ngIf="socket.userId != undefined && socket.userId != loginUserId">
             {{socket.form}}
             <br>
-            {{socket.voltage}}
+            {{socket.voltage}}V
         </div>
     </div>
 </div>
