@@ -23,8 +23,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import {MatButtonToggleModule} from '@angular/material/button-toggle';
-import {MatChipsModule} from '@angular/material/chips';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
   declarations: [
@@ -48,6 +50,8 @@ import {MatChipsModule} from '@angular/material/chips';
     MatTooltipModule,
     MatButtonToggleModule,
     MatChipsModule,
+    MatTabsModule,
+    MatTableModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
     // The HttpClientInMemoryWebApiModule module intercepts HTTP requests

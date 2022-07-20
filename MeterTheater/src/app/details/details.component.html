@@ -1,5 +1,6 @@
 <div *ngIf="socket && socketUser">
   Current Owner: {{socketUser.name}}
+  <div *ngIf="out == false || out == undefined">Socket Checkout Date: {{socket.checkOutTime | date}}</div>
 </div>
 <div *ngIf="socket; else noSocket">
   Socket Form: {{socket.form}}

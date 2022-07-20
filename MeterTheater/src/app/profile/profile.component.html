@@ -1,19 +1,48 @@
 <app-navigation></app-navigation>
-<div class="user">
-  {{user.name}}
-</div>
-<div id="search-component">
-  Owned Socket Information
-  <ul class="search-result">
-    <li *ngFor="let socket of sockets">
-      Socket Form: {{socket.form}}
-      Socket Voltage: {{socket.voltage}}
-    </li>
-  </ul>
-  Owned Meter Information
-  <ul class="search-result">
-    <li *ngFor="let meter of meters">
-      Meter Lan Id: {{meter.lanId}}
-    </li>
-  </ul>
+<div class="container">
+  <div class="user local-center">
+    {{user.name}}
+  </div>
+  <div class="local-center h5">
+    Owned Socket Information
+  </div>
+  <div class="local-center">
+    <mat-table [dataSource]="sockets" class="mat-elevation-z8 max-table">
+      <ng-container matColumnDef="form">
+        <mat-header-cell *matHeaderCellDef>
+          Form
+        </mat-header-cell>
+        <mat-cell *matCellDef="let socket">
+          {{socket.form}}
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="voltage">
+        <mat-header-cell *matHeaderCellDef>
+          Voltage (V)
+        </mat-header-cell>
+        <mat-cell *matCellDef="let socket">
+          {{socket.voltage}}
+        </mat-cell>
+      </ng-container>
+      <mat-header-row *matHeaderRowDef="['form', 'voltage']"></mat-header-row>
+      <mat-row *matRowDef="let socket; columns: ['form', 'voltage']"></mat-row>
+    </mat-table>
+  </div>
+  <div class="local-center h5">
+    Owned Meter Information
+  </div>
+  <div class="local-center">
+    <mat-table [dataSource]="meters" class="mat-elevation-z8 max-table">
+      <ng-container matColumnDef="lanId">
+        <mat-header-cell *matHeaderCellDef>
+          Lan ID
+        </mat-header-cell>
+        <mat-cell *matCellDef="let meter">
+          {{meter.lanId}}
+        </mat-cell>
+      </ng-container>
+      <mat-header-row *matHeaderRowDef="['lanId']"></mat-header-row>
+      <mat-row *matRowDef="let meter; columns: ['lanId']"></mat-row>
+    </mat-table>
+  </div>
 </div>
