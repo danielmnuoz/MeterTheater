@@ -89,8 +89,8 @@
     </mat-select>
   </mat-form-field>
   <div *ngIf="selectedLab">
-    <mat-label>Pick a Wall: </mat-label>
-    <mat-button-toggle-group appearance="legacy" name="table" aria-label="wall choice" [(ngModel)]="selectedTable">
+    <mat-label>Pick a Table: </mat-label>
+    <mat-button-toggle-group appearance="legacy" name="table" aria-label="table choice" [(ngModel)]="selectedTable">
       <mat-button-toggle *ngFor="let table of selectedLab.tables" [value]="table">{{table.name}}</mat-button-toggle>
     </mat-button-toggle-group>
   </div>
