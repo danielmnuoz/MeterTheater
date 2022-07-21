@@ -66,10 +66,19 @@
           </div>
         </mat-cell>
       </ng-container>
-      <mat-header-row *matHeaderRowDef="['labName','tableName','coord','form', 'voltage','duration','meterLanId']">
+      <ng-container matColumnDef="checkIn">
+        <mat-header-cell *matHeaderCellDef>
+          Action
+        </mat-header-cell>
+        <mat-cell *matCellDef="let data">
+          <button (click)="singleCheckIn(data)" type="submit" class="btn btn-primary">Check-in</button>
+        </mat-cell>
+      </ng-container>
+      <mat-header-row
+        *matHeaderRowDef="['labName','tableName','coord','form', 'voltage','duration','meterLanId','checkIn']">
       </mat-header-row>
       <mat-row
-        *matRowDef="let data; columns: ['labName','tableName','coord','form', 'voltage','duration','meterLanId']">
+        *matRowDef="let data; columns: ['labName','tableName','coord','form', 'voltage','duration','meterLanId','checkIn']">
       </mat-row>
     </mat-table>
   </div>

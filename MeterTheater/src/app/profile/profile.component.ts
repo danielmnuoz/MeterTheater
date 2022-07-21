@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Meter } from '../interfaces/meter';
 import { Socket } from '../interfaces/socket';
 import { LocSocket } from '../interfaces/locSocket';
+import { Log } from '../interfaces/log';
 import { User } from '../interfaces/user';
 import { MeterTheaterDBService } from '../meter-theater-db.service';
 import { Router } from '@angular/router';
@@ -55,6 +56,33 @@ export class ProfileComponent implements OnInit {
       }
     }
     return undefined;
+  }
+
+  checkIn(socket: LocSocket, meter: Meter) {
+    if (socket && socket.socket) {
+      socket.socket.userId = undefined;
+      socket.socket.duration = undefined;
+      socket.socket.meterId = undefined;
+      var description: string = "Check-in";
+      if (socket) {
+        this.meterTheaterDBService.checkInSocket(socket.socket).subscribe(_ => {
+          if (socket?.socket?.id) {
+            this.meterTheaterDBService.getSocketById(socket.socket.id).subscribe(socket => {
+              this.getSockets();
+              this.getMeters()
+            });
+          }
+        });
+        this.meterTheaterDBService.addLog({ userId: this.meterTheaterDBService.loginUser.id, socketId: socket.socket.id, meterId: socket.socket.meterId, description: description } as Log).subscribe();
+      }
+    }
+  }
+
+  singleCheckIn(data: any) {
+    if (!this.meterTheaterDBService.loginCheck()) {
+      return;
+    }
+    this.checkIn(data.socket, data.meter);
   }
 
   getSockets() {
