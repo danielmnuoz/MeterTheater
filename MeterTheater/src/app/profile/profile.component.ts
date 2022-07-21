@@ -106,6 +106,7 @@ export class ProfileComponent implements OnInit {
                         });
                       } else {
                         this.tableDataSource.data.push({ socket, undefined });
+                        this.socketsTable?.renderRows();
                       }
                     }
                   }
