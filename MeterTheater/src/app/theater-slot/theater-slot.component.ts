@@ -2,6 +2,7 @@ import { Component, OnInit, Input, OnChanges, SimpleChanges, Output, EventEmitte
 import { Observable, of } from 'rxjs';
 import { Meter } from '../interfaces/meter';
 import { Socket } from '../interfaces/socket';
+import { LocSocket } from '../interfaces/locSocket';
 import { MeterTheaterDBService } from '../meter-theater-db.service';
 
 @Component({
@@ -25,13 +26,15 @@ export class TheaterSlotComponent implements OnInit, OnChanges {
   meter?: Meter;
   loginUserId?: number;
 
-  @Input() socket?: Socket;
+  @Input() socket?: LocSocket;
+  @Input() labName?: string;
+  @Input() tableName?: string;
   @Output() onSelectMeter = new EventEmitter<Meter>();
-  @Output() onSelectSocket = new EventEmitter<Socket>();
+  @Output() onSelectSocket = new EventEmitter<LocSocket>();
 
   getMeterById(): Observable<Meter | undefined> {
-    if (this.socket && this.socket.meterId) {
-      return this.meterTheaterDBService.getMeterById(this.socket.meterId);
+    if (this.socket && this.socket.socket && this.socket.socket.meterId) {
+      return this.meterTheaterDBService.getMeterById(this.socket.socket.meterId);
     } else {
       return of(undefined);
     }

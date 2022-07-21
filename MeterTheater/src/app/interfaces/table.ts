@@ -1,7 +1,7 @@
-import { Socket } from "./socket";
+import { LocSocket } from "./locSocket";
 
 export interface Table{
   id?: number;
   name?: string;
-  sockets?: Socket[][];
+  sockets?: (LocSocket | undefined)[][];
 }

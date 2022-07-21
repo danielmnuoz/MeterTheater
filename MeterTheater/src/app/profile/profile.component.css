@@ -2,6 +2,11 @@
   width: 100%;
 }
 
+mat-header-cell,
+mat-cell {
+  justify-content: center;
+}
+
 .container {
   /* position: absolute; */
   margin: auto;
@@ -20,6 +25,10 @@
   align-items: center;
 }
 
-.max-table {
+.max-sockets {
+  max-width: 1000px;
+}
+
+.max-meters {
   max-width: 300px;
 }

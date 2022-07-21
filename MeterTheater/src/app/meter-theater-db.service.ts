@@ -15,6 +15,7 @@ import { ServerExtendedTable } from './interfaces/serverExtendedTable';
 import { ExtendedTable } from './interfaces/extendedTable';
 import { Lab } from './interfaces/lab';
 import { Table } from './interfaces/table';
+import { LocSocket } from './interfaces/locSocket';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
@@ -59,6 +60,21 @@ export class MeterTheaterDBService {
     this.loginUser = this.DEFAULT_USER
   }
 
+  coords2stringH(i: number): string {
+    if (i < 26) {
+      return String.fromCharCode(65 + ((i)));
+    } else {
+      return this.coords2stringH(Math.floor(i / 26) - 1) + String.fromCharCode(65 + ((i % 26)));
+    }
+  }
+
+  coords2string(row: number, col: number): string {
+    if (row == undefined || col == undefined) {
+      return ''
+    }
+    return this.coords2stringH(row - 1) + col;
+  }
+
   extendedLabs2Labs(extendedLabs: ExtendedLab[]): Lab[] {
     var labs: Lab[] = [];
     for (var extendedLab of extendedLabs) {
@@ -71,19 +87,19 @@ export class MeterTheaterDBService {
     return {
       id: extendedLab.id,
       name: extendedLab.name,
-      tables: extendedLab.tables ? this.extendedTables2Tables(extendedLab.tables) : undefined
+      tables: extendedLab.tables ? this.extendedTables2Tables(extendedLab.tables, extendedLab.name) : undefined
     }
   }
 
-  extendedTables2Tables(extendedTables: ExtendedTable[]): Table[] {
+  extendedTables2Tables(extendedTables: ExtendedTable[], labName: string | undefined): Table[] {
     var tables: Table[] = [];
     for (var extendedTable of extendedTables) {
-      tables.push(this.extendedTable2Table(extendedTable))
+      tables.push(this.extendedTable2Table(extendedTable, labName))
     }
     return tables;
   }
 
-  extendedTable2Table(extendedTable: ExtendedTable): Table {
+  extendedTable2Table(extendedTable: ExtendedTable, labName: string | undefined): Table {
     var ret: Table = {
       id: extendedTable.id,
       name: extendedTable.name,
@@ -103,18 +119,63 @@ export class MeterTheaterDBService {
       }
       return 0
     });
-    var row: Socket[] = [];
-    var sockets: Socket[][] = [];
+    var row: (LocSocket | undefined)[] = [];
+    var sockets: (LocSocket | undefined)[][] = [];
+    var prevLoc: ExtendedLocation | undefined = undefined;
+    var rowOffset: number = 0;
+    var colOffset: number = 0;
     for (var loc of locs) {
+      // always true
+      if (loc.row && loc.col) {
+        var i: number;
+        if (prevLoc != undefined && prevLoc.row != undefined && (loc.row > prevLoc.row + 1)) {
+          i = prevLoc.row + 1;
+          sockets.push(row);
+          row = [];
+          colOffset = 0;
+        } else if (prevLoc == undefined) {
+          i = 1;
+        } else {
+          i = loc.row;
+        }
+        for (; i < loc.row; i++) {
+          sockets.push([]);
+          rowOffset--;
+          colOffset = 0;
+        }
+        if (prevLoc != undefined && prevLoc.col != undefined && prevLoc.row != undefined) {
+          if (loc.col > prevLoc.col + 1 && loc.row == prevLoc.row) {
+            i = prevLoc.col + 1;
+          } else if (loc.row > prevLoc.row && loc.col != 1) {
+            sockets.push(row);
+            row = [];
+            colOffset = 0;
+            i = 1;
+          } else {
+            i = loc.col;
+          }
+        } else if (prevLoc == undefined) {
+          i = 1;
+        } else {
+          i = loc.col;
+        }
+        for (; i < loc.col; i++) {
+          row.push(undefined);
+          colOffset--;
+        }
+      }
       if (loc.col == 1 && row.length != 0) {
         sockets.push(row);
         row = [];
+        colOffset = 0;
       }
-      if (loc.sockets) {
+      // always true
+      if (loc.sockets && loc.row && loc.col) {
         for (var socket of loc.sockets) {
-          row.push(socket);
+          row.push({ socket: socket, row: loc.row, col: loc.col, tableName: extendedTable.name, labName: labName, coord: this.coords2string(loc.row + rowOffset, loc.col + colOffset) } as LocSocket);
         }
       }
+      prevLoc = loc;
     }
     sockets.push(row);
     ret.sockets = sockets;

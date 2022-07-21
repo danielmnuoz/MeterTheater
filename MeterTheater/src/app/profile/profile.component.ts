@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Meter } from '../interfaces/meter';
-import { Socket } from '../interfaces/socket'
+import { Socket } from '../interfaces/socket';
+import { LocSocket } from '../interfaces/locSocket';
 import { User } from '../interfaces/user';
 import { MeterTheaterDBService } from '../meter-theater-db.service';
 import { Router } from '@angular/router';
@@ -29,23 +30,34 @@ export class ProfileComponent implements OnInit {
   user: User = this.meterTheaterDBService.loginUser;
 
   meters: Meter[] = [];
-  sockets: Socket[] = [];
-
-  getSockets() {
-    if(this.user.id){
-    this.meterTheaterDBService.searchSocketsByUser(this.user.id).subscribe(sockets => this.sockets = sockets);
-    }
-  }
+  sockets: LocSocket[] = [];
 
   getMeters() {
-    if(this.user.id){
-    this.meterTheaterDBService.searchMetersByUser(this.user.id).subscribe(meters => this.meters = meters);
+    if (this.user.id) {
+      this.meterTheaterDBService.searchMetersByUser(this.user.id).subscribe(meters => this.meters = meters);
     }
   }
 
-  getLabs() {
+  getSockets() {
     this.meterTheaterDBService.getLabs().subscribe(labs => {
-
+      this.sockets = [];
+      for (var lab of labs) {
+        if (lab.tables) {
+          for (var table of lab.tables) {
+            if (table.sockets) {
+              for (var row of table.sockets) {
+                for (var socket of row) {
+                  if (socket != undefined) {
+                    if (this.user.id != undefined && socket.socket && socket.socket.userId == this.user.id) {
+                      this.sockets.push(socket);
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     });
   }
 

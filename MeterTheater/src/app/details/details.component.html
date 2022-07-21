@@ -1,11 +1,19 @@
-<div *ngIf="socket && socketUser">
-  Current Owner: {{socketUser.name}}
-  <div *ngIf="out == false || out == undefined">Socket Checkout Date: {{socket.checkOutTime | date}}</div>
-</div>
-<div *ngIf="socket; else noSocket">
-  Socket Form: {{socket.form}}
+<div *ngIf="socket">
+  Lab: {{socket.labName}}
   <br>
-  Socket Voltage: {{socket.voltage}}
+  Table: {{socket.tableName}}
+  <br>
+  Slot: {{socket.coord}}
+</div>
+<div *ngIf="socket && socketUser && socket.socket">
+  Current Owner: {{socketUser.name}}
+  <div *ngIf="out == false || out == undefined">Socket Checkout Date: {{socket.socket.checkOutTime | date}}</div>
+  <div *ngIf="out == true">Socket Checkout Date: </div>
+</div>
+<div *ngIf="socket != undefined && this.socket.socket != undefined; else noSocket">
+  Socket Form: {{socket.socket.form}}
+  <br>
+  Socket Voltage: {{socket.socket.voltage}}
   <form (ngSubmit)="onSubmit()" [formGroup]="detailsForm">
     <mat-form-field>
       <input type="text" matInput placeholder="Meter LAN ID" name="Meter LAN ID" aria-label="Meter LAN ID"
