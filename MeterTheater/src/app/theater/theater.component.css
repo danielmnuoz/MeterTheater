@@ -149,3 +149,9 @@ p.text span{
   width: 100px;
   height: 90px;
 }
+.scroll{
+  overflow-x:scroll;
+}
+.table{
+  width: 800px;
+}
