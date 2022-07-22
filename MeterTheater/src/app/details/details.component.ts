@@ -36,6 +36,7 @@ export class DetailsComponent implements OnInit, OnChanges {
   countError: boolean = false;
   meterUseError: boolean = false;
   errorMeterUser?: User;
+  refreshError: boolean = false;
 
   useText: string = ' is already using that meter.';
   sameUserText: string = 'You own this meter, but you are using it somewhere else. Please Check-in the meter.';
@@ -50,6 +51,7 @@ export class DetailsComponent implements OnInit, OnChanges {
   });
 
   setInits(skipForm: boolean = false) {
+    this.refreshError = false;
     this.errorMeterUser = undefined;
     this.countError = false;
     this.meterUseError = false;
@@ -91,20 +93,52 @@ export class DetailsComponent implements OnInit, OnChanges {
 
   checkOut(duration: number | undefined, meterLanId: string | undefined) {
     if (this.socket != undefined && this.socket.socket != undefined) {
-      this.socket.socket.userId = this.meterTheaterDBService.loginUser.id;
-      this.socket.socket.duration = duration;
-      this.socketUser = this.meterTheaterDBService.loginUser;
-      if (meterLanId != undefined) {
-        this.meterTheaterDBService.searchMetersByLanId(meterLanId).subscribe(meters => {
-          // assumes unique
-          if (meters.length != 0) {
-            this.meterTheaterDBService.updateMeter({ id: meters[0].id, userId: this.meterTheaterDBService.loginUser.id, lanId: meterLanId, serialNumber: undefined } as Meter).subscribe(_ => {
+      if (this.socket.socket.id == undefined) {
+        return;
+      }
+      this.meterTheaterDBService.getSocketById(this.socket.socket.id).subscribe(socket => {
+        if (socket.userId != undefined) {
+          this.refreshError = true;
+          return;
+        } else {
+          this.refreshError = false;
+          if (this.socket != undefined && this.socket.socket != undefined) {
+            this.socket.socket.userId = this.meterTheaterDBService.loginUser.id;
+            this.socket.socket.duration = duration;
+            this.socketUser = this.meterTheaterDBService.loginUser;
+            if (meterLanId != undefined) {
+              this.meterTheaterDBService.searchMetersByLanId(meterLanId).subscribe(meters => {
+                // assumes unique
+                if (meters.length != 0) {
+                  this.meterTheaterDBService.updateMeter({ id: meters[0].id, userId: this.meterTheaterDBService.loginUser.id, lanId: meterLanId, serialNumber: undefined } as Meter).subscribe(_ => {
+                    if (this.socket && this.socket.socket) {
+                      this.socket.socket.meterId = meters[0].id;
+                      this.meterTheaterDBService.checkOutSocket(this.socket.socket).subscribe(_ => {
+                        if (this.socket?.socket?.id) {
+                          this.meterTheaterDBService.getSocketById(this.socket.socket.id).subscribe(socket => {
+                            if (this.socket) {
+                              this.socket.socket = socket;
+                            }
+                            this.setInits(true);
+                            this.toggleUpdate();
+                          });
+                        }
+                      });
+                      var description: string = "Checkout: Meter Updated";
+                      this.meterTheaterDBService.addLog({ userId: this.meterTheaterDBService.loginUser.id, socketId: this.socket.socket.id, meterId: meters[0].id, description: description } as Log).subscribe();
+                    }
+                  });
+                } else {
+                  this.checkOutAddMeter(meterLanId);
+                }
+              });
+            } else {
               if (this.socket && this.socket.socket) {
-                this.socket.socket.meterId = meters[0].id;
+                this.socket.socket.meterId = undefined;
                 this.meterTheaterDBService.checkOutSocket(this.socket.socket).subscribe(_ => {
                   if (this.socket?.socket?.id) {
                     this.meterTheaterDBService.getSocketById(this.socket.socket.id).subscribe(socket => {
-                      if (this.socket) {
+                      if (this.socket != undefined) {
                         this.socket.socket = socket;
                       }
                       this.setInits(true);
@@ -112,32 +146,13 @@ export class DetailsComponent implements OnInit, OnChanges {
                     });
                   }
                 });
-                var description: string = "Checkout: Meter Updated";
-                this.meterTheaterDBService.addLog({ userId: this.meterTheaterDBService.loginUser.id, socketId: this.socket.socket.id, meterId: meters[0].id, description: description } as Log).subscribe();
+                var description: string = "Checkout";
+                this.meterTheaterDBService.addLog({ userId: this.meterTheaterDBService.loginUser.id, socketId: this.socket.socket.id, meterId: undefined, description: description } as Log).subscribe();
               }
-            });
-          } else {
-            this.checkOutAddMeter(meterLanId);
-          }
-        });
-      } else {
-        if (this.socket && this.socket.socket) {
-          this.socket.socket.meterId = undefined;
-          this.meterTheaterDBService.checkOutSocket(this.socket.socket).subscribe(_ => {
-            if (this.socket?.socket?.id) {
-              this.meterTheaterDBService.getSocketById(this.socket.socket.id).subscribe(socket => {
-                if (this.socket != undefined) {
-                  this.socket.socket = socket;
-                }
-                this.setInits(true);
-                this.toggleUpdate();
-              });
             }
-          });
-          var description: string = "Checkout";
-          this.meterTheaterDBService.addLog({ userId: this.meterTheaterDBService.loginUser.id, socketId: this.socket.socket.id, meterId: undefined, description: description } as Log).subscribe();
+          }
         }
-      }
+      });
     }
   }
 
