@@ -6,7 +6,7 @@ import { User } from '../interfaces/user';
 import { MeterTheaterDBService } from '../meter-theater-db.service';
 import { Observable, of } from 'rxjs';
 import { Log } from '../interfaces/log';
-import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
+import { Validators, FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-details',
