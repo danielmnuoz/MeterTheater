@@ -34,6 +34,8 @@ export class DetailsComponent implements OnInit, OnChanges {
   socketUser: User = this.meterTheaterDBService.DEFAULT_USER;
   loginUser: User = this.meterTheaterDBService.loginUser;
   countError: boolean = false;
+  meterUseError: boolean = false;
+  errorMeterUser?: User;
 
   @Input() socket?: LocSocket;
   @Input() meter?: Meter;
@@ -45,7 +47,9 @@ export class DetailsComponent implements OnInit, OnChanges {
   });
 
   setInits(skipForm: boolean = false) {
+    this.errorMeterUser = undefined;
     this.countError = false;
+    this.meterUseError = false;
     if (this.socket?.socket?.userId == this.loginUser.id) {
       this.out = false;
     } else if (this.socket?.socket?.userId == undefined) {
@@ -159,6 +163,7 @@ export class DetailsComponent implements OnInit, OnChanges {
     if (this.socket && this.socket.socket) {
       this.socket.socket.userId = undefined;
       this.socket.socket.duration = undefined;
+      var meterId: number | undefined = this.socket.socket.meterId;
       this.socket.socket.meterId = undefined;
       this.meter = undefined;
       var description: string = "Check-in";
@@ -170,12 +175,18 @@ export class DetailsComponent implements OnInit, OnChanges {
               if (this.socket) {
                 this.socket.socket = socket;
               }
+              if (meterId != undefined) {
+                this.meterTheaterDBService.getMeterById(meterId).subscribe(meter => {
+                  meter.userId = undefined;
+                  this.meterTheaterDBService.updateMeter(meter).subscribe();
+                })
+              }
               this.setInits();
               this.toggleUpdate();
             });
           }
         });
-        this.meterTheaterDBService.addLog({ userId: this.meterTheaterDBService.loginUser.id, socketId: this.socket.socket.id, meterId: this.socket.socket.meterId, description: description } as Log).subscribe();
+        this.meterTheaterDBService.addLog({ userId: this.meterTheaterDBService.loginUser.id, socketId: this.socket.socket.id, meterId: meterId, description: description } as Log).subscribe();
       }
     }
   }
@@ -197,10 +208,36 @@ export class DetailsComponent implements OnInit, OnChanges {
         } else {
           this.countError = false;
         }
-        if (this.out == true) {
-          this.checkOut(duration, meterLanId);
+        if (meterLanId != undefined) {
+          this.meterTheaterDBService.searchMetersByLanId(meterLanId).subscribe(meters => {
+            //assumes unique
+            if (meters.length > 0) {
+              if (meters[0].userId != undefined) {
+                this.meterUseError = true;
+                this.meterTheaterDBService.getUserById(meters[0].userId).subscribe(user => {
+                  this.errorMeterUser = user;
+                });
+                return;
+              } else {
+                this.meterUseError = false;
+              }
+              if (this.out == true) {
+                this.checkOut(duration, meterLanId);
+              }
+            } else {
+              this.meterUseError = false;
+              if (this.out == true) {
+                this.checkOut(duration, meterLanId);
+              }
+            }
+          });
+        } else {
+          this.meterUseError = false;
+          if (this.out == true) {
+            this.checkOut(duration, meterLanId);
+          }
         }
-      })
+      });
     }
   }
 

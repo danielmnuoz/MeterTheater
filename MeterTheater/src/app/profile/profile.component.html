@@ -82,21 +82,4 @@
       </mat-row>
     </mat-table>
   </div>
-  <div class="local-center h5">
-    Owned Meters
-  </div>
-  <div class="local-center">
-    <mat-table [dataSource]="meters" class="mat-elevation-z8 max-meters">
-      <ng-container matColumnDef="lanId">
-        <mat-header-cell *matHeaderCellDef>
-          Lan ID
-        </mat-header-cell>
-        <mat-cell *matCellDef="let meter">
-          {{meter.lanId}}
-        </mat-cell>
-      </ng-container>
-      <mat-header-row *matHeaderRowDef="['lanId']"></mat-header-row>
-      <mat-row *matRowDef="let meter; columns: ['lanId']"></mat-row>
-    </mat-table>
-  </div>
 </div>

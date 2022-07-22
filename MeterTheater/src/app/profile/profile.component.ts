@@ -27,7 +27,6 @@ export class ProfileComponent implements OnInit {
     } else {
       this.user = this.meterTheaterDBService.loginUser;
       this.getSockets();
-      this.getMeters();
     }
   }
 
@@ -37,43 +36,30 @@ export class ProfileComponent implements OnInit {
 
   user: User = this.meterTheaterDBService.DEFAULT_USER;
 
-  meters: Meter[] = [];
-
-  getMeters() {
-    if (this.user.id) {
-      this.meterTheaterDBService.searchMetersByUser(this.user.id).subscribe(meters => this.meters = meters);
-    }
-  }
-
-  // assumes 1 meter id per socket
-  getSocketFromWaitSockets(waitSockets: LocSocket[], meterId: number | undefined): LocSocket | undefined {
-    if (meterId == undefined) {
-      return undefined;
-    }
-    for (var i: number = 0; i < waitSockets.length; i++) {
-      if (waitSockets[i].socket?.meterId == meterId) {
-        return waitSockets[i];
-      }
-    }
-    return undefined;
-  }
-
   checkIn(socket: LocSocket, meter: Meter) {
     if (socket && socket.socket) {
       socket.socket.userId = undefined;
       socket.socket.duration = undefined;
+      var meterId: number | undefined = socket.socket.meterId;
       socket.socket.meterId = undefined;
       var description: string = "Check-in";
       if (socket) {
         this.meterTheaterDBService.checkInSocket(socket.socket).subscribe(_ => {
           if (socket?.socket?.id) {
             this.meterTheaterDBService.getSocketById(socket.socket.id).subscribe(socket => {
+              if (socket) {
+              }
+              if (meterId != undefined) {
+                this.meterTheaterDBService.getMeterById(meterId).subscribe(meter => {
+                  meter.userId = undefined;
+                  this.meterTheaterDBService.updateMeter(meter).subscribe();
+                })
+              }
               this.getSockets();
-              this.getMeters()
             });
           }
         });
-        this.meterTheaterDBService.addLog({ userId: this.meterTheaterDBService.loginUser.id, socketId: socket.socket.id, meterId: socket.socket.meterId, description: description } as Log).subscribe();
+        this.meterTheaterDBService.addLog({ userId: this.meterTheaterDBService.loginUser.id, socketId: socket.socket.id, meterId: meterId, description: description } as Log).subscribe();
       }
     }
   }
@@ -86,7 +72,6 @@ export class ProfileComponent implements OnInit {
   }
 
   getSockets() {
-    var waitSockets: LocSocket[] = [];
     this.meterTheaterDBService.getLabs().subscribe(labs => {
       this.tableDataSource.data = [];
       for (var lab of labs) {
@@ -94,13 +79,11 @@ export class ProfileComponent implements OnInit {
           for (var table of lab.tables) {
             if (table.sockets) {
               for (var row of table.sockets) {
-                for (var socket of row) {
+                row.forEach(socket => {
                   if (socket != undefined) {
                     if (this.user.id != undefined && socket.socket != undefined && socket.socket.userId == this.user.id) {
                       if (socket.socket.meterId != undefined) {
-                        waitSockets.push(socket);
                         this.meterTheaterDBService.getMeterById(socket.socket.meterId).subscribe(meter => {
-                          var socket = this.getSocketFromWaitSockets(waitSockets, meter.id);
                           this.tableDataSource.data.push({ socket, meter });
                           this.socketsTable?.renderRows();
                         });
@@ -110,7 +93,7 @@ export class ProfileComponent implements OnInit {
                       }
                     }
                   }
-                }
+                });
               }
             }
           }
