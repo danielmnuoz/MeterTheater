@@ -41,9 +41,8 @@
       <div *ngIf="out == true">
         <button [disabled]="!detailsForm.valid" type="submit" class="btn btn-primary">Checkout</button>
         <mat-error *ngIf="countError">5 sockets are already owned</mat-error>
-        <mat-error *ngIf="meterUseError">{{errorMeterUser ? errorMeterUser.name : 'An unknown user'}} is already using
-          that
-          meter</mat-error>
+        <mat-error *ngIf="meterUseError">{{errorMeterUser ? loginUser.id == errorMeterUser.id ? sameUserText :
+          errorMeterUser.name + useText : 'An unknown user' + useText}}</mat-error>
       </div>
     </div>
   </form>

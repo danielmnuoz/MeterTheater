@@ -37,6 +37,9 @@ export class DetailsComponent implements OnInit, OnChanges {
   meterUseError: boolean = false;
   errorMeterUser?: User;
 
+  useText: string = ' is already using that meter.';
+  sameUserText: string = 'You own this meter, but you are using it somewhere else. Please Check-in the meter.';
+
   @Input() socket?: LocSocket;
   @Input() meter?: Meter;
   @Output() onUpdate = new EventEmitter<boolean>();
