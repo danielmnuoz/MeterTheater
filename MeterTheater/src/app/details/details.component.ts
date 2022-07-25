@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, SimpleChanges, OnChanges, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges, OnChanges, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { Meter } from '../interfaces/meter';
 import { Socket } from '../interfaces/socket';
 import { LocSocket } from '../interfaces/locSocket';
@@ -6,6 +6,7 @@ import { User } from '../interfaces/user';
 import { MeterTheaterDBService } from '../meter-theater-db.service';
 import { Observable, of } from 'rxjs';
 import { Log } from '../interfaces/log';
+import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 import { Validators, FormBuilder } from '@angular/forms';
 
 @Component({
@@ -13,10 +14,11 @@ import { Validators, FormBuilder } from '@angular/forms';
   templateUrl: './details.component.html',
   styleUrls: ['./details.component.css']
 })
-export class DetailsComponent implements OnInit, OnChanges {
+export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
 
   constructor(
     private meterTheaterDBService: MeterTheaterDBService,
+    private _snackBar: MatSnackBar,
     private fb: FormBuilder
   ) { }
 
@@ -28,6 +30,12 @@ export class DetailsComponent implements OnInit, OnChanges {
     this.setInits();
   }
 
+  ngOnDestroy(): void {
+    if (this.snackBarRef != undefined) {
+      this.snackBarRef.dismiss();
+    }
+  }
+
   // needs to match other toggle initials (false)
   toggle: boolean = false;
   out?: boolean;
@@ -37,6 +45,7 @@ export class DetailsComponent implements OnInit, OnChanges {
   meterUseError: boolean = false;
   errorMeterUser?: User;
   refreshError: boolean = false;
+  snackBarRef?: MatSnackBarRef<TextOnlySnackBar>;
 
   useText: string = ' is already using that meter.';
   sameUserText: string = 'You own this meter, but you are using it somewhere else. Please Check-in the meter.';
@@ -53,7 +62,6 @@ export class DetailsComponent implements OnInit, OnChanges {
   setInits(skipForm: boolean = false) {
     this.refreshError = false;
     this.errorMeterUser = undefined;
-    this.countError = false;
     this.meterUseError = false;
     if (this.socket?.socket?.userId == this.loginUser.id) {
       this.out = false;
@@ -71,7 +79,11 @@ export class DetailsComponent implements OnInit, OnChanges {
     }
     if (!skipForm) {
       if (this.socket != undefined && this.socket.socket != undefined) {
-        this.detailsForm.get('duration')?.setValue(this.socket.socket.duration);
+        if (this.socket.socket.duration != undefined) {
+          this.detailsForm.get('duration')?.setValue(this.socket.socket.duration);
+        } else {
+          this.detailsForm.get('duration')?.setValue(1);
+        }
       } else {
         this.detailsForm.get('duration')?.setValue(undefined);
       }
@@ -214,7 +226,12 @@ export class DetailsComponent implements OnInit, OnChanges {
       return;
     }
     if (this.out == false) {
+      this.countError = false;
+      if (this.snackBarRef != undefined) {
+        this.snackBarRef.dismiss();
+      }
       this.checkIn();
+      return;
     }
     var duration: number | undefined = this.detailsForm.get('duration')?.value?.valueOf();
     var meterLanId = this.detailsForm.get('meterLanId')?.value?.toString();
@@ -222,9 +239,12 @@ export class DetailsComponent implements OnInit, OnChanges {
       this.meterTheaterDBService.getUserSockets(this.meterTheaterDBService.loginUser.id).subscribe(sockets => {
         if (sockets.length >= 5) {
           this.countError = true;
-          return;
+          this.snackBarRef = this._snackBar.open("You already have 5 sockets. Consider checking a socket back in.", "Close");
         } else {
           this.countError = false;
+          if (this.snackBarRef != undefined) {
+            this.snackBarRef.dismiss();
+          }
         }
         if (meterLanId != undefined) {
           this.meterTheaterDBService.searchMetersByLanId(meterLanId).subscribe(meters => {
@@ -241,11 +261,13 @@ export class DetailsComponent implements OnInit, OnChanges {
               }
               if (this.out == true) {
                 this.checkOut(duration, meterLanId);
+                return;
               }
             } else {
               this.meterUseError = false;
               if (this.out == true) {
                 this.checkOut(duration, meterLanId);
+                return;
               }
             }
           });
@@ -253,6 +275,7 @@ export class DetailsComponent implements OnInit, OnChanges {
           this.meterUseError = false;
           if (this.out == true) {
             this.checkOut(duration, meterLanId);
+            return;
           }
         }
       });

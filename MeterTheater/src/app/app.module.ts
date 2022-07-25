@@ -25,6 +25,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTableModule } from '@angular/material/table';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { MatTableModule } from '@angular/material/table';
     MatChipsModule,
     MatTabsModule,
     MatTableModule,
+    MatSnackBarModule,
     ReactiveFormsModule,
     BrowserAnimationsModule
   ],

@@ -81,14 +81,13 @@
 
 <div class="theater">
   <mat-label>Pick a Lab: </mat-label>
-  <mat-form-field>
-    <mat-select placeholder="Lab" (selectionChange)="setSelectedTable()" [(ngModel)]="selectedLab">
-      <mat-option *ngFor="let lab of labs" [value]="lab">
-        {{lab.name}}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-  <div *ngIf="selectedLab">
+  <mat-button-toggle-group appearance="legacy" name="lab" placeholder="Lab" [(ngModel)]="selectedLab"
+    (change)="setSelectedTable()">
+    <mat-button-toggle *ngFor="let lab of labs" [value]="lab">
+      {{lab.name}}
+    </mat-button-toggle>
+  </mat-button-toggle-group>
+  <div *ngIf="selectedLab != undefined">
     <mat-label>Pick a Table: </mat-label>
     <mat-button-toggle-group appearance="legacy" name="table" aria-label="table choice" [(ngModel)]="selectedTable">
       <mat-button-toggle *ngFor="let table of selectedLab.tables" [value]="table">{{table.name}}</mat-button-toggle>
@@ -110,17 +109,17 @@
   </div>
   <div class="scroll">
     <div class="table">
-  <div *ngIf="selectedLab">
-    <div *ngIf="selectedTable">
-      {{selectedTable.name}}
-      <div class="row" *ngFor="let row of selectedTable.sockets">
-        <div class="slot" *ngIf="row.length == 0"></div>
-        <app-theater-slot class="slot" *ngFor="let socket of row" [socket]="socket"
-          (onSelectSocket)="selectSocket($event)" (onSelectMeter)="selectMeter($event)">
-        </app-theater-slot>
+      <div *ngIf="selectedLab">
+        <div *ngIf="selectedTable">
+          {{selectedTable.name}}
+          <div class="row" *ngFor="let row of selectedTable.sockets">
+            <div class="slot" *ngIf="row.length == 0"></div>
+            <app-theater-slot class="slot" *ngFor="let socket of row" [socket]="socket"
+              (onSelectSocket)="selectSocket($event)" (onSelectMeter)="selectMeter($event)">
+            </app-theater-slot>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
-</div>
 </div>

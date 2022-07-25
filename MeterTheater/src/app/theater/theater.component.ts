@@ -19,11 +19,15 @@ export class TheaterComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnInit(): void {
-    this.getSocketInfos();
+    var selectedLabId: number | undefined = this.selectedLab?.id;
+    var selectedTableId: number | undefined = this.selectedTable?.id;
+    this.getSocketInfos(selectedLabId, selectedTableId);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.getSocketInfos();
+    var selectedLabId: number | undefined = this.selectedLab?.id;
+    var selectedTableId: number | undefined = this.selectedTable?.id;
+    this.getSocketInfos(selectedLabId, selectedTableId);
   }
 
   labs: Lab[] = [];
@@ -44,22 +48,44 @@ export class TheaterComponent implements OnInit, OnChanges {
     this.onSelectMeter.emit(meter)
   }
 
-  setSelectedTable() {
+  setSelectedTable(selectedTableId: number | undefined = undefined) {
     if (this.selectedLab != undefined) {
       if (this.selectedLab.tables != undefined) {
         if (this.selectedLab.tables.length > 0) {
-          this.selectedTable = this.selectedLab.tables[0];
+          if (selectedTableId == undefined) {
+            this.selectedTable = this.selectedLab.tables[0];
+          } else {
+            for (var table of this.selectedLab.tables) {
+              if (table.id == selectedTableId) {
+                this.selectedTable = table;
+              }
+            }
+            if (this.selectedTable == undefined) {
+              this.selectedTable = this.selectedLab.tables[0];
+            }
+          }
         }
       }
     }
   }
 
-  getSocketInfos(): void {
+  getSocketInfos(selectedLabId: number | undefined = undefined, selectedTableId: number | undefined = undefined): void {
     this.meterTheaterDBService.getLabs().subscribe(labs => {
       this.labs = labs;
       if (this.labs && this.labs.length >= 1) {
-        this.selectedLab = this.labs[0];
-        this.setSelectedTable();
+        if (selectedLabId == undefined) {
+          this.selectedLab = this.labs[0];
+        } else {
+          for (var lab of this.labs) {
+            if (lab.id == selectedLabId) {
+              this.selectedLab = lab;
+            }
+          }
+          if (this.selectedLab == undefined) {
+            this.selectedLab = this.labs[0];
+          }
+        }
+        this.setSelectedTable(selectedTableId);
       }
     });
   }
