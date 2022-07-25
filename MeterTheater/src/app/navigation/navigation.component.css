@@ -5,6 +5,7 @@
     border-bottom-color: #7ab800 ;
     background-color: #f3f4f4;
     top: 0;
+    height: 50px;
     width: 100%;
 }
 .bar a{
@@ -25,6 +26,6 @@
     transform: scale(1.1);
 } 
 .logo{
-    width:11vh;
-    height:10vh;
+    /* width:11vh; */
+    height: 50px;
 }

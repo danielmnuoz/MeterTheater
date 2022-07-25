@@ -153,5 +153,9 @@ p.text span{
   overflow-x:scroll;
 }
 .table{
+  border-style: double;
+  border-color: #636466;
+  background-color: ivory;
   width: 800px;
+  
 }

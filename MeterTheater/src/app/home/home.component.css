@@ -1,5 +1,5 @@
 
-#theaterpage {
+/* #theaterpage {
     float:left;
     width:75%;
     min-height:100%;
@@ -8,4 +8,13 @@
     float:right;
     width:25%;
     min-height:100%;
+} */
+#theaterpage {
+    flex-grow: 1;
+
+}
+#detailpage {
+    min-width: 250px;
+    width: 250px;
+    position: sticky;
 }

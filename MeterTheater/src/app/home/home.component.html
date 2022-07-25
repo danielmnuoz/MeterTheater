@@ -1,8 +1,12 @@
-<div id="nagvigationpage"><app-navigation></app-navigation></div>
-<div id="theaterpage">
-    <app-theater [refreshToggle]="toggle" (onSelectSocket)="selectSocket($event)" (onSelectMeter)="selectMeter($event)">
-    </app-theater>
+<div class="w-100 h-100">
+<!-- <div id="nagvigationpage"><app-navigation></app-navigation></div> -->
+<div class="d-flex">
+    <div id="theaterpage">
+        <app-theater [refreshToggle]="toggle" (onSelectSocket)="selectSocket($event)" (onSelectMeter)="selectMeter($event)">
+        </app-theater>
+    </div>
+    <div id="detailpage">
+        <app-details [socket]="selectedSocket" [meter]="selectedMeter" (onUpdate)="updateInfo()"></app-details>
+    </div>
 </div>
-<div id="detailpage">
-    <app-details [socket]="selectedSocket" [meter]="selectedMeter" (onUpdate)="updateInfo()"></app-details>
 </div>
