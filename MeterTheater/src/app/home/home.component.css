@@ -16,7 +16,8 @@
 }
 #detailpage {
     min-width: 250px !important;
+    height: 100% !important;
     width: 250px;
-    position: sticky;
-    z-index: 1000;
+    /* position: sticky; */
+    /* z-index: 1000; */
 }

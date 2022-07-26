@@ -106,15 +106,16 @@
       <p class="casetext">Owned</p>
     </li>
   </div>
-    <div class="table">
-      <ng-container *ngIf="selectedLab && selectedTable">
-          {{selectedTable.name}}
-          <div class="row" *ngFor="let row of selectedTable.sockets">
-            <div class="slot" *ngIf="row.length == 0"></div>
+  <div class="table">
+    <ng-container *ngIf="selectedLab && selectedTable">
+        {{selectedTable.name}}
+        <div class="row" *ngFor="let row of selectedTable.sockets">
+          <div class="slot" *ngIf="row.length == 0"></div>
             <app-theater-slot class="slot" [selected]="selectedSoc === socket ? true : false" *ngFor="let socket of row" [socket]="socket"
               (onSelectSocket)="selectSocket($event)" (onSelectMeter)="selectMeter($event)">
             </app-theater-slot>
-          </div>
-        </ng-container>
-      </div>
+        </div>
+        <!-- <div class="row"></div> -->
+      </ng-container>
     </div>
+  </div>

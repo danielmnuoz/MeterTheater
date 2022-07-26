@@ -109,7 +109,13 @@ p.casetext{
 p.text span{
     color: rgb(158, 248, 158);
 } */
-
+.theater{
+  border-style: solid;
+  border-color: #636466;
+  background-color: ivory;
+  height: 100vh;
+  background: url('/assets/img/ezgif.com-gif-maker.png') repeat 0 0;
+}
 .key {
   background: rgba(0, 0, 0, 0.1);
   padding: 5px 10px;
@@ -120,6 +126,9 @@ p.text span{
   justify-content: space-between;
   width: 25%;
   margin: auto;
+  position: fixed;
+  bottom: 0;
+  right:250px;
 }
 .key .socket{
   margin: auto;
@@ -151,11 +160,9 @@ p.text span{
   height: 90px;
 }
 .table{
-  border-style: double;
-  border-color: #636466;
-  background-color: ivory;
-  width: 800px;
-  overflow-x: scroll;
+  width: 100%;
+   padding: 1rem;
+  overflow-x: auto;
   scrollbar-color:  #d4aa70 #e4e4e4;
   scrollbar-width:thin;
   margin:auto;
