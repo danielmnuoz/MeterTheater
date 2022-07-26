@@ -13,7 +13,7 @@ import { Table } from '../interfaces/table';
 })
 
 export class TheaterComponent implements OnInit, OnChanges {
-
+  selectedSoc?: LocSocket;
   constructor(
     private meterTheaterDBService: MeterTheaterDBService
   ) { }
@@ -42,6 +42,7 @@ export class TheaterComponent implements OnInit, OnChanges {
 
   selectSocket(socket: LocSocket) {
     this.onSelectSocket.emit(socket)
+    this.selectedSoc = socket;
   }
 
   selectMeter(meter: Meter) {

@@ -143,6 +143,7 @@ p.text span{
 }
 .row{
   display: flex;
+  flex-wrap:nowrap;
 }
 
 .slot{
@@ -157,5 +158,5 @@ p.text span{
   border-color: #636466;
   background-color: ivory;
   width: 800px;
-  
+  overflow-x: scroll
 }

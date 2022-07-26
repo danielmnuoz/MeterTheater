@@ -1,6 +1,6 @@
 <div *ngIf="socket != undefined" (click)="selectSlot()">
   <div *ngIf="socket != undefined && socket.socket != undefined">
-    <div class="socketbutton" tabindex="0" *ngIf="socket.socket.userId == undefined">
+    <div class="socketbutton {{selected ? 'selected' : ''}}" tabindex="0" *ngIf="socket.socket.userId == undefined">
       {{socket.socket.form}}
       <br>
       {{socket.socket.voltage}}V {{socket.coord}}
