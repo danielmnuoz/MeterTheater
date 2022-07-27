@@ -12,6 +12,15 @@ import { MeterTheaterDBService } from '../meter-theater-db.service';
 })
 export class TheaterSlotComponent implements OnInit, OnChanges {
 
+  meter?: Meter;
+  loginUserId?: number;
+  @Input() selected?: boolean = false;
+  @Input() socket?: LocSocket;
+  @Input() labName?: string;
+  @Input() tableName?: string;
+  @Output() onSelectMeter = new EventEmitter<Meter>();
+  @Output() onSelectSocket = new EventEmitter<LocSocket>();
+
   constructor(private meterTheaterDBService: MeterTheaterDBService) { }
 
   ngOnInit(): void {
@@ -23,14 +32,6 @@ export class TheaterSlotComponent implements OnInit, OnChanges {
     this.loginUserId = this.meterTheaterDBService.loginUser.id;
   }
 
-  meter?: Meter;
-  loginUserId?: number;
-
-  @Input() socket?: LocSocket;
-  @Input() labName?: string;
-  @Input() tableName?: string;
-  @Output() onSelectMeter = new EventEmitter<Meter>();
-  @Output() onSelectSocket = new EventEmitter<LocSocket>();
 
   getMeterById(): Observable<Meter | undefined> {
     if (this.socket && this.socket.socket && this.socket.socket.meterId) {

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <div *ngIf="socket">
   Lab: {{socket.labName}}
   <br>
@@ -42,15 +43,58 @@
     <div *ngIf="socket">
       <div *ngIf="out == false">
         <button type="submit" class="btn btn-primary">Check-in</button>
+=======
+<div class="details-container">
+  <div *ngIf="socket">
+    Lab: {{socket.labName}}
+    <br>
+    Table: {{socket.tableName}}
+    <br>
+    Slot: {{socket.coord}}
+  </div>
+  <div *ngIf="socket && socketUser && socket.socket">
+    Current Owner: {{socketUser.name}}
+    <div *ngIf="out == false || out == undefined">Socket Checkout Date: {{socket.socket.checkOutTime | date}}</div>
+    <div *ngIf="out == true">Socket Checkout Date: </div>
+  </div>
+  <div *ngIf="socket != undefined && this.socket.socket != undefined; else noSocket">
+    Socket Form: {{socket.socket.form}}
+    <br>
+    Socket Voltage: {{socket.socket.voltage}}
+    <form (ngSubmit)="onSubmit()" [formGroup]="detailsForm">
+      <mat-form-field>
+        <input type="text" matInput placeholder="Meter LAN ID" name="Meter LAN ID" aria-label="Meter LAN ID"
+          aria-describedby="Meter LAN ID Input" formControlName="meterLanId">
+        <mat-error *ngIf="detailsForm.get('meterLanId')?.errors?.['pattern']">Must enter hex value</mat-error>
+        <mat-error
+          *ngIf="detailsForm.get('meterLanId')?.errors?.['maxlength'] || detailsForm.get('meterLanId')?.errors?.['minlength']">
+          Must be 8 characters in length</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input type="text" matTooltip="A value of 1 will Check-in tonight at midnight" matInput
+          placeholder="Days Until Auto Check-in" name="Days Until Auto Check-in" aria-label="Days Until Auto Check-in"
+          aria-describedby="Days Until Auto Check-in Input" formControlName="duration">
+        <mat-error
+          *ngIf="detailsForm.get('duration')?.errors?.['pattern'] || detailsForm.get('duration')?.errors?.['min']">Must
+          enter positive integer</mat-error>
+        <mat-error *ngIf="detailsForm.get('duration')?.errors?.['required']">Field is required</mat-error>
+        <mat-error *ngIf="detailsForm.get('duration')?.errors?.['max']">Must be less than or equal to 14</mat-error>
+      </mat-form-field>
+      <div class="verticalPadding"></div>
+      <div *ngIf="socket">
+        <div *ngIf="out == false">
+          <button type="submit" class="btn btn-primary">Check-in</button>
+        </div>
+        <div *ngIf="out == true">
+          <button [disabled]="!detailsForm.valid" type="submit" class="btn btn-primary">Checkout</button>
+          <mat-error *ngIf="meterUseError">{{errorMeterUser ? loginUser.id == errorMeterUser.id ? sameUserText :
+            errorMeterUser.name + useText : 'An unknown user' + useText}}</mat-error>
+          <mat-error *ngIf="refreshError">That socket is no longer available.</mat-error>
+        </div>
+>>>>>>> 5bf75dc5fe9466859d21796b317706566ca0d2c3
       </div>
-      <div *ngIf="out == true">
-        <button [disabled]="!detailsForm.valid" type="submit" class="btn btn-primary">Checkout</button>
-        <mat-error *ngIf="meterUseError">{{errorMeterUser ? loginUser.id == errorMeterUser.id ? sameUserText :
-          errorMeterUser.name + useText : 'An unknown user' + useText}}</mat-error>
-        <mat-error *ngIf="refreshError">That socket is no longer available.</mat-error>
-      </div>
-    </div>
-  </form>
+    </form>
+  </div>
 </div>
 <ng-template #noSocket>
   <div>
