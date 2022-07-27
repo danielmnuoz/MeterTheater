@@ -56,6 +56,14 @@
           {{data.socket.socket.duration}}
         </mat-cell>
       </ng-container>
+      <ng-container matColumnDef="comment">
+        <mat-header-cell *matHeaderCellDef>
+          Comment
+        </mat-header-cell>
+        <mat-cell *matCellDef="let data">
+          {{data.socket.socket.comment}}
+        </mat-cell>
+      </ng-container>
       <ng-container matColumnDef="meterLanId">
         <mat-header-cell *matHeaderCellDef>
           Meter LAN ID
@@ -75,10 +83,10 @@
         </mat-cell>
       </ng-container>
       <mat-header-row
-        *matHeaderRowDef="['labName','tableName','coord','form', 'voltage','duration','meterLanId','checkIn']">
+        *matHeaderRowDef="['labName','tableName','coord','form', 'voltage','duration','comment','meterLanId','checkIn']">
       </mat-header-row>
       <mat-row
-        *matRowDef="let data; columns: ['labName','tableName','coord','form', 'voltage','duration','meterLanId','checkIn']">
+        *matRowDef="let data; columns: ['labName','tableName','coord','form', 'voltage','duration','comment','meterLanId','checkIn']">
       </mat-row>
     </mat-table>
   </div>

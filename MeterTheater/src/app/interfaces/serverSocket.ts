@@ -8,4 +8,5 @@ export interface ServerSocket{
     socketCheckOutTime?: string;
     socketCheckInTime?: string;
     socketDuration?: number;
+    socketComment?: string;
 }

@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.meterTheaterDBService.resetLoginUser();
+    this.meterTheaterDBService.resetLoginUser().subscribe();
   }
 
   username: string = '';
@@ -30,20 +30,17 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     var username: string = this.username;
-    var found: boolean = false;
     this.submitted = true;
-    this.meterTheaterDBService.searchUserByName(username).subscribe(users => {
-      for (var user of users) {
-        if(user.name == undefined){
-          continue;
-        }
-        if (user.name.length == username.length && user.name.toLowerCase() === username.toLowerCase()) {
-          this.meterTheaterDBService.loginUser = user;
-          found = true;
-          break;
-        }
-      }
-      if(found){
+    this.meterTheaterDBService.postLoginUser(username).subscribe(user => {
+      if (user == undefined) {
+        this.found = false;
+        var log: Log = {
+          description: `Failed Login: ${username}`,
+        };
+        this.meterTheaterDBService.addLog(log).subscribe();
+      } else {
+        this.found = true;
+        this.meterTheaterDBService.loginUser = user;
         var log: Log = {
           description: "Successful Login",
           userId: this.meterTheaterDBService.loginUser.id
@@ -51,15 +48,8 @@ export class LoginComponent implements OnInit {
         this.meterTheaterDBService.addLog(log).subscribe();
         // this should be in subscribe so that the rest of the website waits for user before querying db
         this.router.navigateByUrl('home');
-      }else{
-        this.found = false;
-        var log: Log = {
-          description: `Failed Login: ${username}`,
-        };
-        this.meterTheaterDBService.addLog(log).subscribe();
       }
-    }
-    );
+    });
   }
 
 }

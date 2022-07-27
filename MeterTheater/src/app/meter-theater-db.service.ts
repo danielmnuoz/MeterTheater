@@ -36,6 +36,7 @@ export class MeterTheaterDBService {
   private METERURL = 'Meters';
   private LABURL = 'Labs';
   private LOGURL = 'Logs';
+  private LOGINURL = 'Logins'
 
   DEFAULT_USER: User = {
     id: undefined,
@@ -45,7 +46,8 @@ export class MeterTheaterDBService {
   loginUser: User = this.DEFAULT_USER;
 
   httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+    withCredentials: true
   };
 
   loginCheck(): boolean {
@@ -56,8 +58,9 @@ export class MeterTheaterDBService {
     }
   }
 
-  resetLoginUser(): void {
-    this.loginUser = this.DEFAULT_USER
+  resetLoginUser(): Observable<undefined> {
+    this.loginUser = this.DEFAULT_USER;
+    return this.getLogout();
   }
 
   coords2stringH(i: number): string {
@@ -252,7 +255,8 @@ export class MeterTheaterDBService {
       locationId: serverSocket.socketLocationId,
       checkOutTime: serverSocket.socketCheckOutTime,
       checkInTime: serverSocket.socketCheckInTime,
-      duration: serverSocket.socketDuration
+      duration: serverSocket.socketDuration,
+      comment: serverSocket.socketComment
     } as Socket
   }
 
@@ -266,7 +270,8 @@ export class MeterTheaterDBService {
       socketLocationId: socket.locationId,
       socketCheckInTime: socket.checkInTime,
       socketCheckOutTime: socket.checkOutTime,
-      socketDuration: socket.duration
+      socketDuration: socket.duration,
+      socketComment: socket.comment
     } as ServerSocket
   }
 
@@ -345,6 +350,29 @@ export class MeterTheaterDBService {
       extendedLabs.push(this.serverExtendedLab2ExtendedLab(serverExtendedLab));
     }
     return extendedLabs;
+  }
+
+  postLoginUser(name: string): Observable<User | undefined> {
+    const url = `${this.APIURL + this.LOGINURL}/Login`;
+    return this.http.post<ServerUser | undefined>(url, JSON.stringify(name), this.httpOptions).pipe(
+      map(serverUser => serverUser != undefined ? this.serverUser2User(serverUser) : undefined),
+      catchError(this.handleError<User | undefined>('postLoginUser'))
+    );
+  }
+
+  // postLoginUser(name: string): Observable<any> {
+  //   const url = `${this.APIURL + this.LOGINURL}/Login`;
+  //   return this.http.post<any>(url, JSON.stringify(name), this.httpOptions).pipe(
+  //     map(response => console.log(response)),
+  //     catchError(this.handleError<any>('postLoginUser'))
+  //   );
+  // }
+
+  getLogout(): Observable<undefined> {
+    const url = `${this.APIURL + this.LOGINURL}/Logout`;
+    return this.http.get<undefined>(url).pipe(
+      catchError(this.handleError<undefined>('getLogout'))
+    );
   }
 
   /** GET labs from the server */

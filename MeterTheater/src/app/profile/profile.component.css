@@ -4,7 +4,8 @@
 
 mat-header-cell,
 mat-cell {
-  justify-content: center;
+  /* justify-content: center; */
+  overflow: auto;
 }
 
 .container {

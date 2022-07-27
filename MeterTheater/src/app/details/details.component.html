@@ -33,6 +33,11 @@
       <mat-error *ngIf="detailsForm.get('duration')?.errors?.['required']">Field is required</mat-error>
       <mat-error *ngIf="detailsForm.get('duration')?.errors?.['max']">Must be less than or equal to 14</mat-error>
     </mat-form-field>
+    <mat-form-field>
+      <textarea type="text" matInput placeholder="Comment" name="Comment" aria-label="Comment"
+        aria-describedby="Comment Input" formControlName="comment"></textarea>
+      <mat-error *ngIf="detailsForm.get('comment')?.errors?.['maxlength']">Must have 100 characters or less</mat-error>
+    </mat-form-field>
     <div class="verticalPadding"></div>
     <div *ngIf="socket">
       <div *ngIf="out == false">

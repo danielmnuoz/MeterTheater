@@ -56,7 +56,8 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
 
   detailsForm = this.fb.group({
     meterLanId: [this.meter?.lanId, [Validators.pattern("[a-fA-F0-9]*"), Validators.minLength(8), Validators.maxLength(8)]],
-    duration: [this.socket?.socket?.duration, [Validators.pattern("[1-9][0-9]*"), Validators.min(1), Validators.max(14), Validators.required]]
+    duration: [this.socket?.socket?.duration, [Validators.pattern("[1-9][0-9]*"), Validators.min(1), Validators.max(14), Validators.required]],
+    comment: [this.socket?.socket?.comment, [Validators.maxLength(100)]]
   });
 
   setInits(skipForm: boolean = false) {
@@ -71,14 +72,17 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
       this.out = undefined;
     }
     if (this.out != true) {
-      this.detailsForm.get('duration')?.disable()
-      this.detailsForm.get('meterLanId')?.disable()
+      this.detailsForm.get('duration')?.disable();
+      this.detailsForm.get('meterLanId')?.disable();
+      this.detailsForm.get('comment')?.disable();
     } else {
-      this.detailsForm.get('duration')?.enable()
-      this.detailsForm.get('meterLanId')?.enable()
+      this.detailsForm.get('duration')?.enable();
+      this.detailsForm.get('meterLanId')?.enable();
+      this.detailsForm.get('comment')?.enable();
     }
     if (!skipForm) {
       if (this.socket != undefined && this.socket.socket != undefined) {
+        this.detailsForm.get('comment')?.setValue(this.socket.socket.comment);
         if (this.socket.socket.duration != undefined) {
           this.detailsForm.get('duration')?.setValue(this.socket.socket.duration);
         } else {
@@ -86,6 +90,7 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
         }
       } else {
         this.detailsForm.get('duration')?.setValue(undefined);
+        this.detailsForm.get('comment')?.setValue(undefined);
       }
       if (this.meter != undefined) {
         this.detailsForm.get('meterLanId')?.setValue(this.meter.lanId);
@@ -103,7 +108,7 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  checkOut(duration: number | undefined, meterLanId: string | undefined) {
+  checkOut(duration: number | undefined, meterLanId: string | undefined, comment: string | undefined) {
     if (this.socket != undefined && this.socket.socket != undefined) {
       if (this.socket.socket.id == undefined) {
         return;
@@ -117,6 +122,7 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
           if (this.socket != undefined && this.socket.socket != undefined) {
             this.socket.socket.userId = this.meterTheaterDBService.loginUser.id;
             this.socket.socket.duration = duration;
+            this.socket.socket.comment = comment;
             this.socketUser = this.meterTheaterDBService.loginUser;
             if (meterLanId != undefined) {
               this.meterTheaterDBService.searchMetersByLanId(meterLanId).subscribe(meters => {
@@ -193,6 +199,7 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
     if (this.socket && this.socket.socket) {
       this.socket.socket.userId = undefined;
       this.socket.socket.duration = undefined;
+      this.socket.socket.comment = undefined;
       var meterId: number | undefined = this.socket.socket.meterId;
       this.socket.socket.meterId = undefined;
       this.meter = undefined;
@@ -235,6 +242,7 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
     }
     var duration: number | undefined = this.detailsForm.get('duration')?.value?.valueOf();
     var meterLanId = this.detailsForm.get('meterLanId')?.value?.toString();
+    var comment: string | undefined = this.detailsForm.get('comment')?.value?.toString();
     if (this.meterTheaterDBService.loginUser.id != undefined) {
       this.meterTheaterDBService.getUserSockets(this.meterTheaterDBService.loginUser.id).subscribe(sockets => {
         if (sockets.length >= 5) {
@@ -260,13 +268,13 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
                 this.meterUseError = false;
               }
               if (this.out == true) {
-                this.checkOut(duration, meterLanId);
+                this.checkOut(duration, meterLanId, comment);
                 return;
               }
             } else {
               this.meterUseError = false;
               if (this.out == true) {
-                this.checkOut(duration, meterLanId);
+                this.checkOut(duration, meterLanId, comment);
                 return;
               }
             }
@@ -274,7 +282,7 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
         } else {
           this.meterUseError = false;
           if (this.out == true) {
-            this.checkOut(duration, meterLanId);
+            this.checkOut(duration, meterLanId, comment);
             return;
           }
         }
