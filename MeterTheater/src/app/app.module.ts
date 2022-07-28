@@ -27,7 +27,6 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatTableModule } from '@angular/material/table';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
-import { CookieService } from 'ngx-cookie-service';
 
 @NgModule({
   declarations: [
@@ -57,7 +56,7 @@ import { CookieService } from 'ngx-cookie-service';
     ReactiveFormsModule,
     BrowserAnimationsModule
   ],
-  providers: [CookieService],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
