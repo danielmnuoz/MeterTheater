@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from '../interfaces/user';
 import { Log } from '../interfaces/log';
-
+import { Validators, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router'
 
 import { MeterTheaterDBService } from '../meter-theater-db.service';
@@ -13,24 +13,27 @@ import { MeterTheaterDBService } from '../meter-theater-db.service';
 })
 export class LoginComponent implements OnInit {
 
-  submitted = false;
-
   constructor(
     private router: Router,
-    private meterTheaterDBService: MeterTheaterDBService
+    private meterTheaterDBService: MeterTheaterDBService,
+    private fb: FormBuilder
   ) { }
 
   ngOnInit(): void {
     this.meterTheaterDBService.resetLoginUser().subscribe();
   }
 
-  username: string = '';
-  potentialMatches: User[] = [];
   found: boolean = true;
 
+  loginForm = this.fb.group({
+    username: ['', [Validators.required]]
+  });
+
   onSubmit() {
-    var username: string = this.username;
-    this.submitted = true;
+    var username: string | undefined = this.loginForm.get('username')?.value?.toString();
+    if (username == undefined) {
+      username = '';
+    }
     this.meterTheaterDBService.postLoginUser(username).subscribe(user => {
       if (user == undefined) {
         this.found = false;
