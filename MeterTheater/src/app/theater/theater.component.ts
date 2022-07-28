@@ -1,10 +1,10 @@
-import { Component, EventEmitter, Input, OnInit, Output, OnChanges, SimpleChange, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { Meter } from '../interfaces/meter';
-import { Socket } from '../interfaces/socket'
 import { LocSocket } from '../interfaces/locSocket';
 import { MeterTheaterDBService } from '../meter-theater-db.service';
 import { Lab } from '../interfaces/lab';
 import { Table } from '../interfaces/table';
+import { User } from '../interfaces/user';
 
 @Component({
   selector: 'app-theater',
@@ -19,6 +19,7 @@ export class TheaterComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnInit(): void {
+    this.loginUser = this.meterTheaterDBService.loginUser;
     var selectedLabId: number | undefined = this.selectedLab?.id;
     var selectedTableId: number | undefined = this.selectedTable?.id;
     this.getSocketInfos(selectedLabId, selectedTableId);
@@ -33,6 +34,7 @@ export class TheaterComponent implements OnInit, OnChanges {
   labs: Lab[] = [];
   selectedLab?: Lab;
   selectedTable?: Table;
+  loginUser: User = this.meterTheaterDBService.loginUser;
 
   @Output() onSelectSocket = new EventEmitter<LocSocket>();
   @Output() onSelectMeter = new EventEmitter<Meter>();

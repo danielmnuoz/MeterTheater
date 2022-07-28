@@ -166,7 +166,7 @@ p.text span{
   scrollbar-color:  #d4aa70 #e4e4e4;
   scrollbar-width:thin;
   margin:auto;
-} 
+}
 .table::-webkit-scrollbar {
   width: 20px;
 }
@@ -178,4 +178,7 @@ p.text span{
   background-image: linear-gradient(180deg, #7ab800 0%, #33647f 99%);
   box-shadow: inset 2px 2px 5px 0 rgba(#fff, 0.5);
   border-radius: 100px;
+}
+.user{
+  margin-bottom: 15px;
 }

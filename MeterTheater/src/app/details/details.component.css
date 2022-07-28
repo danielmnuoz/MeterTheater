@@ -3,11 +3,33 @@
   height: 100% !important;
   padding: 5px !important;
 }
-.verticalPadding {
-  height: 25px;
+
+textarea {
+  max-height: 100px;
 }
 
-.mat-form-field {
-  display: block;
-  max-width: 200px;
+.mat-list-item {
+  font-size: small;
+}
+
+.item-align {
+  margin-top: 16px;
+  padding-left: 16px;
+}
+
+.center-container {
+  margin: auto;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flexbox;
+  justify-content: center;
+  align-items: center;
+}
+
+.local-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
