@@ -110,8 +110,8 @@ p.text span{
     color: rgb(158, 248, 158);
 } */
 .theater{
-  border-style: solid;
-  border-color: #636466;
+  /* border-style: solid;
+  border-right-color: #568002; */
   background-color: ivory;
   height: 100%;
   background: url('/assets/img/ezgif.com-gif-maker.png') repeat 0 0;
@@ -135,8 +135,8 @@ p.text span{
 }
 .socket{
   background-color: #7ab800;
-  height: 4vh;
-  width: 4vh;
+  height: 37px;
+  width: 37px;
   margin: 5px;
   border-radius:1vh;
 }
