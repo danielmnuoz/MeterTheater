@@ -24,12 +24,14 @@ export class LoginComponent implements OnInit {
   }
 
   found: boolean = true;
+  disableLogin: boolean = false;
 
   loginForm = this.fb.group({
     username: ['', [Validators.required]]
   });
 
   onSubmit() {
+    this.disableLogin = true;
     var username: string | undefined = this.loginForm.get('username')?.value?.toString();
     if (username == undefined) {
       username = '';
@@ -40,6 +42,7 @@ export class LoginComponent implements OnInit {
         var log: Log = {
           description: `Failed Login: ${username}`,
         };
+        this.disableLogin = false;
         this.meterTheaterDBService.addLog(log).subscribe();
       } else {
         this.found = true;
@@ -48,6 +51,7 @@ export class LoginComponent implements OnInit {
           description: "Successful Login",
           userId: this.meterTheaterDBService.loginUser.id
         };
+        this.disableLogin = false;
         this.meterTheaterDBService.addLog(log).subscribe();
         // this should be in subscribe so that the rest of the website waits for user before querying db
         this.router.navigateByUrl('home');

@@ -45,6 +45,7 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
   errorMeterUser?: User;
   refreshError: boolean = false;
   snackBarRef?: MatSnackBarRef<TextOnlySnackBar>;
+  disableCheck: boolean = false;
 
   useText: string = ' is already using that meter.';
   sameUserText: string = 'You own this meter, but you are using it somewhere else. Please Check-in the meter.';
@@ -110,11 +111,13 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
   checkOut(duration: number | undefined, meterLanId: string | undefined, comment: string | undefined) {
     if (this.socket != undefined && this.socket.socket != undefined) {
       if (this.socket.socket.id == undefined) {
+        this.disableCheck = false;
         return;
       }
       this.meterTheaterDBService.getSocketById(this.socket.socket.id).subscribe(socket => {
         if (socket.userId != undefined) {
           this.refreshError = true;
+          this.disableCheck = false;
           return;
         } else {
           this.refreshError = false;
@@ -136,13 +139,18 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
                             if (this.socket) {
                               this.socket.socket = socket;
                             }
+                            this.disableCheck = false;
                             this.setInits(true);
                             this.toggleUpdate();
                           });
+                        } else {
+                          this.disableCheck = false;
                         }
                       });
                       var description: string = "Checkout: Meter Updated";
                       this.meterTheaterDBService.addLog({ userId: this.meterTheaterDBService.loginUser.id, socketId: this.socket.socket.id, meterId: meters[0].id, description: description } as Log).subscribe();
+                    } else {
+                      this.disableCheck = false;
                     }
                   });
                 } else {
@@ -158,18 +166,27 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
                       if (this.socket != undefined) {
                         this.socket.socket = socket;
                       }
+                      this.disableCheck = false;
                       this.setInits(true);
                       this.toggleUpdate();
                     });
+                  } else {
+                    this.disableCheck = false;
                   }
                 });
                 var description: string = "Checkout";
                 this.meterTheaterDBService.addLog({ userId: this.meterTheaterDBService.loginUser.id, socketId: this.socket.socket.id, meterId: undefined, description: description } as Log).subscribe();
+              } else {
+                this.disableCheck = false;
               }
             }
+          } else {
+            this.disableCheck = false;
           }
         }
       });
+    } else {
+      this.disableCheck = false;
     }
   }
 
@@ -183,13 +200,18 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
               if (this.socket) {
                 this.socket.socket = socket;
               }
+              this.disableCheck = false;
               this.setInits(true);
               this.toggleUpdate();
             });
+          } else {
+            this.disableCheck = false;
           }
         });
         var description: string = "Checkout: Meter Added";
         this.meterTheaterDBService.addLog({ userId: this.meterTheaterDBService.loginUser.id, socketId: this.socket.socket.id, meterId: meter.id, description: description } as Log).subscribe();
+      } else {
+        this.disableCheck = false;
       }
     });
   }
@@ -214,21 +236,33 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
               if (meterId != undefined) {
                 this.meterTheaterDBService.getMeterById(meterId).subscribe(meter => {
                   meter.userId = undefined;
-                  this.meterTheaterDBService.updateMeter(meter).subscribe();
-                })
+                  this.meterTheaterDBService.updateMeter(meter).subscribe(_ => {
+                    this.disableCheck = false;
+                  });
+                });
+              } else {
+                this.disableCheck = false;
               }
               this.setInits();
               this.toggleUpdate();
             });
+          } else {
+            this.disableCheck = false;
           }
         });
         this.meterTheaterDBService.addLog({ userId: this.meterTheaterDBService.loginUser.id, socketId: this.socket.socket.id, meterId: meterId, description: description } as Log).subscribe();
+      } else {
+        this.disableCheck = false;
       }
+    } else {
+      this.disableCheck = false;
     }
   }
 
   onSubmit() {
+    this.disableCheck = true;
     if (!this.meterTheaterDBService.loginCheck()) {
+      this.disableCheck = false;
       return;
     }
     if (this.out == false) {
@@ -242,6 +276,12 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
     var duration: number | undefined = this.detailsForm.get('duration')?.value?.valueOf();
     var meterLanId = this.detailsForm.get('meterLanId')?.value?.toString();
     var comment: string | undefined = this.detailsForm.get('comment')?.value?.toString();
+    if (meterLanId?.length == 0) {
+      meterLanId = undefined;
+    }
+    if (comment?.length == 0) {
+      comment = undefined;
+    }
     if (this.meterTheaterDBService.loginUser.id != undefined) {
       this.meterTheaterDBService.getUserSockets(this.meterTheaterDBService.loginUser.id).subscribe(sockets => {
         if (sockets.length >= 5) {
@@ -260,7 +300,9 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
               if (meters[0].userId != undefined) {
                 this.meterUseError = true;
                 this.meterTheaterDBService.getUserById(meters[0].userId).subscribe(user => {
+                  console.log(meters[0].lanId?.length);
                   this.errorMeterUser = user;
+                  this.disableCheck = false;
                 });
                 return;
               } else {
@@ -269,12 +311,16 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
               if (this.out == true) {
                 this.checkOut(duration, meterLanId, comment);
                 return;
+              } else {
+                this.disableCheck = false;
               }
             } else {
               this.meterUseError = false;
               if (this.out == true) {
                 this.checkOut(duration, meterLanId, comment);
                 return;
+              } else {
+                this.disableCheck = false;
               }
             }
           });
@@ -283,9 +329,13 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
           if (this.out == true) {
             this.checkOut(duration, meterLanId, comment);
             return;
+          } else {
+            this.disableCheck = false;
           }
         }
       });
+    } else {
+      this.disableCheck = false;
     }
   }
 

@@ -13,7 +13,7 @@
         User not found
       </div>
       <div class="local-center">
-        <button type="submit" class="btn btn-success" [disabled]="!loginForm.valid">Login</button>
+        <button type="submit" class="btn btn-success" [disabled]="!loginForm.valid || disableLogin">Login</button>
       </div>
     </div>
   </form>

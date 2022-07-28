@@ -1,4 +1,3 @@
-<!-- <app-navigation></app-navigation> -->
 <div class="container">
   <div class="user local-center">
     {{user.name}}
@@ -79,7 +78,7 @@
           Action
         </mat-header-cell>
         <mat-cell *matCellDef="let data">
-          <button (click)="singleCheckIn(data)" type="submit" class="btn btn-primary">Check-in</button>
+          <button (click)="singleCheckIn(data)" type="submit" class="btn btn-primary" [disabled]="checkInDisable">Check-in</button>
         </mat-cell>
       </ng-container>
       <mat-header-row

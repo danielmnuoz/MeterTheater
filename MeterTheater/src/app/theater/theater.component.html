@@ -1,5 +1,5 @@
 <div class="theater">
-  <div class="user">{{loginUser.name}}</div>
+  <div class="user">Welcome {{loginUser.name}}</div>
   <mat-form-field>
     <mat-select name="lab" placeholder="Lab" [(ngModel)]="selectedLab" (selectionChange)="setSelectedTable()">
       <mat-option *ngFor="let lab of labs" [value]="lab">
@@ -28,7 +28,6 @@
   </div>
   <div class="table">
     <ng-container *ngIf="selectedLab && selectedTable">
-      {{selectedTable.name}}
       <div class="row" *ngFor="let row of selectedTable.sockets">
         <div class="slot" *ngIf="row.length == 0"></div>
         <app-theater-slot class="slot" [selected]="selectedSoc === socket ? true : false" *ngFor="let socket of row"

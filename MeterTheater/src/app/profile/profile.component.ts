@@ -35,6 +35,7 @@ export class ProfileComponent implements OnInit {
   tableDataSource = new MatTableDataSource<any>();
 
   user: User = this.meterTheaterDBService.DEFAULT_USER;
+  checkInDisable: boolean = false;
 
   checkIn(socket: LocSocket, meter: Meter) {
     if (socket && socket.socket) {
@@ -44,17 +45,21 @@ export class ProfileComponent implements OnInit {
       var meterId: number | undefined = socket.socket.meterId;
       socket.socket.meterId = undefined;
       var description: string = "Check-in";
+      // always true
       if (socket) {
         this.meterTheaterDBService.checkInSocket(socket.socket).subscribe(_ => {
+          // always true
           if (socket?.socket?.id) {
             this.meterTheaterDBService.getSocketById(socket.socket.id).subscribe(socket => {
-              if (socket) {
-              }
               if (meterId != undefined) {
                 this.meterTheaterDBService.getMeterById(meterId).subscribe(meter => {
                   meter.userId = undefined;
-                  this.meterTheaterDBService.updateMeter(meter).subscribe();
+                  this.meterTheaterDBService.updateMeter(meter).subscribe(_ => {
+                    this.checkInDisable = false;
+                  });
                 })
+              } else {
+                this.checkInDisable = false;
               }
               this.getSockets();
             });
@@ -62,11 +67,15 @@ export class ProfileComponent implements OnInit {
         });
         this.meterTheaterDBService.addLog({ userId: this.meterTheaterDBService.loginUser.id, socketId: socket.socket.id, meterId: meterId, description: description } as Log).subscribe();
       }
+    } else {
+      this.checkInDisable = false;
     }
   }
 
   singleCheckIn(data: any) {
+    this.checkInDisable = true;
     if (!this.meterTheaterDBService.loginCheck()) {
+      this.checkInDisable = false;
       return;
     }
     this.checkIn(data.socket, data.meter);
