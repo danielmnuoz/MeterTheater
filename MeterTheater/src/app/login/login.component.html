@@ -2,10 +2,10 @@
   <form (ngSubmit)="onSubmit(); loginForm.reset()" #loginForm="ngForm">
     <div class="form-group">
       <div class="local-center">
-        <div class="input-group mb-3">
-          <input type="text" placeholder="Username" class="form-control" id="Username" required [(ngModel)]="username"
-            name="name" #name="ngModel" aria-label="Username" aria-describedby="username input">
-        </div>
+        <mat-form-field>
+          <input matInput type="text" placeholder="Username" class="form-control" id="Username" required
+            [(ngModel)]="username" name="name" #name="ngModel" aria-label="Username" aria-describedby="username input">
+        </mat-form-field>
       </div>
       <div [hidden]="name.valid || name.pristine" class="alert alert-danger">
         Username is required
