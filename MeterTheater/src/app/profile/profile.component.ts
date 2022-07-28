@@ -40,6 +40,7 @@ export class ProfileComponent implements OnInit {
     if (socket && socket.socket) {
       socket.socket.userId = undefined;
       socket.socket.duration = undefined;
+      socket.socket.comment = undefined;
       var meterId: number | undefined = socket.socket.meterId;
       socket.socket.meterId = undefined;
       var description: string = "Check-in";

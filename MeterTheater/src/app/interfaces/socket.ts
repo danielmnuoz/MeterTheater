@@ -8,4 +8,5 @@ export interface Socket{
     checkOutTime?: string;
     checkInTime?: string;
     duration?: number;
+    comment?: string;
 }
