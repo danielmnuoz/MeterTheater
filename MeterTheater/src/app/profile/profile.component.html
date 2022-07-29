@@ -43,7 +43,7 @@
         </ng-container>
         <ng-container matColumnDef="voltage">
           <mat-header-cell *matHeaderCellDef>
-            Voltage (V)
+            Voltage
           </mat-header-cell>
           <mat-cell *matCellDef="let data">
             {{data.socket.socket.voltage}}
@@ -51,7 +51,7 @@
         </ng-container>
         <ng-container matColumnDef="duration">
           <mat-header-cell *matHeaderCellDef>
-            Expected Checkout Duration (days)
+            Expected Duration (remaining days)
           </mat-header-cell>
           <mat-cell *matCellDef="let data">
             {{data.socket.socket.duration}}

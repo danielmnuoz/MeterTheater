@@ -86,7 +86,7 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
         if (this.socket.socket.duration != undefined) {
           this.detailsForm.get('duration')?.setValue(this.socket.socket.duration);
         } else {
-          this.detailsForm.get('duration')?.setValue(1);
+          this.detailsForm.get('duration')?.setValue(7);
         }
       } else {
         this.detailsForm.get('duration')?.setValue(undefined);

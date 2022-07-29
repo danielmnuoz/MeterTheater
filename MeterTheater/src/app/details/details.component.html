@@ -49,9 +49,9 @@
         Must be 8 characters in length</mat-error>
     </mat-form-field>
     <mat-form-field class="item-align">
-      <input type="text" matInput placeholder="Expected Checkout Duration (days)"
-        name="Expected Checkout Duration (days)" aria-label="Expected Checkout Duration (days)"
-        aria-describedby="Expected Checkout Duration (days)" formControlName="duration">
+      <input type="text" matInput placeholder="Expected Duration (remaining days)"
+        name="Expected Duration (remaining days)" aria-label="Expected Duration (remaining days)"
+        aria-describedby="Expected Duration (remaining days)" formControlName="duration">
       <mat-error
         *ngIf="detailsForm.get('duration')?.errors?.['pattern'] || detailsForm.get('duration')?.errors?.['min']">Must
         enter positive integer</mat-error>
