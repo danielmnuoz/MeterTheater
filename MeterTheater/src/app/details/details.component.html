@@ -1,15 +1,15 @@
 <div class="details-container">
   <div *ngIf="socket">
     <mat-list>
-      <mat-list-item>Lab: {{socket.labName}}</mat-list-item>
+      <mat-list-item>Lab: <strong> &nbsp;{{socket.labName}}</strong></mat-list-item>
       <mat-divider></mat-divider>
-      <mat-list-item>Table: {{socket.tableName}}</mat-list-item>
+      <mat-list-item>Table: <strong> &nbsp;{{socket.tableName}}</strong></mat-list-item>
       <mat-divider></mat-divider>
-      <mat-list-item>Slot: {{socket.coord}}</mat-list-item>
+      <mat-list-item>Slot: <strong> &nbsp;{{socket.coord}}</strong></mat-list-item>
       <mat-divider></mat-divider>
       <ng-container *ngIf="socket && socketUser && socket.socket">
         <mat-list-item>
-          Current Owner: {{socketUser.name}}
+          Current Owner: <strong> &nbsp; {{socketUser.name}}</strong>
         </mat-list-item>
         <mat-divider></mat-divider>
       </ng-container>
@@ -17,7 +17,7 @@
         *ngIf="socket != undefined && socketUser != undefined && socket.socket != undefined && (out == false || out == undefined)">
         <mat-list-item>
           Socket Checkout
-          Date: {{socket.socket.checkOutTime | date}}</mat-list-item>
+          Date: <strong> &nbsp;{{socket.socket.checkOutTime | date}}</strong></mat-list-item>
         <mat-divider></mat-divider>
       </ng-container>
       <ng-container *ngIf="out == true">
@@ -26,13 +26,14 @@
       </ng-container>
       <ng-container *ngIf="socket != undefined && this.socket.socket != undefined">
         <mat-list-item>Socket Form:
-          {{socket.socket.form}}
+          <strong> &nbsp;{{socket.socket.form}}</strong>
         </mat-list-item>
         <mat-divider></mat-divider>
       </ng-container>
       <ng-container *ngIf="socket != undefined && this.socket.socket != undefined">
         <mat-list-item>Socket Voltage:
-          {{socket.socket.voltage}}</mat-list-item>
+          <strong> &nbsp;{{socket.socket.voltage}}</strong>
+        </mat-list-item>
         <mat-divider></mat-divider>
       </ng-container>
     </mat-list>
@@ -66,7 +67,7 @@
     <div class="verticalPadding"></div>
     <div class="item-align" *ngIf="socket">
       <div *ngIf="out == false">
-        <button [disabled] = "disableCheck" type="submit" class="btn btn-primary">Check-in</button>
+        <button [disabled]="disableCheck" type="submit" class="btn btn-primary">Check-in</button>
       </div>
       <div *ngIf="out == true">
         <button [disabled]="!detailsForm.valid || disableCheck" type="submit" class="btn btn-primary">Checkout</button>
