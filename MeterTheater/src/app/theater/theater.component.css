@@ -117,11 +117,11 @@ p.text span{
   list-style-type: none;
   display: flex;
   justify-content: space-between;
-  width: 25%;
+  width: 175px;
   margin: auto;
   position: fixed;
-  bottom: 0;
-  right: 250px;
+  top: 50px;
+  right:250px;
 }
 
 .key .socket {
@@ -133,12 +133,12 @@ p.text span{
   height: 37px;
   width: 37px;
   margin: 5px;
-  border-radius: 1vh;
+  border-radius:10px;
 }
 
 .casetext {
   font-weight: bold;
-  font-size: 1vw;
+  font-size: 13px;
 }
 
 .socket.owned {
@@ -163,11 +163,10 @@ p.text span{
   width: 100%;
   padding: 1rem;
   overflow-x: auto;
-  scrollbar-color: #d4aa70 #e4e4e4;
-  scrollbar-width: thin;
-  margin: auto;
+  scrollbar-color:  #d4aa70 #e4e4e4;
+  scrollbar-width:thin;
+  margin:auto;
 }
-
 .table::-webkit-scrollbar {
   width: 20px;
 }
@@ -181,8 +180,4 @@ p.text span{
   background-image: linear-gradient(180deg, #7ab800 0%, #33647f 99%);
   box-shadow: inset 2px 2px 5px 0 rgba(#fff, 0.5);
   border-radius: 100px;
-}
-
-.user {
-  margin-bottom: 15px;
 }
