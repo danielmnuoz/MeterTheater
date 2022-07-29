@@ -55,7 +55,7 @@
         *ngIf="detailsForm.get('duration')?.errors?.['pattern'] || detailsForm.get('duration')?.errors?.['min']">Must
         enter positive integer</mat-error>
       <mat-error *ngIf="detailsForm.get('duration')?.errors?.['required']">Field is required</mat-error>
-      <mat-error *ngIf="detailsForm.get('duration')?.errors?.['max']">Must be less than or equal to 14</mat-error>
+      <mat-error *ngIf="detailsForm.get('duration')?.errors?.['max']">Must be less than or equal to 180</mat-error>
     </mat-form-field>
     <mat-form-field class="item-align">
       <textarea type="text" matInput placeholder="Comment" name="Comment" aria-label="Comment"

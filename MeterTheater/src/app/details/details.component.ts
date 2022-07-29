@@ -56,7 +56,7 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
 
   detailsForm = this.fb.group({
     meterLanId: [this.meter?.lanId, [Validators.pattern("[a-fA-F0-9]*"), Validators.minLength(8), Validators.maxLength(8)]],
-    duration: [this.socket?.socket?.duration, [Validators.pattern("[1-9][0-9]*"), Validators.min(1), Validators.max(14), Validators.required]],
+    duration: [this.socket?.socket?.duration, [Validators.pattern("[1-9][0-9]*"), Validators.min(1), Validators.max(180), Validators.required]],
     comment: [this.socket?.socket?.comment, [Validators.maxLength(100)]]
   });
 
@@ -286,7 +286,7 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
       this.meterTheaterDBService.getUserSockets(this.meterTheaterDBService.loginUser.id).subscribe(sockets => {
         if (sockets.length >= 5) {
           this.countError = true;
-          this.snackBarRef = this._snackBar.open("You already have 5 sockets. Consider checking a socket back in.", "Close");
+          this.snackBarRef = this._snackBar.open("You already have 5 sockets. Remember to check-in sockets you are not using.", "Close");
         } else {
           this.countError = false;
           if (this.snackBarRef != undefined) {

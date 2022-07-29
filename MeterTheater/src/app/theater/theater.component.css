@@ -109,13 +109,6 @@ p.casetext{
 p.text span{
     color: rgb(158, 248, 158);
 } */
-.theater{
-  /* border-style: solid;
-  border-right-color: #568002; */
-  background-color: ivory;
-  height: 100%;
-  background: url('/assets/img/ezgif.com-gif-maker.png') repeat 0 0;
-}
 .key {
   background: rgba(0, 0, 0, 0.1);
   padding: 5px 10px;
@@ -128,57 +121,68 @@ p.text span{
   margin: auto;
   position: fixed;
   bottom: 0;
-  right:250px;
+  right: 250px;
 }
-.key .socket{
+
+.key .socket {
   margin: auto;
 }
-.socket{
+
+.socket {
   background-color: #7ab800;
   height: 37px;
   width: 37px;
   margin: 5px;
-  border-radius:1vh;
+  border-radius: 1vh;
 }
-.casetext{
+
+.casetext {
   font-weight: bold;
   font-size: 1vw;
 }
-.socket.owned{
+
+.socket.owned {
   background-color: #33647f;
 }
-.socket.occupied{
+
+.socket.occupied {
   background-color: #636466;
 }
-.row{
+
+.row {
   display: flex;
-  flex-wrap:nowrap;
+  flex-wrap: nowrap;
 }
 
-.slot{
+.slot {
   width: 100px;
   height: 90px;
 }
-.table{
+
+.table {
   width: 100%;
-   padding: 1rem;
+  padding: 1rem;
   overflow-x: auto;
-  scrollbar-color:  #d4aa70 #e4e4e4;
-  scrollbar-width:thin;
-  margin:auto;
+  scrollbar-color: #d4aa70 #e4e4e4;
+  scrollbar-width: thin;
+  margin: auto;
 }
+
 .table::-webkit-scrollbar {
   width: 20px;
 }
+
 .table::-webkit-scrollbar-track {
   background-color: #e4e4e4;
   border-radius: 100px;
 }
+
 .table::-webkit-scrollbar-thumb {
   background-image: linear-gradient(180deg, #7ab800 0%, #33647f 99%);
   box-shadow: inset 2px 2px 5px 0 rgba(#fff, 0.5);
   border-radius: 100px;
 }
-.user{
+
+.user {
   margin-bottom: 15px;
 }

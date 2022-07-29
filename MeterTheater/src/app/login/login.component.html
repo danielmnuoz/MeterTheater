@@ -1,20 +1,23 @@
-<div class="container resize-width resize-height">
-  <form (ngSubmit)="onSubmit(); loginForm.reset()" [formGroup]="loginForm">
-    <div class="form-group">
-      <div class="local-center">
-        <mat-form-field>
-          <input type="text" matInput placeholder="Username" name="username" aria-label="Username"
-            aria-describedby="Username" formControlName="username">
-          <mat-error *ngIf="loginForm.get('username')?.errors?.['required']">Username is required</mat-error>
-        </mat-form-field>
+<div class="container">
+  <app-navigation></app-navigation>
+  <div class="login-container resize-width resize-height">
+    <form (ngSubmit)="onSubmit(); loginForm.reset()" [formGroup]="loginForm">
+      <div class="form-group">
+        <div class="local-center">
+          <mat-form-field>
+            <input type="text" matInput placeholder="Username" name="username" aria-label="Username"
+              aria-describedby="Username" formControlName="username">
+            <mat-error *ngIf="loginForm.get('username')?.errors?.['required']">Username is required</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="verticalPadding"></div>
+        <div [hidden]="found" class="alert alert-danger">
+          User not found
+        </div>
+        <div class="local-center">
+          <button type="submit" class="btn btn-success" [disabled]="!loginForm.valid || disableLogin">Login</button>
+        </div>
       </div>
-      <div class="verticalPadding"></div>
-      <div [hidden]="found" class="alert alert-danger">
-        User not found
-      </div>
-      <div class="local-center">
-        <button type="submit" class="btn btn-success" [disabled]="!loginForm.valid || disableLogin">Login</button>
-      </div>
-    </div>
-  </form>
+    </form>
+  </div>
 </div>

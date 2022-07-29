@@ -1,93 +1,96 @@
-<div class="container resize-height resize-width">
-  <div class="user local-center">
-    {{user.name}}
-  </div>
-  <div class="local-center h5">
-    Owned Sockets
-  </div>
-  <div class="local-center">
-    <mat-table #socketsTable [dataSource]="tableDataSource" class="mat-elevation-z8 max-sockets">
-      <ng-container matColumnDef="labName">
-        <mat-header-cell *matHeaderCellDef>
-          Lab
-        </mat-header-cell>
-        <mat-cell *matCellDef="let data">
-          {{data.socket.labName}}
-        </mat-cell>
-      </ng-container>
-      <ng-container matColumnDef="tableName">
-        <mat-header-cell *matHeaderCellDef>
-          Table
-        </mat-header-cell>
-        <mat-cell *matCellDef="let data">
-          {{data.socket.tableName}}
-        </mat-cell>
-      </ng-container>
-      <ng-container matColumnDef="coord">
-        <mat-header-cell *matHeaderCellDef>
-          Slot
-        </mat-header-cell>
-        <mat-cell *matCellDef="let data">
-          {{data.socket.coord}}
-        </mat-cell>
-      </ng-container>
-      <ng-container matColumnDef="form">
-        <mat-header-cell *matHeaderCellDef>
-          Form
-        </mat-header-cell>
-        <mat-cell *matCellDef="let data">
-          {{data.socket.socket.form}}
-        </mat-cell>
-      </ng-container>
-      <ng-container matColumnDef="voltage">
-        <mat-header-cell *matHeaderCellDef>
-          Voltage (V)
-        </mat-header-cell>
-        <mat-cell *matCellDef="let data">
-          {{data.socket.socket.voltage}}
-        </mat-cell>
-      </ng-container>
-      <ng-container matColumnDef="duration">
-        <mat-header-cell *matHeaderCellDef>
-          Days Until Auto Check-in
-        </mat-header-cell>
-        <mat-cell *matCellDef="let data">
-          {{data.socket.socket.duration}}
-        </mat-cell>
-      </ng-container>
-      <ng-container matColumnDef="comment">
-        <mat-header-cell *matHeaderCellDef>
-          Comment
-        </mat-header-cell>
-        <mat-cell *matCellDef="let data">
-          {{data.socket.socket.comment}}
-        </mat-cell>
-      </ng-container>
-      <ng-container matColumnDef="meterLanId">
-        <mat-header-cell *matHeaderCellDef>
-          Meter LAN ID
-        </mat-header-cell>
-        <mat-cell *matCellDef="let data">
-          <div *ngIf="data.meter != undefined">
-            {{data.meter.lanId}}
-          </div>
-        </mat-cell>
-      </ng-container>
-      <ng-container matColumnDef="checkIn">
-        <mat-header-cell *matHeaderCellDef>
-          Action
-        </mat-header-cell>
-        <mat-cell *matCellDef="let data">
-          <button (click)="singleCheckIn(data)" type="submit" class="btn btn-primary"
-            [disabled]="checkInDisable">Check-in</button>
-        </mat-cell>
-      </ng-container>
-      <mat-header-row
-        *matHeaderRowDef="['labName','tableName','coord','form', 'voltage','duration','comment','meterLanId','checkIn']">
-      </mat-header-row>
-      <mat-row
-        *matRowDef="let data; columns: ['labName','tableName','coord','form', 'voltage','duration','comment','meterLanId','checkIn']">
-      </mat-row>
-    </mat-table>
+<div class="container">
+  <app-navigation></app-navigation>
+  <div class="profile-container resize-height resize-width">
+    <div class="user local-center">
+      {{user.name}}
+    </div>
+    <div class="local-center h5">
+      Owned Sockets
+    </div>
+    <div class="local-center">
+      <mat-table #socketsTable [dataSource]="tableDataSource" class="mat-elevation-z8 max-sockets">
+        <ng-container matColumnDef="labName">
+          <mat-header-cell *matHeaderCellDef>
+            Lab
+          </mat-header-cell>
+          <mat-cell *matCellDef="let data">
+            {{data.socket.labName}}
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="tableName">
+          <mat-header-cell *matHeaderCellDef>
+            Table
+          </mat-header-cell>
+          <mat-cell *matCellDef="let data">
+            {{data.socket.tableName}}
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="coord">
+          <mat-header-cell *matHeaderCellDef>
+            Slot
+          </mat-header-cell>
+          <mat-cell *matCellDef="let data">
+            {{data.socket.coord}}
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="form">
+          <mat-header-cell *matHeaderCellDef>
+            Form
+          </mat-header-cell>
+          <mat-cell *matCellDef="let data">
+            {{data.socket.socket.form}}
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="voltage">
+          <mat-header-cell *matHeaderCellDef>
+            Voltage (V)
+          </mat-header-cell>
+          <mat-cell *matCellDef="let data">
+            {{data.socket.socket.voltage}}
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="duration">
+          <mat-header-cell *matHeaderCellDef>
+            Days Until Auto Check-in
+          </mat-header-cell>
+          <mat-cell *matCellDef="let data">
+            {{data.socket.socket.duration}}
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="comment">
+          <mat-header-cell *matHeaderCellDef>
+            Comment
+          </mat-header-cell>
+          <mat-cell *matCellDef="let data">
+            {{data.socket.socket.comment}}
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="meterLanId">
+          <mat-header-cell *matHeaderCellDef>
+            Meter LAN ID
+          </mat-header-cell>
+          <mat-cell *matCellDef="let data">
+            <div *ngIf="data.meter != undefined">
+              {{data.meter.lanId}}
+            </div>
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="checkIn">
+          <mat-header-cell *matHeaderCellDef>
+            Action
+          </mat-header-cell>
+          <mat-cell *matCellDef="let data">
+            <button (click)="singleCheckIn(data)" type="submit" class="btn btn-primary"
+              [disabled]="checkInDisable">Check-in</button>
+          </mat-cell>
+        </ng-container>
+        <mat-header-row
+          *matHeaderRowDef="['labName','tableName','coord','form', 'voltage','duration','comment','meterLanId','checkIn']">
+        </mat-header-row>
+        <mat-row
+          *matRowDef="let data; columns: ['labName','tableName','coord','form', 'voltage','duration','comment','meterLanId','checkIn']">
+        </mat-row>
+      </mat-table>
+    </div>
   </div>
 </div>
