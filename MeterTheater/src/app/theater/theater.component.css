@@ -119,7 +119,7 @@ p.text span{
   justify-content: space-between;
   width: 175px;
   margin: auto;
-  position: fixed;
+  position: absolute;
   top: 50px;
   right:250px;
 }
@@ -180,4 +180,11 @@ p.text span{
   background-image: linear-gradient(180deg, #7ab800 0%, #33647f 99%);
   box-shadow: inset 2px 2px 5px 0 rgba(#fff, 0.5);
   border-radius: 100px;
+}
+
+@media all and (max-width: 625px){
+  .key{
+    margin-left: 0px;
+    left: 180px;
+  }
 }

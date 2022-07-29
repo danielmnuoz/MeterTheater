@@ -5,6 +5,7 @@
   height: 100%;
   background: url('/assets/img/ezgif.com-gif-maker.png') repeat 0 0;
   min-height: 750px;
+  min-width: 354px;
 }
 
 #detailpage {
