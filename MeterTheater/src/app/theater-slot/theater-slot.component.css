@@ -23,7 +23,6 @@
   cursor: pointer;
 }
 .socketbutton:focus, .selected{
-  transform: scale(1.2);
   background-color: #568002;
   /* border-style: solid;
   border-color: #636466 */
