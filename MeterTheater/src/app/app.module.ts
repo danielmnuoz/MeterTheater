@@ -28,6 +28,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
+import { NetErrorComponent } from './net-error/net-error.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { MatListModule } from '@angular/material/list';
     HomeComponent,
     DetailsComponent,
     ProfileComponent,
-    NavigationComponent
+    NavigationComponent,
+    NetErrorComponent
   ],
   imports: [
     BrowserModule,

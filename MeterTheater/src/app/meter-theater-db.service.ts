@@ -21,6 +21,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 
 import { catchError, map, tap } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -28,9 +29,10 @@ import { catchError, map, tap } from 'rxjs/operators';
 
 export class MeterTheaterDBService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
-  private APIURL = 'https://10.1.210.32:8002/api/';
+  public SITEURL = 'https://metertheater';
+  public APIURL = 'https://10.1.210.32:8002/api/';
   private USERURL = 'Users';
   private SOCKETURL = 'Sockets';
   private METERURL = 'Meters';
@@ -632,11 +634,12 @@ export class MeterTheaterDBService {
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
 
+      if (error.status === 0) {
+        this.router.navigateByUrl('net-error');
+      }
+
       // TODO: send the error to remote logging infrastructure
       console.error(error); // log to console instead
-
-      // TODO: better job of transforming error for user consumption
-      // this.log(`${operation} failed: ${error.message}`);
 
       // Let the app keep running by returning an empty result.
       return of(result as T);
