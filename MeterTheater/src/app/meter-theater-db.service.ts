@@ -30,7 +30,7 @@ export class MeterTheaterDBService {
 
   constructor(private http: HttpClient) { }
 
-  private APIURL = 'http://10.1.210.32:8001/api/';
+  private APIURL = 'https://10.1.210.32:8002/api/';
   private USERURL = 'Users';
   private SOCKETURL = 'Sockets';
   private METERURL = 'Meters';
@@ -40,7 +40,10 @@ export class MeterTheaterDBService {
 
   DEFAULT_USER: User = {
     id: undefined,
-    name: undefined
+    name: undefined,
+    email: undefined,
+    fullName: undefined,
+    isAdmin: undefined
   }
 
   loginUser: User = this.DEFAULT_USER;
@@ -226,14 +229,20 @@ export class MeterTheaterDBService {
   serverUser2User(serverUser: ServerUser): User {
     return {
       id: serverUser.userId,
-      name: serverUser.userName
+      name: serverUser.userName,
+      fullName: serverUser.userFullName,
+      email: serverUser.userEmail,
+      isAdmin: serverUser.userIsAdmin
     } as User;
   }
 
   user2ServerUser(user: User): ServerUser {
     return {
       userId: user.id,
-      userName: user.name
+      userName: user.name,
+      userEmail: user.email,
+      userFullName: user.fullName,
+      userIsAdmin: user.isAdmin
     } as ServerUser;
   }
 
@@ -489,6 +498,14 @@ export class MeterTheaterDBService {
         map(serverSockets => this.serverSockets2Sockets(serverSockets)),
         catchError(this.handleError<Socket[]>('getSockets', []))
       );
+  }
+
+  getTakenSockets(): Observable<Socket[]> {
+    const url = `${this.APIURL + this.SOCKETURL}/?taken=${true}`;
+    return this.http.get<ServerSocket[]>(url).pipe(
+      map(serverSockets => this.serverSockets2Sockets(serverSockets)),
+      catchError(this.handleError<Socket[]>('getTakenSockets', []))
+    );
   }
 
   getUserSockets(userId: number): Observable<Socket[]> {
