@@ -4,17 +4,21 @@
     <div class="user local-center">
       {{user.name}}
     </div>
-    <!-- <ng-container *ngIf="user.isAdmin == true">
+    <ng-container *ngIf="user.isAdmin == true">
       <mat-button-toggle-group appearance="legacy" name="view" aria-label="view choice" [(ngModel)]="selectedView">
-        <mat-button-toggle [value]="standard">Standard View</mat-button-toggle>
-        <mat-button-toggle [value]="admin">Admin View</mat-button-toggle>
+        <mat-button-toggle value="standard">Standard View</mat-button-toggle>
+        <mat-button-toggle value="admin">Admin View</mat-button-toggle>
       </mat-button-toggle-group>
-    </ng-container> -->
+    </ng-container>
     <div class="local-center h5">
       Owned Sockets
     </div>
+    <mat-error class="local-center" *ngIf="refreshCheckinError">That socket is no longer available for check-in.
+    </mat-error>
     <div class="local-center">
-      <mat-table #socketsTable [dataSource]="tableDataSource" class="mat-elevation-z8 max-sockets">
+      <mat-table #socketsTable
+        [dataSource]="selectedView == 'standard' ? tableStandardDataSource : tableAdminDataSource"
+        class="mat-elevation-z8 max-sockets">
         <ng-container matColumnDef="labName">
           <mat-header-cell *matHeaderCellDef>
             Lab
@@ -57,7 +61,7 @@
         </ng-container>
         <ng-container matColumnDef="duration">
           <mat-header-cell *matHeaderCellDef>
-            Expected Duration (remaining days)
+            Expected Duration (days)
           </mat-header-cell>
           <mat-cell *matCellDef="let data">
             {{data.socket.socket.duration}}

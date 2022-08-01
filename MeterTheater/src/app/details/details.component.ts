@@ -43,7 +43,8 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
   countError: boolean = false;
   meterUseError: boolean = false;
   errorMeterUser?: User;
-  refreshError: boolean = false;
+  refreshCheckoutError: boolean = false;
+  refreshCheckinError: boolean = false;
   snackBarRef?: MatSnackBarRef<TextOnlySnackBar>;
   disableCheck: boolean = false;
 
@@ -61,7 +62,8 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
   });
 
   setInits(skipForm: boolean = false) {
-    this.refreshError = false;
+    this.refreshCheckoutError = false;
+    this.refreshCheckinError = false;
     this.errorMeterUser = undefined;
     this.meterUseError = false;
     if (this.socket?.socket?.userId == this.loginUser.id) {
@@ -86,7 +88,7 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
         if (this.socket.socket.duration != undefined) {
           this.detailsForm.get('duration')?.setValue(this.socket.socket.duration);
         } else {
-          this.detailsForm.get('duration')?.setValue(7);
+          this.detailsForm.get('duration')?.setValue(undefined);
         }
       } else {
         this.detailsForm.get('duration')?.setValue(undefined);
@@ -116,11 +118,11 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
       }
       this.meterTheaterDBService.getSocketById(this.socket.socket.id).subscribe(socket => {
         if (socket.userId != undefined) {
-          this.refreshError = true;
+          this.refreshCheckoutError = true;
           this.disableCheck = false;
           return;
         } else {
-          this.refreshError = false;
+          this.refreshCheckoutError = false;
           if (this.socket != undefined && this.socket.socket != undefined) {
             this.socket.socket.userId = this.meterTheaterDBService.loginUser.id;
             this.socket.socket.duration = duration;
@@ -217,43 +219,54 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   checkIn() {
-    if (this.socket && this.socket.socket) {
-      this.socket.socket.userId = undefined;
-      this.socket.socket.duration = undefined;
-      this.socket.socket.comment = undefined;
-      var meterId: number | undefined = this.socket.socket.meterId;
-      this.socket.socket.meterId = undefined;
-      this.meter = undefined;
-      var description: string = "Check-in";
-      this.socketUser = this.meterTheaterDBService.DEFAULT_USER;
-      if (this.socket) {
-        this.meterTheaterDBService.checkInSocket(this.socket.socket).subscribe(_ => {
-          if (this.socket?.socket?.id) {
-            this.meterTheaterDBService.getSocketById(this.socket.socket.id).subscribe(socket => {
-              if (this.socket) {
-                this.socket.socket = socket;
-              }
-              if (meterId != undefined) {
-                this.meterTheaterDBService.getMeterById(meterId).subscribe(meter => {
-                  meter.userId = undefined;
-                  this.meterTheaterDBService.updateMeter(meter).subscribe(_ => {
+    if (this.socket && this.socket.socket && this.socket.socket.id) {
+      this.meterTheaterDBService.getSocketById(this.socket.socket.id).subscribe(checkSocket => {
+        if (checkSocket.userId == undefined) {
+          this.refreshCheckinError = true;
+          this.disableCheck = false;
+          return;
+        } else if (this.socket && this.socket.socket) {
+          this.refreshCheckinError = false;
+          this.socket.socket.userId = undefined;
+          this.socket.socket.duration = undefined;
+          this.socket.socket.comment = undefined;
+          var meterId: number | undefined = this.socket.socket.meterId;
+          this.socket.socket.meterId = undefined;
+          this.meter = undefined;
+          var description: string = "Check-in";
+          this.socketUser = this.meterTheaterDBService.DEFAULT_USER;
+          if (this.socket) {
+            this.meterTheaterDBService.checkInSocket(this.socket.socket).subscribe(_ => {
+              if (this.socket?.socket?.id) {
+                this.meterTheaterDBService.getSocketById(this.socket.socket.id).subscribe(socket => {
+                  if (this.socket) {
+                    this.socket.socket = socket;
+                  }
+                  if (meterId != undefined) {
+                    this.meterTheaterDBService.getMeterById(meterId).subscribe(meter => {
+                      meter.userId = undefined;
+                      this.meterTheaterDBService.updateMeter(meter).subscribe(_ => {
+                        this.disableCheck = false;
+                      });
+                    });
+                  } else {
                     this.disableCheck = false;
-                  });
+                  }
+                  this.setInits();
+                  this.toggleUpdate();
                 });
               } else {
                 this.disableCheck = false;
               }
-              this.setInits();
-              this.toggleUpdate();
             });
+            this.meterTheaterDBService.addLog({ userId: this.meterTheaterDBService.loginUser.id, socketId: this.socket.socket.id, meterId: meterId, description: description } as Log).subscribe();
           } else {
             this.disableCheck = false;
           }
-        });
-        this.meterTheaterDBService.addLog({ userId: this.meterTheaterDBService.loginUser.id, socketId: this.socket.socket.id, meterId: meterId, description: description } as Log).subscribe();
-      } else {
-        this.disableCheck = false;
-      }
+        } else {
+          this.disableCheck = false;
+        }
+      });
     } else {
       this.disableCheck = false;
     }

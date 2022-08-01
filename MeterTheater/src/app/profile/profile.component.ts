@@ -32,41 +32,55 @@ export class ProfileComponent implements OnInit {
 
   @ViewChild(MatTable) socketsTable?: MatTable<any>;
 
-  tableDataSource = new MatTableDataSource<any>();
+  tableStandardDataSource = new MatTableDataSource<any>();
+  tableAdminDataSource = new MatTableDataSource<any>();
 
   user: User = this.meterTheaterDBService.DEFAULT_USER;
   checkInDisable: boolean = false;
+  selectedView?: string;
+  refreshCheckinError: boolean = false;
 
   checkIn(socket: LocSocket, meter: Meter) {
-    if (socket && socket.socket) {
-      socket.socket.userId = undefined;
-      socket.socket.duration = undefined;
-      socket.socket.comment = undefined;
-      var meterId: number | undefined = socket.socket.meterId;
-      socket.socket.meterId = undefined;
-      var description: string = "Check-in";
-      // always true
-      if (socket) {
-        this.meterTheaterDBService.checkInSocket(socket.socket).subscribe(_ => {
+    if (socket && socket.socket && socket.socket.id != undefined) {
+      this.meterTheaterDBService.getSocketById(socket.socket.id).subscribe(checkSocket => {
+        if (checkSocket.userId == undefined) {
+          this.refreshCheckinError = true;
+          this.checkInDisable = false;
+          return;
+        } else if (socket && socket.socket) {
+          this.refreshCheckinError = false;
+          socket.socket.userId = undefined;
+          socket.socket.duration = undefined;
+          socket.socket.comment = undefined;
+          var meterId: number | undefined = socket.socket.meterId;
+          socket.socket.meterId = undefined;
+          var description: string = "Check-in";
           // always true
-          if (socket?.socket?.id) {
-            this.meterTheaterDBService.getSocketById(socket.socket.id).subscribe(socket => {
-              if (meterId != undefined) {
-                this.meterTheaterDBService.getMeterById(meterId).subscribe(meter => {
-                  meter.userId = undefined;
-                  this.meterTheaterDBService.updateMeter(meter).subscribe(_ => {
+          if (socket) {
+            this.meterTheaterDBService.checkInSocket(socket.socket).subscribe(_ => {
+              // always true
+              if (socket?.socket?.id) {
+                this.meterTheaterDBService.getSocketById(socket.socket.id).subscribe(socket => {
+                  if (meterId != undefined) {
+                    this.meterTheaterDBService.getMeterById(meterId).subscribe(meter => {
+                      meter.userId = undefined;
+                      this.meterTheaterDBService.updateMeter(meter).subscribe(_ => {
+                        this.checkInDisable = false;
+                      });
+                    })
+                  } else {
                     this.checkInDisable = false;
-                  });
-                })
-              } else {
-                this.checkInDisable = false;
+                  }
+                  this.getSockets(this.selectedView);
+                });
               }
-              this.getSockets();
             });
+            this.meterTheaterDBService.addLog({ userId: this.meterTheaterDBService.loginUser.id, socketId: socket.socket.id, meterId: meterId, description: description } as Log).subscribe();
           }
-        });
-        this.meterTheaterDBService.addLog({ userId: this.meterTheaterDBService.loginUser.id, socketId: socket.socket.id, meterId: meterId, description: description } as Log).subscribe();
-      }
+        } else {
+          this.checkInDisable = false;
+        }
+      });
     } else {
       this.checkInDisable = false;
     }
@@ -81,9 +95,15 @@ export class ProfileComponent implements OnInit {
     this.checkIn(data.socket, data.meter);
   }
 
-  getSockets() {
+  getSockets(selectedView: string | undefined = undefined) {
+    if (selectedView != undefined) {
+      this.selectedView = selectedView;
+    } else {
+      this.selectedView = "standard";
+    }
     this.meterTheaterDBService.getLabs().subscribe(labs => {
-      this.tableDataSource.data = [];
+      this.tableStandardDataSource.data = [];
+      this.tableAdminDataSource.data = [];
       for (var lab of labs) {
         if (lab.tables) {
           for (var table of lab.tables) {
@@ -94,11 +114,22 @@ export class ProfileComponent implements OnInit {
                     if (this.user.id != undefined && socket.socket != undefined && socket.socket.userId == this.user.id) {
                       if (socket.socket.meterId != undefined) {
                         this.meterTheaterDBService.getMeterById(socket.socket.meterId).subscribe(meter => {
-                          this.tableDataSource.data.push({ socket, meter });
+                          this.tableStandardDataSource.data.push({ socket, meter });
                           this.socketsTable?.renderRows();
                         });
                       } else {
-                        this.tableDataSource.data.push({ socket, undefined });
+                        this.tableStandardDataSource.data.push({ socket, undefined });
+                        this.socketsTable?.renderRows();
+                      }
+                    }
+                    if (socket.socket != undefined && socket.socket.userId != undefined) {
+                      if (socket.socket.meterId != undefined) {
+                        this.meterTheaterDBService.getMeterById(socket.socket.meterId).subscribe(meter => {
+                          this.tableAdminDataSource.data.push({ socket, meter });
+                          this.socketsTable?.renderRows();
+                        });
+                      } else {
+                        this.tableAdminDataSource.data.push({ socket, undefined });
                         this.socketsTable?.renderRows();
                       }
                     }
