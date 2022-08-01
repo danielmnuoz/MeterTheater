@@ -17,9 +17,15 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    if (!this.meterTheaterDBService.loginCheck()) {
-      this.router.navigateByUrl('login');
-    }
+    this.meterTheaterDBService.getLoginUser().subscribe(users => {
+      if (users == undefined || users.length == 0) {
+        this.router.navigateByUrl('login');
+        console.log(users);
+      } else {
+        // assumes unique
+        this.meterTheaterDBService.loginUser = users[0];
+      }
+    });
   }
 
   // needs to match other toggle initials (false)

@@ -369,17 +369,17 @@ export class MeterTheaterDBService {
     );
   }
 
-  // postLoginUser(name: string): Observable<any> {
-  //   const url = `${this.APIURL + this.LOGINURL}/Login`;
-  //   return this.http.post<any>(url, JSON.stringify(name), this.httpOptions).pipe(
-  //     map(response => console.log(response)),
-  //     catchError(this.handleError<any>('postLoginUser'))
-  //   );
-  // }
+  /* GET logged in user */
+  getLoginUser(): Observable<User[] | undefined> {
+    return this.http.get<ServerUser[] | undefined>(`${this.APIURL + this.LOGINURL}/GetLogin`, this.httpOptions).pipe(
+      map(serverUsers => serverUsers != undefined ? this.serverUsers2Users(serverUsers) : undefined),
+      catchError(this.handleError<User[] | undefined>('getLoginUser', []))
+    );
+  }
 
   getLogout(): Observable<undefined> {
     const url = `${this.APIURL + this.LOGINURL}/Logout`;
-    return this.http.get<undefined>(url).pipe(
+    return this.http.get<undefined>(url, this.httpOptions).pipe(
       catchError(this.handleError<undefined>('getLogout'))
     );
   }
@@ -387,7 +387,7 @@ export class MeterTheaterDBService {
   /** GET labs from the server */
   getLabs(): Observable<Lab[]> {
     const url = `${this.APIURL + this.LABURL}/?extend=true`;
-    return this.http.get<ServerExtendedLab[]>(url)
+    return this.http.get<ServerExtendedLab[]>(url, this.httpOptions)
       .pipe(
         map(serverExtendedLabs => this.extendedLabs2Labs(this.serverExtendedLabs2ExtendedLabs(serverExtendedLabs))),
         catchError(this.handleError<Lab[]>('getLabs', []))
@@ -396,7 +396,7 @@ export class MeterTheaterDBService {
 
   /** GET logs from the server */
   getLogs(): Observable<Log[]> {
-    return this.http.get<ServerLog[]>(this.APIURL + this.LOGURL)
+    return this.http.get<ServerLog[]>(this.APIURL + this.LOGURL, this.httpOptions)
       .pipe(
         map(serverLogs => this.serverLogs2Logs(serverLogs)),
         catchError(this.handleError<Log[]>('getLogs', []))
@@ -405,7 +405,7 @@ export class MeterTheaterDBService {
 
   /** GET matching last log from the server */
   getLastLog(userId: number | undefined = undefined, socketId: number | undefined = undefined, meterId: number | undefined = undefined): Observable<Log> {
-    return this.http.get<ServerLog>(this.APIURL + this.LOGURL + `/last/?logUserId=${userId}&logSocketId=${socketId}&logMeterId=${meterId}`)
+    return this.http.get<ServerLog>(this.APIURL + this.LOGURL + `/last/?logUserId=${userId}&logSocketId=${socketId}&logMeterId=${meterId}`, this.httpOptions)
       .pipe(
         map(serverLog => this.serverLog2Log(serverLog)),
         catchError(this.handleError<Log>('getLastLog'))
@@ -424,15 +424,15 @@ export class MeterTheaterDBService {
   /** GET user by id. Will 404 if id not found */
   getUserById(id: number): Observable<User> {
     const url = `${this.APIURL + this.USERURL}/${id}`;
-    return this.http.get<ServerUser>(url).pipe(
+    return this.http.get<ServerUser>(url, this.httpOptions).pipe(
       map(serverUser => this.serverUser2User(serverUser)),
       catchError(this.handleError<User>(`getUserById id=${id}`))
     );
   }
 
-  /* GET sockets whose name contains search term */
+  /* GET users whose name contains search term */
   searchUserByName(name: string): Observable<User[]> {
-    return this.http.get<ServerUser[]>(`${this.APIURL + this.USERURL}/?userName=${name}`).pipe(
+    return this.http.get<ServerUser[]>(`${this.APIURL + this.USERURL}/?userName=${name}`, this.httpOptions).pipe(
       map(serverUsers => this.serverUsers2Users(serverUsers)),
       catchError(this.handleError<User[]>('searchUserByName', []))
     );
@@ -440,7 +440,7 @@ export class MeterTheaterDBService {
 
   /** GET users from the server */
   getUsers(): Observable<User[]> {
-    return this.http.get<ServerUser[]>(this.APIURL + this.USERURL)
+    return this.http.get<ServerUser[]>(this.APIURL + this.USERURL, this.httpOptions)
       .pipe(
         map(serverUsers => this.serverUsers2Users(serverUsers)),
         catchError(this.handleError<User[]>('getUsers', []))
@@ -477,7 +477,7 @@ export class MeterTheaterDBService {
   /** GET socket by id. Will 404 if id not found */
   getSocketById(id: number): Observable<Socket> {
     const url = `${this.APIURL + this.SOCKETURL}/${id}`;
-    return this.http.get<ServerSocket>(url).pipe(
+    return this.http.get<ServerSocket>(url, this.httpOptions).pipe(
       map(serverSocket => this.serverSocket2Socket(serverSocket)),
       catchError(this.handleError<Socket>(`getSocketById id=${id}`))
     );
@@ -485,7 +485,7 @@ export class MeterTheaterDBService {
 
   /* GET sockets whose name contains search term */
   searchSocketsByUser(userId: number): Observable<Socket[]> {
-    return this.http.get<ServerSocket[]>(`${this.APIURL + this.SOCKETURL}/?socketUserId=${userId}`).pipe(
+    return this.http.get<ServerSocket[]>(`${this.APIURL + this.SOCKETURL}/?socketUserId=${userId}`, this.httpOptions).pipe(
       map(serverSockets => this.serverSockets2Sockets(serverSockets)),
       catchError(this.handleError<Socket[]>('searchSockets', []))
     );
@@ -493,7 +493,7 @@ export class MeterTheaterDBService {
 
   /** GET sockets from the server */
   getSockets(): Observable<Socket[]> {
-    return this.http.get<ServerSocket[]>(this.APIURL + this.SOCKETURL)
+    return this.http.get<ServerSocket[]>(this.APIURL + this.SOCKETURL, this.httpOptions)
       .pipe(
         map(serverSockets => this.serverSockets2Sockets(serverSockets)),
         catchError(this.handleError<Socket[]>('getSockets', []))
@@ -502,7 +502,7 @@ export class MeterTheaterDBService {
 
   getTakenSockets(): Observable<Socket[]> {
     const url = `${this.APIURL + this.SOCKETURL}/?taken=${true}`;
-    return this.http.get<ServerSocket[]>(url).pipe(
+    return this.http.get<ServerSocket[]>(url, this.httpOptions).pipe(
       map(serverSockets => this.serverSockets2Sockets(serverSockets)),
       catchError(this.handleError<Socket[]>('getTakenSockets', []))
     );
@@ -510,7 +510,7 @@ export class MeterTheaterDBService {
 
   getUserSockets(userId: number): Observable<Socket[]> {
     const url = `${this.APIURL + this.SOCKETURL}/?socketUserID=${userId}`;
-    return this.http.get<ServerSocket[]>(url).pipe(
+    return this.http.get<ServerSocket[]>(url, this.httpOptions).pipe(
       map(serverSockets => this.serverSockets2Sockets(serverSockets)),
       catchError(this.handleError<Socket[]>('getUserSockets', []))
     );
@@ -563,7 +563,7 @@ export class MeterTheaterDBService {
 
   /* GET meters whose name contains search term */
   searchMetersByUser(userId: number): Observable<Meter[]> {
-    return this.http.get<ServerMeter[]>(`${this.APIURL + this.METERURL}/?meterUserId=${userId}`).pipe(
+    return this.http.get<ServerMeter[]>(`${this.APIURL + this.METERURL}/?meterUserId=${userId}`, this.httpOptions).pipe(
       map(serverMeters => this.serverMeters2Meters(serverMeters)),
       catchError(this.handleError<Meter[]>('searchMetersByUser', []))
     );
@@ -571,7 +571,7 @@ export class MeterTheaterDBService {
 
   /* GET meters whose name contains search term */
   searchMetersByLanId(lanId: string): Observable<Meter[]> {
-    return this.http.get<ServerMeter[]>(`${this.APIURL + this.METERURL}/?meterLanId=${lanId}`).pipe(
+    return this.http.get<ServerMeter[]>(`${this.APIURL + this.METERURL}/?meterLanId=${lanId}`, this.httpOptions).pipe(
       map(serverMeters => this.serverMeters2Meters(serverMeters)),
       catchError(this.handleError<Meter[]>('searchMetersByLanId', []))
     );
@@ -580,7 +580,7 @@ export class MeterTheaterDBService {
   /** GET meter by id. Will 404 if id not found */
   getMeterById(id: number): Observable<Meter> {
     const url = `${this.APIURL + this.METERURL}/${id}`;
-    return this.http.get<ServerMeter>(url).pipe(
+    return this.http.get<ServerMeter>(url, this.httpOptions).pipe(
       map(serverMeter => this.serverMeter2Meter(serverMeter)),
       catchError(this.handleError<Meter>(`getMeterById id=${id}`))
     );
@@ -588,7 +588,7 @@ export class MeterTheaterDBService {
 
   /** GET meters from the server */
   getMeters(): Observable<Meter[]> {
-    return this.http.get<ServerMeter[]>(this.APIURL + this.METERURL)
+    return this.http.get<ServerMeter[]>(this.APIURL + this.METERURL, this.httpOptions)
       .pipe(
         map(serverMeters => this.serverMeters2Meters(serverMeters)),
         catchError(this.handleError<Meter[]>('getMeters', []))

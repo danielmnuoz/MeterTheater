@@ -22,12 +22,16 @@ export class ProfileComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    if (!this.meterTheaterDBService.loginCheck()) {
-      this.router.navigateByUrl('login');
-    } else {
-      this.user = this.meterTheaterDBService.loginUser;
-      this.getSockets();
-    }
+    this.meterTheaterDBService.getLoginUser().subscribe(users => {
+      if (users == undefined || users.length == 0) {
+        this.router.navigateByUrl('login');
+      } else {
+        // assumes unique
+        this.meterTheaterDBService.loginUser = users[0];
+        this.user = this.meterTheaterDBService.loginUser;
+        this.getSockets();
+      }
+    });
   }
 
   @ViewChild(MatTable) socketsTable?: MatTable<any>;
