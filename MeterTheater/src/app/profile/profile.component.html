@@ -4,12 +4,12 @@
     <div class="user local-center">
       {{user.name}}
     </div>
-    <ng-container *ngIf="user.isAdmin == true">
+    <div class="local-center" *ngIf="user.isAdmin == true">
       <mat-button-toggle-group appearance="legacy" name="view" aria-label="view choice" [(ngModel)]="selectedView">
         <mat-button-toggle value="standard">Standard View</mat-button-toggle>
         <mat-button-toggle value="admin">Admin View</mat-button-toggle>
       </mat-button-toggle-group>
-    </ng-container>
+    </div>
     <div class="local-center h5">
       Owned Sockets
     </div>
