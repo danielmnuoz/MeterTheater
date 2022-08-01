@@ -20,7 +20,11 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.meterTheaterDBService.resetLoginUser().subscribe();
+    this.meterTheaterDBService.getCheckLogin().subscribe(ret => {
+      if (ret == true) {
+        this.meterTheaterDBService.resetLoginUser().subscribe();
+      }
+    });
   }
 
   found: boolean = true;

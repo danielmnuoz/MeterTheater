@@ -363,6 +363,13 @@ export class MeterTheaterDBService {
     return extendedLabs;
   }
 
+  getCheckLogin(): Observable<boolean> {
+    const url = `${this.APIURL + this.LOGINURL}/CheckLogin`;
+    return this.http.get<boolean>(url, this.httpOptions).pipe(
+      catchError(this.handleError<boolean>('getCheckLogin'))
+    );
+  }
+
   postLoginUser(name: string): Observable<User | undefined> {
     const url = `${this.APIURL + this.LOGINURL}/Login`;
     return this.http.post<ServerUser | undefined>(url, JSON.stringify(name), this.httpOptions).pipe(
