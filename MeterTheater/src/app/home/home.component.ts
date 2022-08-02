@@ -3,6 +3,7 @@ import { LocSocket } from '../interfaces/locSocket';
 import { Meter } from '../interfaces/meter';
 import { Router } from '@angular/router';
 import { MeterTheaterDBService } from '../meter-theater-db.service';
+import { User } from '../interfaces/user';
 
 @Component({
   selector: 'app-home',
@@ -17,21 +18,28 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.meterTheaterDBService.getLoginUser().subscribe(users => {
-      if (users == undefined || users.length == 0) {
-        this.router.navigateByUrl('login');
-        console.log(users);
+    this.meterTheaterDBService.getCheckLogin().subscribe(ret => {
+      if (ret == true) {
+        this.meterTheaterDBService.getLoginUser().subscribe(users => {
+          if (users == undefined || users.length == 0) {
+            this.router.navigateByUrl('login');
+          } else {
+            // assumes unique
+            this.loginUser = users[0];
+          }
+        });
       } else {
-        // assumes unique
-        this.meterTheaterDBService.loginUser = users[0];
+        this.router.navigateByUrl('login');
       }
     });
+
   }
 
   // needs to match other toggle initials (false)
   toggle: boolean = false;
   selectedSocket?: LocSocket;
   selectedMeter?: Meter;
+  loginUser: User = this.meterTheaterDBService.DEFAULT_USER;
 
   selectSocket(socket?: LocSocket) {
     this.selectedSocket = socket;

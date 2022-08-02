@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.meterTheaterDBService.getCheckLogin().subscribe(ret => {
       if (ret == true) {
-        this.meterTheaterDBService.resetLoginUser().subscribe();
+        this.meterTheaterDBService.getLogout().subscribe();
       }
     });
   }
@@ -50,10 +50,10 @@ export class LoginComponent implements OnInit {
         this.meterTheaterDBService.addLog(log).subscribe();
       } else {
         this.found = true;
-        this.meterTheaterDBService.loginUser = user;
+        // this.meterTheaterDBService.loginUser = user;
         var log: Log = {
           description: "Successful Login",
-          userId: this.meterTheaterDBService.loginUser.id
+          userId: user.id
         };
         this.disableLogin = false;
         this.meterTheaterDBService.addLog(log).subscribe();

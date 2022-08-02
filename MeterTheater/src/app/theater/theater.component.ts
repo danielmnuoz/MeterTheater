@@ -12,18 +12,11 @@ import { User } from '../interfaces/user';
   styleUrls: ['./theater.component.css']
 })
 
-export class TheaterComponent implements OnInit, OnChanges {
+export class TheaterComponent implements OnChanges {
   selectedSoc?: LocSocket;
   constructor(
     private meterTheaterDBService: MeterTheaterDBService
   ) { }
-
-  ngOnInit(): void {
-    this.loginUser = this.meterTheaterDBService.loginUser;
-    var selectedLabId: number | undefined = this.selectedLab?.id;
-    var selectedTableId: number | undefined = this.selectedTable?.id;
-    this.getSocketInfos(selectedLabId, selectedTableId);
-  }
 
   ngOnChanges(changes: SimpleChanges): void {
     var selectedLabId: number | undefined = this.selectedLab?.id;
@@ -34,13 +27,13 @@ export class TheaterComponent implements OnInit, OnChanges {
   labs: Lab[] = [];
   selectedLab?: Lab;
   selectedTable?: Table;
-  loginUser: User = this.meterTheaterDBService.loginUser;
 
   @Output() onSelectSocket = new EventEmitter<LocSocket>();
   @Output() onSelectMeter = new EventEmitter<Meter>();
   @Output() onSelect = new EventEmitter<boolean>();
   // needs to match other toggle initials (false)
   @Input() refreshToggle: boolean = false;
+  @Input() loginUser: User = this.meterTheaterDBService.DEFAULT_USER;
 
   selectSocket(socket: LocSocket) {
     this.onSelectSocket.emit(socket)

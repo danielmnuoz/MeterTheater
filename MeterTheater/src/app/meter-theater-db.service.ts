@@ -48,25 +48,25 @@ export class MeterTheaterDBService {
     isAdmin: undefined
   }
 
-  loginUser: User = this.DEFAULT_USER;
+  // loginUser: User = this.DEFAULT_USER;
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
     withCredentials: true
   };
 
-  loginCheck(): boolean {
-    if (this.loginUser.id == this.DEFAULT_USER.id) {
-      return false;
-    } else {
-      return true;
-    }
-  }
+  // loginCheck(): boolean {
+  //   if (this.loginUser.id == this.DEFAULT_USER.id) {
+  //     return false;
+  //   } else {
+  //     return true;
+  //   }
+  // }
 
-  resetLoginUser(): Observable<undefined> {
-    this.loginUser = this.DEFAULT_USER;
-    return this.getLogout();
-  }
+  // resetLoginUser(): Observable<undefined> {
+  //   this.loginUser = this.DEFAULT_USER;
+  //   return this.getLogout();
+  // }
 
   coords2stringH(i: number): string {
     if (i < 26) {

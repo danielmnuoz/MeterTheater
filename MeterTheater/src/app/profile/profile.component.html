@@ -2,9 +2,9 @@
   <app-navigation></app-navigation>
   <div class="profile-container resize-height resize-width">
     <div class="user local-center">
-      {{user.name}}
+      {{loginUser.name}}
     </div>
-    <div class="local-center" *ngIf="user.isAdmin == true">
+    <div class="local-center" *ngIf="loginUser.isAdmin == true">
       <mat-button-toggle-group appearance="legacy" name="view" aria-label="view choice" [(ngModel)]="selectedView">
         <mat-button-toggle value="standard">Standard View</mat-button-toggle>
         <mat-button-toggle value="admin">Admin View</mat-button-toggle>
@@ -61,7 +61,7 @@
         </ng-container>
         <ng-container matColumnDef="duration">
           <mat-header-cell *matHeaderCellDef>
-            Expected Duration (days)
+            Expected Remaining Days
           </mat-header-cell>
           <mat-cell *matCellDef="let data">
             {{data.socket.socket.duration}}

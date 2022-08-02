@@ -1,7 +1,6 @@
-<nav  class="bar resize-width">
-    <a *ngIf="!dbservice.loginCheck()" routerLink="/login">Login</a>
-    <a *ngIf="dbservice.loginCheck()" routerLink="/home">Home</a>
-    <a *ngIf="dbservice.loginCheck()" routerLink="/profile">Profile</a>
-    <a *ngIf="dbservice.loginCheck()" routerLink="/login">Logout</a>
-    <img class="logo" src="assets/img/landislogo.png" alt="Landis+GyrLogo">
+<nav class="bar resize-width">
+  <a routerLink="/home">Home</a>
+  <a routerLink="/profile">Profile</a>
+  <a routerLink="/login">Logout</a>
+  <img class="logo" src="assets/img/landislogo.png" alt="Landis+GyrLogo">
 </nav>
