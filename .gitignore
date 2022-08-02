@@ -43,3 +43,4 @@ MeterTheater/Thumbs.db
 
 # MeterTheaterAPI
 MeterTheaterAPI/appsettings.json
+MeterTheaterAPI/appsettings.Development.json
