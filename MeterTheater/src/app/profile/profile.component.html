@@ -10,8 +10,11 @@
         <mat-button-toggle value="admin">Admin View</mat-button-toggle>
       </mat-button-toggle-group>
     </div>
-    <div class="local-center h5">
+    <div class="local-center h5" *ngIf="selectedView != 'admin'">
       Owned Sockets
+    </div>
+    <div class="local-center h5" *ngIf="selectedView == 'admin'">
+      Sockets in Use
     </div>
     <mat-error class="local-center" *ngIf="refreshCheckinError">That socket is no longer available for check-in.
     </mat-error>

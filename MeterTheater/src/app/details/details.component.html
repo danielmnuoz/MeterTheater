@@ -1,11 +1,9 @@
 <div class="details-container">
   <div *ngIf="socket">
     <mat-list>
-      <mat-list-item>Lab: <strong> &nbsp;{{socket.labName}}</strong></mat-list-item>
-      <mat-divider></mat-divider>
-      <mat-list-item>Table: <strong> &nbsp;{{socket.tableName}}</strong></mat-list-item>
-      <mat-divider></mat-divider>
-      <mat-list-item>Slot: <strong> &nbsp;{{socket.coord}}</strong></mat-list-item>
+      <mat-list-item class="local-center">{{socket.labName}}, {{socket.tableName}},
+        {{socket.coord}}
+      </mat-list-item>
       <mat-divider></mat-divider>
       <ng-container *ngIf="socket && socketUser && socket.socket">
         <mat-list-item>
@@ -22,18 +20,6 @@
       </ng-container>
       <ng-container *ngIf="out == true">
         <mat-list-item>Socket Checkout Date: </mat-list-item>
-        <mat-divider></mat-divider>
-      </ng-container>
-      <ng-container *ngIf="socket != undefined && this.socket.socket != undefined">
-        <mat-list-item>Socket Form:
-          <strong> &nbsp;{{socket.socket.form}}</strong>
-        </mat-list-item>
-        <mat-divider></mat-divider>
-      </ng-container>
-      <ng-container *ngIf="socket != undefined && this.socket.socket != undefined">
-        <mat-list-item>Socket Voltage:
-          <strong> &nbsp;{{socket.socket.voltage}}</strong>
-        </mat-list-item>
         <mat-divider></mat-divider>
       </ng-container>
     </mat-list>
