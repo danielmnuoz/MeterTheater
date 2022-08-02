@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { MeterTheaterDBService } from '../meter-theater-db.service';
 
 @Component({
   selector: 'app-navigation',
@@ -8,9 +7,7 @@ import { MeterTheaterDBService } from '../meter-theater-db.service';
 })
 export class NavigationComponent implements OnInit {
 
-  constructor(
-    public dbservice: MeterTheaterDBService
-  ) { }
+  constructor() { }
 
   ngOnInit(): void {
   }

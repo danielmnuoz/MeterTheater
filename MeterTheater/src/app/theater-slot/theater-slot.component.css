@@ -24,6 +24,4 @@
 }
 .socketbutton:focus, .selected{
   background-color: #568002;
-  /* border-style: solid;
-  border-color: #636466 */
 }

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, SimpleChanges, OnChanges, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, Input, SimpleChanges, OnChanges, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { Meter } from '../interfaces/meter';
 import { LocSocket } from '../interfaces/locSocket';
 import { User } from '../interfaces/user';
@@ -271,8 +271,6 @@ export class DetailsComponent implements OnChanges, OnDestroy {
     }
   }
 
-
-
   onSubmit() {
     this.disableCheck = true;
     this.meterTheaterDBService.getCheckLogin().subscribe(ret => {
@@ -312,7 +310,6 @@ export class DetailsComponent implements OnChanges, OnDestroy {
                   if (meters[0].userId != undefined) {
                     this.meterUseError = true;
                     this.meterTheaterDBService.getUserById(meters[0].userId).subscribe(user => {
-                      console.log(meters[0].lanId?.length);
                       this.errorMeterUser = user;
                       this.disableCheck = false;
                     });

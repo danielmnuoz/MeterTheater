@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Meter } from '../interfaces/meter';
-import { Socket } from '../interfaces/socket';
 import { LocSocket } from '../interfaces/locSocket';
 import { MeterTheaterDBService } from '../meter-theater-db.service';
 

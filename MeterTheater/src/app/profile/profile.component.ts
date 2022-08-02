@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Meter } from '../interfaces/meter';
-import { Socket } from '../interfaces/socket';
 import { LocSocket } from '../interfaces/locSocket';
 import { Log } from '../interfaces/log';
 import { User } from '../interfaces/user';

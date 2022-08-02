@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from '../interfaces/user';
 import { Log } from '../interfaces/log';
 import { Validators, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router'
@@ -43,21 +42,15 @@ export class LoginComponent implements OnInit {
     this.meterTheaterDBService.postLoginUser(username).subscribe(user => {
       if (user == undefined) {
         this.found = false;
-        var log: Log = {
-          description: `Failed Login: ${username}`,
-        };
         this.disableLogin = false;
-        this.meterTheaterDBService.addLog(log).subscribe();
       } else {
         this.found = true;
-        // this.meterTheaterDBService.loginUser = user;
         var log: Log = {
           description: "Successful Login",
           userId: user.id
         };
         this.disableLogin = false;
         this.meterTheaterDBService.addLog(log).subscribe();
-        // this should be in subscribe so that the rest of the website waits for user before querying db
         this.router.navigateByUrl('home');
       }
     });

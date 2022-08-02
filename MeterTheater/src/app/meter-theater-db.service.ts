@@ -48,25 +48,10 @@ export class MeterTheaterDBService {
     isAdmin: undefined
   }
 
-  // loginUser: User = this.DEFAULT_USER;
-
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
     withCredentials: true
   };
-
-  // loginCheck(): boolean {
-  //   if (this.loginUser.id == this.DEFAULT_USER.id) {
-  //     return false;
-  //   } else {
-  //     return true;
-  //   }
-  // }
-
-  // resetLoginUser(): Observable<undefined> {
-  //   this.loginUser = this.DEFAULT_USER;
-  //   return this.getLogout();
-  // }
 
   coords2stringH(i: number): string {
     if (i < 26) {
@@ -492,7 +477,7 @@ export class MeterTheaterDBService {
     );
   }
 
-  /* GET sockets whose name contains search term */
+  /* GET sockets whose userId contains search term */
   searchSocketsByUser(userId: number): Observable<Socket[]> {
     return this.http.get<ServerSocket[]>(`${this.APIURL + this.SOCKETURL}/?socketUserId=${userId}`, this.httpOptions).pipe(
       map(serverSockets => this.serverSockets2Sockets(serverSockets)),
@@ -570,7 +555,7 @@ export class MeterTheaterDBService {
     );
   }
 
-  /* GET meters whose name contains search term */
+  /* GET meters whose userId contains search term */
   searchMetersByUser(userId: number): Observable<Meter[]> {
     return this.http.get<ServerMeter[]>(`${this.APIURL + this.METERURL}/?meterUserId=${userId}`, this.httpOptions).pipe(
       map(serverMeters => this.serverMeters2Meters(serverMeters)),
@@ -578,7 +563,7 @@ export class MeterTheaterDBService {
     );
   }
 
-  /* GET meters whose name contains search term */
+  /* GET meters whose lanId contains search term */
   searchMetersByLanId(lanId: string): Observable<Meter[]> {
     return this.http.get<ServerMeter[]>(`${this.APIURL + this.METERURL}/?meterLanId=${lanId}`, this.httpOptions).pipe(
       map(serverMeters => this.serverMeters2Meters(serverMeters)),

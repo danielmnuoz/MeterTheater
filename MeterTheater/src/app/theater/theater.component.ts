@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { Meter } from '../interfaces/meter';
 import { LocSocket } from '../interfaces/locSocket';
 import { MeterTheaterDBService } from '../meter-theater-db.service';
