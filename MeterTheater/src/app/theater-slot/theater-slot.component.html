@@ -10,7 +10,7 @@
       </div>
     </div>
     <div class="socketbutton owned" *ngIf="socket.socket.userId == loginUserId">
-      {{socket.socket.form}}
+      {{socket.coord}}
       <br>
       <div class="wholecircle">
         {{socket.socket.form}}
@@ -19,7 +19,7 @@
       </div>
     </div>
     <div class="socketbutton occupied" *ngIf="socket.socket.userId != undefined && socket.socket.userId != loginUserId">
-      {{socket.socket.form}}
+      {{socket.coord}}
       <br>
       <div class="wholecircle">
         {{socket.socket.form}}
