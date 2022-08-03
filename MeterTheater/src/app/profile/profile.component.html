@@ -1,9 +1,6 @@
 <div class="container">
   <app-navigation [loginUser]="loginUser"></app-navigation>
   <div class="profile-container resize-height resize-width">
-    <div class="user local-center">
-      {{loginUser.name}}
-    </div>
     <div class="local-center" *ngIf="loginUser.isAdmin == true">
       <mat-button-toggle-group appearance="legacy" name="view" aria-label="view choice" [(ngModel)]="selectedView">
         <mat-button-toggle value="standard">Standard View</mat-button-toggle>
