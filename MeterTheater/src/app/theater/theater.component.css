@@ -77,6 +77,15 @@
 ::-webkit-scrollbar-corner {
   background: rgba(0,0,0,0);
 }
+
+.mat-button-toggle-group{
+  overflow: auto;
+}
+
+.mat-form-field{
+  overflow: auto;
+}
+
 @media all and (max-width: 625px) {
   .key {
     margin-left: 0px;

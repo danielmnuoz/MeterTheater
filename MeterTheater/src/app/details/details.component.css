@@ -11,6 +11,7 @@ textarea {
 
 .mat-list-item {
   font-size: small;
+  overflow: auto;
 }
 
 .item-align {
@@ -33,4 +34,8 @@ textarea {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+strong{
+  overflow:auto;
 }
