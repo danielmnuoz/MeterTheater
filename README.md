@@ -18,8 +18,9 @@ To access the API, first do POST https://10.1.210.32:8002/Logins/Login with a JS
 ## DB
 ### Access
 The tieteam windows account could be used, and the password for sa is in the appsettings.json secret on the GitHub.
-### Job Note
+### Job Notes
 The AutoCheckIn job (and all other jobs) in the SQL database stop when the NUC is restarted. To turn the jobs back on, after logging into the SQL Server, right-click SQL Server Agent and click start.
+Also, the AutoCheckIn job is currently set to only decrement down to 0, and does not check-in the sockets afterwards.
 ### User Note
 When recreating the User table, make sure to add 'BusPI' as a user, as that is the username used by the PI. Also note that only the userName, userID, and userIsAdmin fields are currently used.
 ### Creation
