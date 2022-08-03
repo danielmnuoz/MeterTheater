@@ -10,7 +10,35 @@
   border-radius:15px;
   font-size:15px;
   text-align: center;
-  padding: 20px;
+  display: flex;
+  justify-content: center;
+  /* padding: 20px; */
+}
+/* .wholecircle{
+  width:55px;
+  height: 55px;
+  border-radius: 50%;
+  border: 5px solid grey;
+} */
+ .topcircle{
+  width: 55px;
+  height: 25px;
+  border-top-left-radius: 100px;
+  border-top-right-radius: 100px;
+  border: 5px solid black;
+  border-bottom: 0;
+
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box; 
+} 
+ .bottomcircle{
+  width: 55px;
+  height: 25px;
+  border-bottom-left-radius: 100px;
+  border-bottom-right-radius: 100px;
+  border: 5px solid black;
+  border-top: 0;
 }
 .socketbutton.owned{
   background-color: #33647f;
@@ -18,7 +46,7 @@
 .socketbutton.occupied{
   background-color: #636466;
 }
-.socketbutton:not(.occupied):hover{
+.socketbutton:hover{
   transform: scale(1.2);
   cursor: pointer;
 }
