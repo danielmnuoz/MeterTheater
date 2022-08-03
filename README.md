@@ -21,7 +21,7 @@ The tieteam windows account could be used, and the password for sa is in the app
 ### Job Note
 The AutoCheckIn job (and all other jobs) in the SQL database stop when the NUC is restarted. To turn the jobs back on, after logging into the SQL Server, right-click SQL Server Agent and click start.
 ### User Note
-When recreating the User table, make sure to add 'BusPI' as a user, as that is the username used by the PI. Also note that only the userName and userID fields are currently used.
+When recreating the User table, make sure to add 'BusPI' as a user, as that is the username used by the PI. Also note that only the userName, userID, and userIsAdmin fields are currently used.
 ### Creation
 The MeterTheater.sql script can be used to recreate the database with the initial data (the 2nd and 6th floor labs). The autoCheckIn.sql file is a script with the job that deals with decrementing the remaining number of days on a socket at midnight every night.
 ### Admin
