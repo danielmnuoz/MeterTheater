@@ -4,7 +4,10 @@
 Development should be done on http://localhost:4200 (since that is the only port allowed by the CORS policy in the API).
 
 ## IIS
+### Certificates
 The certificates expire on 7/28/2023 for the website and the API.
+### Publishing
+When publishing the angular app, make sure to not delete the web.config in the IIS folder. It has the rewrite configuration in it.
 
 ## API
 ### API Development
@@ -13,6 +16,8 @@ The appsettings.json and appsettings.Development.json files are in the .gitignor
 To access the API, first do POST https://10.1.210.32:8002/Logins/Login with a JSON string in the body. The string needs to be a valid username. The request will send back a cookie and a user object on success. The API can then be freely accessed by passing the cookie along with the request.
 
 ## DB
+### Access
+The tieteam windows account could be used, and the password for sa is in the appsettings.json secret on the GitHub.
 ### Job Note
 The AutoCheckIn job (and all other jobs) in the SQL database stop when the NUC is restarted. To turn the jobs back on, after logging into the SQL Server, right-click SQL Server Agent and click start.
 ### User Note
