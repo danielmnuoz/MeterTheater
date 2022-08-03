@@ -10,7 +10,7 @@
   margin: auto;
   position: absolute;
   top: 50px;
-  right:250px;
+  right: 250px;
 }
 
 .key .socket {
@@ -22,7 +22,7 @@
   height: 37px;
   width: 37px;
   margin: 5px;
-  border-radius:10px;
+  border-radius: 10px;
 }
 
 .casetext {
@@ -52,10 +52,11 @@
   width: 100%;
   padding: 1rem;
   overflow-x: auto;
-  scrollbar-color:  #d4aa70 #e4e4e4;
-  scrollbar-width:thin;
-  margin:auto;
+  scrollbar-color: #d4aa70 #e4e4e4;
+  scrollbar-width: thin;
+  margin: auto;
 }
+
 .table::-webkit-scrollbar {
   width: 20px;
 }
@@ -71,8 +72,8 @@
   border-radius: 100px;
 }
 
-@media all and (max-width: 625px){
-  .key{
+@media all and (max-width: 625px) {
+  .key {
     margin-left: 0px;
     left: 180px;
   }
