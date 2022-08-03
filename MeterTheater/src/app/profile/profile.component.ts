@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Meter } from '../interfaces/meter';
-import { Socket } from '../interfaces/socket';
 import { LocSocket } from '../interfaces/locSocket';
 import { Log } from '../interfaces/log';
 import { User } from '../interfaces/user';
@@ -22,14 +21,19 @@ export class ProfileComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.meterTheaterDBService.getLoginUser().subscribe(users => {
-      if (users == undefined || users.length == 0) {
-        this.router.navigateByUrl('login');
+    this.meterTheaterDBService.getCheckLogin().subscribe(ret => {
+      if (ret == true) {
+        this.meterTheaterDBService.getLoginUser().subscribe(users => {
+          if (users == undefined || users.length == 0) {
+            this.router.navigateByUrl('login');
+          } else {
+            // assumes unique
+            this.loginUser = users[0];
+            this.getSockets();
+          }
+        });
       } else {
-        // assumes unique
-        this.meterTheaterDBService.loginUser = users[0];
-        this.user = this.meterTheaterDBService.loginUser;
-        this.getSockets();
+        this.router.navigateByUrl('login');
       }
     });
   }
@@ -39,7 +43,7 @@ export class ProfileComponent implements OnInit {
   tableStandardDataSource = new MatTableDataSource<any>();
   tableAdminDataSource = new MatTableDataSource<any>();
 
-  user: User = this.meterTheaterDBService.DEFAULT_USER;
+  loginUser: User = this.meterTheaterDBService.DEFAULT_USER;
   checkInDisable: boolean = false;
   selectedView?: string;
   refreshCheckinError: boolean = false;
@@ -79,7 +83,7 @@ export class ProfileComponent implements OnInit {
                 });
               }
             });
-            this.meterTheaterDBService.addLog({ userId: this.meterTheaterDBService.loginUser.id, socketId: socket.socket.id, meterId: meterId, description: description } as Log).subscribe();
+            this.meterTheaterDBService.addLog({ userId: this.loginUser.id, socketId: socket.socket.id, meterId: meterId, description: description } as Log).subscribe();
           }
         } else {
           this.checkInDisable = false;
@@ -92,11 +96,13 @@ export class ProfileComponent implements OnInit {
 
   singleCheckIn(data: any) {
     this.checkInDisable = true;
-    if (!this.meterTheaterDBService.loginCheck()) {
-      this.checkInDisable = false;
-      return;
-    }
-    this.checkIn(data.socket, data.meter);
+    this.meterTheaterDBService.getCheckLogin().subscribe(ret => {
+      if (ret == true) {
+        this.checkIn(data.socket, data.meter);
+      } else {
+        this.router.navigateByUrl('login');
+      }
+    });
   }
 
   getSockets(selectedView: string | undefined = undefined) {
@@ -115,7 +121,7 @@ export class ProfileComponent implements OnInit {
               for (var row of table.sockets) {
                 row.forEach(socket => {
                   if (socket != undefined) {
-                    if (this.user.id != undefined && socket.socket != undefined && socket.socket.userId == this.user.id) {
+                    if (this.loginUser.id != undefined && socket.socket != undefined && socket.socket.userId == this.loginUser.id) {
                       if (socket.socket.meterId != undefined) {
                         this.meterTheaterDBService.getMeterById(socket.socket.meterId).subscribe(meter => {
                           this.tableStandardDataSource.data.push({ socket, meter });

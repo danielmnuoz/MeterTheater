@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Meter } from '../interfaces/meter';
-import { Socket } from '../interfaces/socket';
 import { LocSocket } from '../interfaces/locSocket';
 import { MeterTheaterDBService } from '../meter-theater-db.service';
 
@@ -10,10 +9,10 @@ import { MeterTheaterDBService } from '../meter-theater-db.service';
   templateUrl: './theater-slot.component.html',
   styleUrls: ['./theater-slot.component.css']
 })
-export class TheaterSlotComponent implements OnInit, OnChanges {
+export class TheaterSlotComponent implements OnChanges {
 
   meter?: Meter;
-  loginUserId?: number;
+  @Input() loginUserId?: number;
   @Input() selected?: boolean = false;
   @Input() socket?: LocSocket;
   @Input() labName?: string;
@@ -23,15 +22,9 @@ export class TheaterSlotComponent implements OnInit, OnChanges {
 
   constructor(private meterTheaterDBService: MeterTheaterDBService) { }
 
-  ngOnInit(): void {
-    this.loginUserId = this.meterTheaterDBService.loginUser.id;
-  }
-
   ngOnChanges(changes: SimpleChanges): void {
     this.getMeterById().subscribe(meter => this.meter = meter);
-    this.loginUserId = this.meterTheaterDBService.loginUser.id;
   }
-
 
   getMeterById(): Observable<Meter | undefined> {
     if (this.socket && this.socket.socket && this.socket.socket.meterId) {

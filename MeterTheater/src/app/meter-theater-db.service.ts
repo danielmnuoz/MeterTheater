@@ -21,6 +21,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 
 import { catchError, map, tap } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -28,9 +29,10 @@ import { catchError, map, tap } from 'rxjs/operators';
 
 export class MeterTheaterDBService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
-  private APIURL = 'https://10.1.210.32:8002/api/';
+  public SITEURL = 'https://metertheater';
+  public APIURL = 'https://10.1.210.32:8002/api/';
   private USERURL = 'Users';
   private SOCKETURL = 'Sockets';
   private METERURL = 'Meters';
@@ -46,25 +48,10 @@ export class MeterTheaterDBService {
     isAdmin: undefined
   }
 
-  loginUser: User = this.DEFAULT_USER;
-
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
     withCredentials: true
   };
-
-  loginCheck(): boolean {
-    if (this.loginUser.id == this.DEFAULT_USER.id) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-  resetLoginUser(): Observable<undefined> {
-    this.loginUser = this.DEFAULT_USER;
-    return this.getLogout();
-  }
 
   coords2stringH(i: number): string {
     if (i < 26) {
@@ -361,6 +348,13 @@ export class MeterTheaterDBService {
     return extendedLabs;
   }
 
+  getCheckLogin(): Observable<boolean> {
+    const url = `${this.APIURL + this.LOGINURL}/CheckLogin`;
+    return this.http.get<boolean>(url, this.httpOptions).pipe(
+      catchError(this.handleError<boolean>('getCheckLogin'))
+    );
+  }
+
   postLoginUser(name: string): Observable<User | undefined> {
     const url = `${this.APIURL + this.LOGINURL}/Login`;
     return this.http.post<ServerUser | undefined>(url, JSON.stringify(name), this.httpOptions).pipe(
@@ -483,7 +477,7 @@ export class MeterTheaterDBService {
     );
   }
 
-  /* GET sockets whose name contains search term */
+  /* GET sockets whose userId contains search term */
   searchSocketsByUser(userId: number): Observable<Socket[]> {
     return this.http.get<ServerSocket[]>(`${this.APIURL + this.SOCKETURL}/?socketUserId=${userId}`, this.httpOptions).pipe(
       map(serverSockets => this.serverSockets2Sockets(serverSockets)),
@@ -561,7 +555,7 @@ export class MeterTheaterDBService {
     );
   }
 
-  /* GET meters whose name contains search term */
+  /* GET meters whose userId contains search term */
   searchMetersByUser(userId: number): Observable<Meter[]> {
     return this.http.get<ServerMeter[]>(`${this.APIURL + this.METERURL}/?meterUserId=${userId}`, this.httpOptions).pipe(
       map(serverMeters => this.serverMeters2Meters(serverMeters)),
@@ -569,7 +563,7 @@ export class MeterTheaterDBService {
     );
   }
 
-  /* GET meters whose name contains search term */
+  /* GET meters whose lanId contains search term */
   searchMetersByLanId(lanId: string): Observable<Meter[]> {
     return this.http.get<ServerMeter[]>(`${this.APIURL + this.METERURL}/?meterLanId=${lanId}`, this.httpOptions).pipe(
       map(serverMeters => this.serverMeters2Meters(serverMeters)),
@@ -632,11 +626,12 @@ export class MeterTheaterDBService {
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
 
+      if (error.status === 0) {
+        this.router.navigateByUrl('net-error');
+      }
+
       // TODO: send the error to remote logging infrastructure
       console.error(error); // log to console instead
-
-      // TODO: better job of transforming error for user consumption
-      // this.log(`${operation} failed: ${error.message}`);
 
       // Let the app keep running by returning an empty result.
       return of(result as T);

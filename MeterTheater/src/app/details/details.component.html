@@ -1,11 +1,9 @@
 <div class="details-container">
   <div *ngIf="socket">
     <mat-list>
-      <mat-list-item>Lab: <strong> &nbsp;{{socket.labName}}</strong></mat-list-item>
-      <mat-divider></mat-divider>
-      <mat-list-item>Table: <strong> &nbsp;{{socket.tableName}}</strong></mat-list-item>
-      <mat-divider></mat-divider>
-      <mat-list-item>Slot: <strong> &nbsp;{{socket.coord}}</strong></mat-list-item>
+      <mat-list-item class="local-center">{{socket.labName}}, {{socket.tableName}},
+        {{socket.coord}}
+      </mat-list-item>
       <mat-divider></mat-divider>
       <ng-container *ngIf="socket && socketUser && socket.socket">
         <mat-list-item>
@@ -24,18 +22,6 @@
         <mat-list-item>Socket Checkout Date: </mat-list-item>
         <mat-divider></mat-divider>
       </ng-container>
-      <ng-container *ngIf="socket != undefined && this.socket.socket != undefined">
-        <mat-list-item>Socket Form:
-          <strong> &nbsp;{{socket.socket.form}}</strong>
-        </mat-list-item>
-        <mat-divider></mat-divider>
-      </ng-container>
-      <ng-container *ngIf="socket != undefined && this.socket.socket != undefined">
-        <mat-list-item>Socket Voltage:
-          <strong> &nbsp;{{socket.socket.voltage}}</strong>
-        </mat-list-item>
-        <mat-divider></mat-divider>
-      </ng-container>
     </mat-list>
   </div>
   <form *ngIf="socket != undefined && this.socket.socket != undefined; else noSocket" (ngSubmit)="onSubmit()"
@@ -49,8 +35,9 @@
         Must be 8 characters in length</mat-error>
     </mat-form-field>
     <mat-form-field class="item-align">
-      <input type="text" matInput placeholder="Expected Duration (days)" name="Expected Duration (days)"
-        aria-label="Expected Duration (days)" aria-describedby="Expected Duration (days)" formControlName="duration">
+      <input type="text" matInput placeholder="Expected Remaining Days" name="Expected Remaining Days"
+        aria-label="Expected Remaining Days" aria-describedby="Expected Remaining Days Input"
+        formControlName="duration">
       <mat-error
         *ngIf="detailsForm.get('duration')?.errors?.['pattern'] || detailsForm.get('duration')?.errors?.['min']">Must
         enter positive integer</mat-error>

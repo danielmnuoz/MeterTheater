@@ -1,7 +1,0 @@
-name: .NET CI
-on: [push]
-env:
-  app-name: "Meter Theater"
-  rg-name: ""
-jobs:
-
