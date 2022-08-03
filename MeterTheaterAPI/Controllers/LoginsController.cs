@@ -18,10 +18,12 @@ namespace MeterTheater.Controllers
     {
 
         private readonly MeterTheaterDBContext _context;
+        private readonly IConfiguration _configuration;
 
-        public LoginsController(MeterTheaterDBContext context)
+        public LoginsController(MeterTheaterDBContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         // GET: api/Logins/Logout
@@ -61,6 +63,7 @@ namespace MeterTheater.Controllers
             return identity.IsAuthenticated;
         }
 
+        // The commented code here is to test LDAP.
         // POST: api/Logins/Login
         [HttpPost("Login")]
         [AllowAnonymous]
@@ -68,8 +71,10 @@ namespace MeterTheater.Controllers
         public async Task<ActionResult<User>> Login([FromBody] string userName)
         {
 
-
             //DirectoryEntry de = new("LDAP://bm.net");
+
+            //de.Username = _configuration["ADCredentials:Username"];
+            //de.Password = _configuration["ADCredentials:Password"];
 
             //DirectorySearcher ds = new(de)
             //{
@@ -83,7 +88,6 @@ namespace MeterTheater.Controllers
             //    // Using the index zero (0) is required!
             //    Debug.WriteLine(sr.Properties["name"][0].ToString());
             //}
-
 
             var users = await _context.Users.Where(e => e.UserName == userName).ToListAsync();
             if (users.Count <= 0)
