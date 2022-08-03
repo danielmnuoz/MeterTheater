@@ -50,6 +50,8 @@
 
 .table {
   width: 100%;
+  height: 400px;
+  overflow-y: auto;
   padding: 1rem;
   overflow-x: auto;
   scrollbar-color: #d4aa70 #e4e4e4;
