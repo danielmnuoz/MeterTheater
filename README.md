@@ -1,7 +1,7 @@
 # MeterTheater
 
 ## Known Bugs
-- Overflow for long user names, large numbers of tables, long table names, and other overflow errors.
+- Overflow for long user names, large numbers of tables, long table names, large voltages, large forms, large coordinate values (e.g. AAAA1), and other overflow errors.
 - Logging into multiple accounts in different tabs will cause account overlap conflicts due to non-unique cookies being used.
 
 ## Angular
