@@ -1,24 +1,21 @@
-KIOSK MODE:
+## Kiosk Mode
 
-$sudo nano /home/theaterbusser/kiosk.sh
+        $sudo nano /home/theaterbusser/kiosk.sh
 
-
-
-
-$sudo systemctl stop kiosk.serivce
+        $sudo systemctl stop kiosk.serivce
 Enable kiosk mode (running at boot)
 
-$sudo systemctl enable kiosk.serice 
+        $sudo systemctl enable kiosk.serice 
 Disable kiosk mode (stop running at boot)
 
-$sudo systemctl disable kiosk.service
+        $sudo systemctl disable kiosk.service
 
 Enable theater.py at boot:
-$sudo nano /home/theaterbusser/ .bashrc
+        $sudo nano /home/theaterbusser/ .bashrc
 Scroll all the way down to find the startup script.
 
 
-HARDWARE LIST
+## Hardware List
 
 Raspberry Pi 4
 22 AWG solid core wire 
