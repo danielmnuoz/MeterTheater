@@ -1,5 +1,6 @@
 ## Kiosk Mode
-Shell script located at
+Shell script location
+
         $sudo nano /home/theaterbusser/kiosk.sh
        
 Stop kiosk mode
