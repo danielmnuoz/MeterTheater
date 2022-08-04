@@ -15,3 +15,9 @@ sed -i 's/"exit_type":"Crashed"/"exit_type":"Normal"/' /home/theaterbusser/.conf
 
 #launches metertheater in chromium in Kiosk
 /usr/bin/chromium-browser  --kiosk https://metertheater &
+
+#infinity loop that makes chromium switch tab every 15 sec
+while true; do
+         xdotool keydown ctrl+Next; xdotool keyup ctrl+Next;
+      sleep 15
+done
