@@ -1,9 +1,10 @@
-import { Component, EventEmitter, Input, OnInit, Output, OnChanges, SimpleChange, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { Meter } from '../interfaces/meter';
-import { Socket } from '../interfaces/socket'
+import { LocSocket } from '../interfaces/locSocket';
 import { MeterTheaterDBService } from '../meter-theater-db.service';
 import { Lab } from '../interfaces/lab';
 import { Table } from '../interfaces/table';
+import { User } from '../interfaces/user';
 
 @Component({
   selector: 'app-theater',
@@ -11,55 +12,76 @@ import { Table } from '../interfaces/table';
   styleUrls: ['./theater.component.css']
 })
 
-export class TheaterComponent implements OnInit, OnChanges {
-
+export class TheaterComponent implements OnChanges {
+  selectedSoc?: LocSocket;
   constructor(
     private meterTheaterDBService: MeterTheaterDBService
   ) { }
 
-  ngOnInit(): void {
-    this.getSocketInfos();
-  }
-
   ngOnChanges(changes: SimpleChanges): void {
-    this.getSocketInfos();
+    var selectedLabId: number | undefined = this.selectedLab?.id;
+    var selectedTableId: number | undefined = this.selectedTable?.id;
+    this.getSocketInfos(selectedLabId, selectedTableId);
   }
 
   labs: Lab[] = [];
   selectedLab?: Lab;
   selectedTable?: Table;
 
-  @Output() onSelectSocket = new EventEmitter<Socket>();
+  @Output() onSelectSocket = new EventEmitter<LocSocket>();
   @Output() onSelectMeter = new EventEmitter<Meter>();
   @Output() onSelect = new EventEmitter<boolean>();
   // needs to match other toggle initials (false)
   @Input() refreshToggle: boolean = false;
+  @Input() loginUser: User = this.meterTheaterDBService.DEFAULT_USER;
 
-  selectSocket(socket: Socket) {
+  selectSocket(socket: LocSocket) {
     this.onSelectSocket.emit(socket)
+    this.selectedSoc = socket;
   }
 
   selectMeter(meter: Meter) {
     this.onSelectMeter.emit(meter)
   }
 
-  setSelectedTable() {
+  setSelectedTable(selectedTableId: number | undefined = undefined) {
     if (this.selectedLab != undefined) {
       if (this.selectedLab.tables != undefined) {
         if (this.selectedLab.tables.length > 0) {
-          this.selectedTable = this.selectedLab.tables[0];
+          if (selectedTableId == undefined) {
+            this.selectedTable = this.selectedLab.tables[0];
+          } else {
+            for (var table of this.selectedLab.tables) {
+              if (table.id == selectedTableId) {
+                this.selectedTable = table;
+              }
+            }
+            if (this.selectedTable == undefined) {
+              this.selectedTable = this.selectedLab.tables[0];
+            }
+          }
         }
       }
     }
   }
 
-  // TODO - sort extendedLabs? and other stuff
-  getSocketInfos(): void {
+  getSocketInfos(selectedLabId: number | undefined = undefined, selectedTableId: number | undefined = undefined): void {
     this.meterTheaterDBService.getLabs().subscribe(labs => {
       this.labs = labs;
       if (this.labs && this.labs.length >= 1) {
-        this.selectedLab = this.labs[0];
-        this.setSelectedTable();
+        if (selectedLabId == undefined) {
+          this.selectedLab = this.labs[0];
+        } else {
+          for (var lab of this.labs) {
+            if (lab.id == selectedLabId) {
+              this.selectedLab = lab;
+            }
+          }
+          if (this.selectedLab == undefined) {
+            this.selectedLab = this.labs[0];
+          }
+        }
+        this.setSelectedTable(selectedTableId);
       }
     });
   }

@@ -1,95 +1,13 @@
-<!-- <div class="fakebody">
-  <div class="movie-container">
-    <label>Pick a floor:</label>
-    <select id="floor">
-      <option value="2">Floor 2</option>
-      <option value="6">Floor 6</option>
-    </select>
-  </div>
-
-  <ul class="showcase">
-    <li>
-      <div class="seat"></div>
-      <p class="casetext">Available</p>
-    </li>
-    <li>
-      <div class="seat occupied"></div>
-      <p class="casetext">Occupied</p>
-    </li>
-    <li>
-      <div class="seat owned"></div>
-      <p class="casetext">Owned</p>
-    </li>
-  </ul>
-
-  <div class="subcontainer">
-    <div class="screen"></div>
-
-    <div class="row">
-      <div class="seat"></div>
-      <div class="seat"></div>
-      <div class="seat"></div>
-      <div class="seat"></div>
-      <div class="seat"></div>
-      <div class="seat"></div>
-      <div class="seat"></div>
-      <div class="seat"></div>
-
-    </div>
-    <div class="row">
-      <div class="seat"></div>
-      <div class="seat"></div>
-      <div class="seat"></div>
-      <div class="seat occupied"></div>
-      <div class="seat occupied"></div>
-      <div class="seat"></div>
-      <div class="seat"></div>
-    </div>
-    <div class="row">
-      <div class="seat"></div>
-      <div class="seat"></div>
-      <div class="seat"></div>
-      <div class="seat"></div>
-      <div class="seat"></div>
-      <div class="seat"></div>
-      <div class="seat occupied"></div>
-      <div class="seat occupied"></div>
-    </div>
-    <div class="row">
-      <div class="seat"></div>
-      <div class="seat"></div>
-      <div class="seat"></div>
-      <div class="seat"></div>
-      <div class="seat"></div>
-      <div class="seat"></div>
-    </div>
-    <div class="row">
-      <div class="seat"></div>
-      <div class="seat"></div>
-      <div class="seat"></div>
-      <div class="seat occupied"></div>
-      <div class="seat occupied"></div>
-      <div class="seat"></div>
-    </div>
-  </div>
-
-  <p class="text">
-    You have selected <span id="count">0</span> sockets
-  </p>
-</div> -->
-
-
 <div class="theater">
-  <mat-label>Pick a Lab: </mat-label>
-  <mat-button-toggle-group appearance="legacy" placeholder="Lab" (change)="setSelectedTable()"
-    [(ngModel)]="selectedLab">
-    <mat-button-toggle *ngFor="let lab of labs" [value]="lab">
-      {{lab.name}}
-    </mat-button-toggle>
-  </mat-button-toggle-group>
-  <div *ngIf="selectedLab">
-    <mat-label>Pick a Wall: </mat-label>
-    <mat-button-toggle-group appearance="legacy" name="table" aria-label="wall choice" [(ngModel)]="selectedTable">
+  <mat-form-field>
+    <mat-select name="lab" placeholder="Lab" [(ngModel)]="selectedLab" (selectionChange)="setSelectedTable()">
+      <mat-option *ngFor="let lab of labs" [value]="lab">
+        {{lab.name}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <div *ngIf="selectedLab != undefined">
+    <mat-button-toggle-group appearance="legacy" name="table" aria-label="table choice" [(ngModel)]="selectedTable">
       <mat-button-toggle *ngFor="let table of selectedLab.tables" [value]="table">{{table.name}}</mat-button-toggle>
     </mat-button-toggle-group>
   </div>
@@ -104,17 +22,18 @@
     </li>
     <li>
       <div class="socket owned"></div>
-      <p class="casetext">Owned</p>
+      <p class="casetext">Yours</p>
     </li>
   </div>
-  <div *ngIf="selectedLab">
-    <div *ngIf="selectedTable">
-      {{selectedTable.name}}
+  <div class="table">
+    <ng-container *ngIf="selectedLab && selectedTable">
       <div class="row" *ngFor="let row of selectedTable.sockets">
-        <app-theater-slot class="slot" *ngFor="let socket of row" [socket]="socket"
-          (onSelectSocket)="selectSocket($event)" (onSelectMeter)="selectMeter($event)">
+        <div class="slot" *ngIf="row.length == 0"></div>
+        <app-theater-slot class="slot" [selected]="selectedSoc === socket ? true : false" *ngFor="let socket of row"
+          [socket]="socket" [loginUserId]="loginUser.id" (onSelectSocket)="selectSocket($event)"
+          (onSelectMeter)="selectMeter($event)">
         </app-theater-slot>
       </div>
-    </div>
+    </ng-container>
   </div>
 </div>

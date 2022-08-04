@@ -11,8 +11,6 @@ import { TheaterSlotComponent } from './theater-slot/theater-slot.component';
 
 import { HttpClientModule } from '@angular/common/http';
 
-import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
-import { InMemoryDataService } from './in-memory-data.service';
 import { LoginComponent } from './login/login.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { HomeComponent } from './home/home.component';
@@ -27,6 +25,10 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTableModule } from '@angular/material/table';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatListModule } from '@angular/material/list';
+import { NetErrorComponent } from './net-error/net-error.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +40,8 @@ import { MatTableModule } from '@angular/material/table';
     HomeComponent,
     DetailsComponent,
     ProfileComponent,
-    NavigationComponent
+    NavigationComponent,
+    NetErrorComponent
   ],
   imports: [
     BrowserModule,
@@ -52,14 +55,11 @@ import { MatTableModule } from '@angular/material/table';
     MatChipsModule,
     MatTabsModule,
     MatTableModule,
+    MatSnackBarModule,
+    MatDividerModule,
+    MatListModule,
     ReactiveFormsModule,
-    BrowserAnimationsModule,
-    // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
-    // and returns simulated server responses.
-    // Remove it when a real server is ready to receive requests.
-    // HttpClientInMemoryWebApiModule.forRoot(
-    //   InMemoryDataService, { dataEncapsulation: false }
-    // )
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

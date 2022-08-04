@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from '../interfaces/user';
 import { Log } from '../interfaces/log';
-
+import { Validators, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router'
 
 import { MeterTheaterDBService } from '../meter-theater-db.service';
@@ -13,53 +12,49 @@ import { MeterTheaterDBService } from '../meter-theater-db.service';
 })
 export class LoginComponent implements OnInit {
 
-  submitted = false;
-
   constructor(
     private router: Router,
-    private meterTheaterDBService: MeterTheaterDBService
+    private meterTheaterDBService: MeterTheaterDBService,
+    private fb: FormBuilder
   ) { }
 
   ngOnInit(): void {
-    this.meterTheaterDBService.resetLoginUser();
+    this.meterTheaterDBService.getCheckLogin().subscribe(ret => {
+      if (ret == true) {
+        this.meterTheaterDBService.getLogout().subscribe();
+      }
+    });
   }
 
-  username: string = '';
-  potentialMatches: User[] = [];
   found: boolean = true;
+  disableLogin: boolean = false;
+
+  loginForm = this.fb.group({
+    username: ['', [Validators.required]]
+  });
 
   onSubmit() {
-    var username: string = this.username;
-    var found: boolean = false;
-    this.submitted = true;
-    this.meterTheaterDBService.searchUserByName(username).subscribe(users => {
-      for (var user of users) {
-        if(user.name == undefined){
-          continue;
-        }
-        if (user.name.length == username.length && user.name.toLowerCase() === username.toLowerCase()) {
-          this.meterTheaterDBService.loginUser = user;
-          found = true;
-          break;
-        }
-      }
-      if(found){
+    this.disableLogin = true;
+    var username: string | undefined = this.loginForm.get('username')?.value?.toString();
+    if (username == undefined) {
+      username = '';
+    }
+    this.meterTheaterDBService.postLoginUser(username).subscribe(user => {
+      if (user == undefined) {
+        this.found = false;
+        this.disableLogin = false;
+      } else {
+        this.found = true;
         var log: Log = {
           description: "Successful Login",
-          userId: this.meterTheaterDBService.loginUser.id
+          userId: user.id
         };
+        this.disableLogin = false;
         this.meterTheaterDBService.addLog(log).subscribe();
-        // this should be in subscribe so that the rest of the website waits for user before querying db
         this.router.navigateByUrl('home');
-      }else{
-        this.found = false;
-        var log: Log = {
-          description: `Failed Login: ${username}`,
-        };
-        this.meterTheaterDBService.addLog(log).subscribe();
+        return;
       }
-    }
-    );
+    });
   }
 
 }

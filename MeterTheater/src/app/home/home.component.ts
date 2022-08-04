@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Socket } from '../interfaces/socket'
+import { LocSocket } from '../interfaces/locSocket';
 import { Meter } from '../interfaces/meter';
 import { Router } from '@angular/router';
 import { MeterTheaterDBService } from '../meter-theater-db.service';
+import { User } from '../interfaces/user';
 
 @Component({
   selector: 'app-home',
@@ -17,17 +18,32 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    if (!this.meterTheaterDBService.loginCheck()) {
-      this.router.navigateByUrl('login');
-    }
+    this.meterTheaterDBService.getCheckLogin().subscribe(ret => {
+      if (ret == true) {
+        this.meterTheaterDBService.getLoginUser().subscribe(users => {
+          if (users == undefined || users.length == 0) {
+            this.router.navigateByUrl('login');
+            return;
+          } else {
+            // assumes unique
+            this.loginUser = users[0];
+          }
+        });
+      } else {
+        this.router.navigateByUrl('login');
+        return;
+      }
+    });
+
   }
 
   // needs to match other toggle initials (false)
   toggle: boolean = false;
-  selectedSocket?: Socket;
+  selectedSocket?: LocSocket;
   selectedMeter?: Meter;
+  loginUser: User = this.meterTheaterDBService.DEFAULT_USER;
 
-  selectSocket(socket?: Socket) {
+  selectSocket(socket?: LocSocket) {
     this.selectedSocket = socket;
   }
 
@@ -35,8 +51,8 @@ export class HomeComponent implements OnInit {
     this.selectedMeter = meter;
   }
 
-  updateInfo(){
-    this.toggle=!this.toggle;
+  updateInfo() {
+    this.toggle = !this.toggle;
   }
 
 }

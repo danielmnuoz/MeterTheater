@@ -1,0 +1,46 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# Compiled output
+/MeterTheater/dist
+/MeterTheater/tmp
+/MeterTheater/out-tsc
+/MeterTheater/bazel-out
+
+# Node
+/MeterTheater/node_modules
+MeterTheater/npm-debug.log
+MeterTheater/yarn-error.log
+
+# IDEs and editors
+MeterTheater/.idea/
+MeterTheater/.project
+MeterTheater/.classpath
+MeterTheater/.c9/
+MeterTheater/*.launch
+MeterTheater/.settings/
+MeterTheater/*.sublime-workspace
+
+# Visual Studio Code
+MeterTheater/.vscode/*
+MeterTheater/!.vscode/settings.json
+MeterTheater/!.vscode/tasks.json
+MeterTheater/!.vscode/launch.json
+MeterTheater/!.vscode/extensions.json
+MeterTheater/.history/*
+
+# Miscellaneous
+/MeterTheater/.angular/cache
+MeterTheater/.sass-cache/
+/MeterTheater/connect.lock
+/MeterTheater/coverage
+/MeterTheater/libpeerconnection.log
+MeterTheater/testem.log
+/MeterTheater/typings
+
+# System files
+MeterTheater/.DS_Store
+MeterTheater/Thumbs.db
+
+# MeterTheaterAPI
+MeterTheaterAPI/appsettings.json
+MeterTheaterAPI/appsettings.Development.json

@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { User } from '../interfaces/user';
+import { MeterTheaterDBService } from '../meter-theater-db.service';
 
 @Component({
   selector: 'app-navigation',
@@ -7,9 +9,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavigationComponent implements OnInit {
 
-  constructor() { }
+  constructor(private meterTheaterDBService: MeterTheaterDBService) { }
 
   ngOnInit(): void {
   }
+
+  @Input() loginUser: User = this.meterTheaterDBService.DEFAULT_USER;
 
 }

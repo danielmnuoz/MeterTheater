@@ -1,24 +1,50 @@
-.container{
+.container {
   border-width: 2px;
   border-style: solid;
 }
-.socketbutton{
+
+.socketbutton {
   background-color: #7ab800;
   height: 80px;
   width: 70px;
   margin: 5px;
-  border-radius:15px;
-  font-size:15px;
+  border-radius: 15px;
+  font-size: 15px;
   text-align: center;
-  padding: 20px;
+  display: flex;
+  justify-content: center;
+  position: relative;
 }
-.socketbutton.owned{
+
+.wholecircle {
+  width: 55px;
+  height: 55px;
+  position: absolute;
+  bottom: 5px;
+  border-radius: 50%;
+  border: 3px outset #3a4957;
+}
+
+.socketbutton.owned {
   background-color: #33647f;
 }
-.socketbutton.occupied{
+
+.socketbutton.occupied {
   background-color: #636466;
 }
-.socketbutton:not(.occupied):hover{
+
+.socketbutton:hover {
   transform: scale(1.2);
-  cursor: grab;
+  cursor: pointer;
+}
+
+.socketbutton:focus,
+.selected {
+  background-color: #568002;
+}
+
+.overflow {
+  padding: 0;
+  margin: 0;
+  overflow: auto;
 }

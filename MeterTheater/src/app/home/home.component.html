@@ -1,8 +1,14 @@
-<div id="nagvigationpage"><app-navigation></app-navigation></div>
-<div id="theaterpage">
-    <app-theater [refreshToggle]="toggle" (onSelectSocket)="selectSocket($event)" (onSelectMeter)="selectMeter($event)">
-    </app-theater>
-</div>
-<div id="detailpage">
-    <app-details [socket]="selectedSocket" [meter]="selectedMeter" (onUpdate)="updateInfo()"></app-details>
+<div class="container resize-height resize-width">
+  <app-navigation [loginUser]="loginUser"></app-navigation>
+  <div class="home-container">
+    <div id="theaterpage">
+      <app-theater [refreshToggle]="toggle" [loginUser]="loginUser" (onSelectSocket)="selectSocket($event)"
+        (onSelectMeter)="selectMeter($event)">
+      </app-theater>
+    </div>
+    <div id="detailpage">
+      <app-details [loginUser]="loginUser" [socket]="selectedSocket" [meter]="selectedMeter" (onUpdate)="updateInfo()">
+      </app-details>
+    </div>
+  </div>
 </div>

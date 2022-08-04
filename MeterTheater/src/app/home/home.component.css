@@ -1,11 +1,36 @@
-
 #theaterpage {
-    float:left;
-    width:75%;
-    min-height:100%;
+  flex-grow: 1;
+  overflow-x: auto;
+  background-color: ivory;
+  height: 100%;
+  background: url('/assets/img/ezgif.com-gif-maker.png') repeat 0 0;
+  /* min-height: 750px; */
+  min-width: 354px;
 }
+
 #detailpage {
-    float:right;
-    width:25%;
-    min-height:100%;
+  min-width: 250px;
+  width: 250px;
+  /* min-height: 750px; */
+}
+
+.home-container {
+  height: 100%;
+  display: flex;
+  /* min-height: 750px; */
+}
+
+.container {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+  margin: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 0;
+  min-width: 100%;
+  /* min-height: 750px; */
+  ;
 }

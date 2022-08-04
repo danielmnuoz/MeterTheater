@@ -1,8 +1,45 @@
-.verticalPadding {
-  height: 25px;
+.details-container {
+  border-left: 1px lightgray solid;
+  border-right: 1px lightgray solid;
+  height: 100% !important;
+  padding: 5px !important;
 }
 
-.mat-form-field {
-  display: block;
-  max-width: 200px;
+textarea {
+  max-height: 80px;
+}
+
+.mat-list-item {
+  font-size: small;
+  overflow: auto;
+}
+
+.item-align {
+  margin-top: 16px;
+  padding-left: 16px;
+}
+
+.center-container {
+  margin: auto;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flexbox;
+  justify-content: center;
+  align-items: center;
+}
+
+.local-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+strong{
+  overflow:auto;
+}
+
+.overflow{
+  overflow: auto;
 }

@@ -15,11 +15,13 @@ import { ServerExtendedTable } from './interfaces/serverExtendedTable';
 import { ExtendedTable } from './interfaces/extendedTable';
 import { Lab } from './interfaces/lab';
 import { Table } from './interfaces/table';
+import { LocSocket } from './interfaces/locSocket';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 
 import { catchError, map, tap } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -27,36 +29,43 @@ import { catchError, map, tap } from 'rxjs/operators';
 
 export class MeterTheaterDBService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
-  private APIURL = 'http://10.1.210.32:8001/api/';
+  public SITEURL = 'https://metertheater';
+  public APIURL = 'https://10.1.210.32:8002/api/';
   private USERURL = 'Users';
   private SOCKETURL = 'Sockets';
   private METERURL = 'Meters';
   private LABURL = 'Labs';
   private LOGURL = 'Logs';
+  private LOGINURL = 'Logins'
 
   DEFAULT_USER: User = {
     id: undefined,
-    name: undefined
+    name: undefined,
+    email: undefined,
+    fullName: undefined,
+    isAdmin: undefined
   }
 
-  loginUser: User = this.DEFAULT_USER;
-
   httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+    withCredentials: true
   };
 
-  loginCheck(): boolean {
-    if (this.loginUser.id == this.DEFAULT_USER.id) {
-      return false;
+  coords2stringH(i: number): string {
+    if (i < 26) {
+      return String.fromCharCode(65 + ((i)));
     } else {
-      return true;
+      return this.coords2stringH(Math.floor(i / 26) - 1) + String.fromCharCode(65 + ((i % 26)));
     }
   }
 
-  resetLoginUser(): void {
-    this.loginUser = this.DEFAULT_USER
+  coords2string(row: number, col: number): string {
+    if (row == undefined || col == undefined) {
+      return ''
+    }
+    return this.coords2stringH(row - 1) + col;
   }
 
   extendedLabs2Labs(extendedLabs: ExtendedLab[]): Lab[] {
@@ -71,19 +80,19 @@ export class MeterTheaterDBService {
     return {
       id: extendedLab.id,
       name: extendedLab.name,
-      tables: extendedLab.tables ? this.extendedTables2Tables(extendedLab.tables) : undefined
+      tables: extendedLab.tables ? this.extendedTables2Tables(extendedLab.tables, extendedLab.name) : undefined
     }
   }
 
-  extendedTables2Tables(extendedTables: ExtendedTable[]): Table[] {
+  extendedTables2Tables(extendedTables: ExtendedTable[], labName: string | undefined): Table[] {
     var tables: Table[] = [];
     for (var extendedTable of extendedTables) {
-      tables.push(this.extendedTable2Table(extendedTable))
+      tables.push(this.extendedTable2Table(extendedTable, labName))
     }
     return tables;
   }
 
-  extendedTable2Table(extendedTable: ExtendedTable): Table {
+  extendedTable2Table(extendedTable: ExtendedTable, labName: string | undefined): Table {
     var ret: Table = {
       id: extendedTable.id,
       name: extendedTable.name,
@@ -103,18 +112,63 @@ export class MeterTheaterDBService {
       }
       return 0
     });
-    var row: Socket[] = [];
-    var sockets: Socket[][] = [];
+    var row: (LocSocket | undefined)[] = [];
+    var sockets: (LocSocket | undefined)[][] = [];
+    var prevLoc: ExtendedLocation | undefined = undefined;
+    var rowOffset: number = 0;
+    var colOffset: number = 0;
     for (var loc of locs) {
+      // always true
+      if (loc.row && loc.col) {
+        var i: number;
+        if (prevLoc != undefined && prevLoc.row != undefined && (loc.row > prevLoc.row + 1)) {
+          i = prevLoc.row + 1;
+          sockets.push(row);
+          row = [];
+          colOffset = 0;
+        } else if (prevLoc == undefined) {
+          i = 1;
+        } else {
+          i = loc.row;
+        }
+        for (; i < loc.row; i++) {
+          sockets.push([]);
+          rowOffset--;
+          colOffset = 0;
+        }
+        if (prevLoc != undefined && prevLoc.col != undefined && prevLoc.row != undefined) {
+          if (loc.col > prevLoc.col + 1 && loc.row == prevLoc.row) {
+            i = prevLoc.col + 1;
+          } else if (loc.row > prevLoc.row && loc.col != 1) {
+            sockets.push(row);
+            row = [];
+            colOffset = 0;
+            i = 1;
+          } else {
+            i = loc.col;
+          }
+        } else if (prevLoc == undefined) {
+          i = 1;
+        } else {
+          i = loc.col;
+        }
+        for (; i < loc.col; i++) {
+          row.push(undefined);
+          colOffset--;
+        }
+      }
       if (loc.col == 1 && row.length != 0) {
         sockets.push(row);
         row = [];
+        colOffset = 0;
       }
-      if (loc.sockets) {
+      // always true
+      if (loc.sockets && loc.row && loc.col) {
         for (var socket of loc.sockets) {
-          row.push(socket);
+          row.push({ socket: socket, row: loc.row, col: loc.col, tableName: extendedTable.name, labName: labName, coord: this.coords2string(loc.row + rowOffset, loc.col + colOffset) } as LocSocket);
         }
       }
+      prevLoc = loc;
     }
     sockets.push(row);
     ret.sockets = sockets;
@@ -162,14 +216,20 @@ export class MeterTheaterDBService {
   serverUser2User(serverUser: ServerUser): User {
     return {
       id: serverUser.userId,
-      name: serverUser.userName
+      name: serverUser.userName,
+      fullName: serverUser.userFullName,
+      email: serverUser.userEmail,
+      isAdmin: serverUser.userIsAdmin
     } as User;
   }
 
   user2ServerUser(user: User): ServerUser {
     return {
       userId: user.id,
-      userName: user.name
+      userName: user.name,
+      userEmail: user.email,
+      userFullName: user.fullName,
+      userIsAdmin: user.isAdmin
     } as ServerUser;
   }
 
@@ -191,7 +251,8 @@ export class MeterTheaterDBService {
       locationId: serverSocket.socketLocationId,
       checkOutTime: serverSocket.socketCheckOutTime,
       checkInTime: serverSocket.socketCheckInTime,
-      duration: serverSocket.socketDuration
+      duration: serverSocket.socketDuration,
+      comment: serverSocket.socketComment
     } as Socket
   }
 
@@ -205,7 +266,8 @@ export class MeterTheaterDBService {
       socketLocationId: socket.locationId,
       socketCheckInTime: socket.checkInTime,
       socketCheckOutTime: socket.checkOutTime,
-      socketDuration: socket.duration
+      socketDuration: socket.duration,
+      socketComment: socket.comment
     } as ServerSocket
   }
 
@@ -286,10 +348,40 @@ export class MeterTheaterDBService {
     return extendedLabs;
   }
 
+  getCheckLogin(): Observable<boolean> {
+    const url = `${this.APIURL + this.LOGINURL}/CheckLogin`;
+    return this.http.get<boolean>(url, this.httpOptions).pipe(
+      catchError(this.handleError<boolean>('getCheckLogin'))
+    );
+  }
+
+  postLoginUser(name: string): Observable<User | undefined> {
+    const url = `${this.APIURL + this.LOGINURL}/Login`;
+    return this.http.post<ServerUser | undefined>(url, JSON.stringify(name), this.httpOptions).pipe(
+      map(serverUser => serverUser != undefined ? this.serverUser2User(serverUser) : undefined),
+      catchError(this.handleError<User | undefined>('postLoginUser'))
+    );
+  }
+
+  /* GET logged in user */
+  getLoginUser(): Observable<User[] | undefined> {
+    return this.http.get<ServerUser[] | undefined>(`${this.APIURL + this.LOGINURL}/GetLogin`, this.httpOptions).pipe(
+      map(serverUsers => serverUsers != undefined ? this.serverUsers2Users(serverUsers) : undefined),
+      catchError(this.handleError<User[] | undefined>('getLoginUser', []))
+    );
+  }
+
+  getLogout(): Observable<undefined> {
+    const url = `${this.APIURL + this.LOGINURL}/Logout`;
+    return this.http.get<undefined>(url, this.httpOptions).pipe(
+      catchError(this.handleError<undefined>('getLogout'))
+    );
+  }
+
   /** GET labs from the server */
   getLabs(): Observable<Lab[]> {
     const url = `${this.APIURL + this.LABURL}/?extend=true`;
-    return this.http.get<ServerExtendedLab[]>(url)
+    return this.http.get<ServerExtendedLab[]>(url, this.httpOptions)
       .pipe(
         map(serverExtendedLabs => this.extendedLabs2Labs(this.serverExtendedLabs2ExtendedLabs(serverExtendedLabs))),
         catchError(this.handleError<Lab[]>('getLabs', []))
@@ -298,7 +390,7 @@ export class MeterTheaterDBService {
 
   /** GET logs from the server */
   getLogs(): Observable<Log[]> {
-    return this.http.get<ServerLog[]>(this.APIURL + this.LOGURL)
+    return this.http.get<ServerLog[]>(this.APIURL + this.LOGURL, this.httpOptions)
       .pipe(
         map(serverLogs => this.serverLogs2Logs(serverLogs)),
         catchError(this.handleError<Log[]>('getLogs', []))
@@ -307,7 +399,7 @@ export class MeterTheaterDBService {
 
   /** GET matching last log from the server */
   getLastLog(userId: number | undefined = undefined, socketId: number | undefined = undefined, meterId: number | undefined = undefined): Observable<Log> {
-    return this.http.get<ServerLog>(this.APIURL + this.LOGURL + `/last/?logUserId=${userId}&logSocketId=${socketId}&logMeterId=${meterId}`)
+    return this.http.get<ServerLog>(this.APIURL + this.LOGURL + `/last/?logUserId=${userId}&logSocketId=${socketId}&logMeterId=${meterId}`, this.httpOptions)
       .pipe(
         map(serverLog => this.serverLog2Log(serverLog)),
         catchError(this.handleError<Log>('getLastLog'))
@@ -326,15 +418,15 @@ export class MeterTheaterDBService {
   /** GET user by id. Will 404 if id not found */
   getUserById(id: number): Observable<User> {
     const url = `${this.APIURL + this.USERURL}/${id}`;
-    return this.http.get<ServerUser>(url).pipe(
+    return this.http.get<ServerUser>(url, this.httpOptions).pipe(
       map(serverUser => this.serverUser2User(serverUser)),
       catchError(this.handleError<User>(`getUserById id=${id}`))
     );
   }
 
-  /* GET sockets whose name contains search term */
+  /* GET users whose name contains search term */
   searchUserByName(name: string): Observable<User[]> {
-    return this.http.get<ServerUser[]>(`${this.APIURL + this.USERURL}/?userName=${name}`).pipe(
+    return this.http.get<ServerUser[]>(`${this.APIURL + this.USERURL}/?userName=${name}`, this.httpOptions).pipe(
       map(serverUsers => this.serverUsers2Users(serverUsers)),
       catchError(this.handleError<User[]>('searchUserByName', []))
     );
@@ -342,7 +434,7 @@ export class MeterTheaterDBService {
 
   /** GET users from the server */
   getUsers(): Observable<User[]> {
-    return this.http.get<ServerUser[]>(this.APIURL + this.USERURL)
+    return this.http.get<ServerUser[]>(this.APIURL + this.USERURL, this.httpOptions)
       .pipe(
         map(serverUsers => this.serverUsers2Users(serverUsers)),
         catchError(this.handleError<User[]>('getUsers', []))
@@ -379,15 +471,15 @@ export class MeterTheaterDBService {
   /** GET socket by id. Will 404 if id not found */
   getSocketById(id: number): Observable<Socket> {
     const url = `${this.APIURL + this.SOCKETURL}/${id}`;
-    return this.http.get<ServerSocket>(url).pipe(
+    return this.http.get<ServerSocket>(url, this.httpOptions).pipe(
       map(serverSocket => this.serverSocket2Socket(serverSocket)),
       catchError(this.handleError<Socket>(`getSocketById id=${id}`))
     );
   }
 
-  /* GET sockets whose name contains search term */
+  /* GET sockets whose userId contains search term */
   searchSocketsByUser(userId: number): Observable<Socket[]> {
-    return this.http.get<ServerSocket[]>(`${this.APIURL + this.SOCKETURL}/?socketUserId=${userId}`).pipe(
+    return this.http.get<ServerSocket[]>(`${this.APIURL + this.SOCKETURL}/?socketUserId=${userId}`, this.httpOptions).pipe(
       map(serverSockets => this.serverSockets2Sockets(serverSockets)),
       catchError(this.handleError<Socket[]>('searchSockets', []))
     );
@@ -395,16 +487,24 @@ export class MeterTheaterDBService {
 
   /** GET sockets from the server */
   getSockets(): Observable<Socket[]> {
-    return this.http.get<ServerSocket[]>(this.APIURL + this.SOCKETURL)
+    return this.http.get<ServerSocket[]>(this.APIURL + this.SOCKETURL, this.httpOptions)
       .pipe(
         map(serverSockets => this.serverSockets2Sockets(serverSockets)),
         catchError(this.handleError<Socket[]>('getSockets', []))
       );
   }
 
+  getTakenSockets(): Observable<Socket[]> {
+    const url = `${this.APIURL + this.SOCKETURL}/?taken=${true}`;
+    return this.http.get<ServerSocket[]>(url, this.httpOptions).pipe(
+      map(serverSockets => this.serverSockets2Sockets(serverSockets)),
+      catchError(this.handleError<Socket[]>('getTakenSockets', []))
+    );
+  }
+
   getUserSockets(userId: number): Observable<Socket[]> {
     const url = `${this.APIURL + this.SOCKETURL}/?socketUserID=${userId}`;
-    return this.http.get<ServerSocket[]>(url).pipe(
+    return this.http.get<ServerSocket[]>(url, this.httpOptions).pipe(
       map(serverSockets => this.serverSockets2Sockets(serverSockets)),
       catchError(this.handleError<Socket[]>('getUserSockets', []))
     );
@@ -455,17 +555,17 @@ export class MeterTheaterDBService {
     );
   }
 
-  /* GET meters whose name contains search term */
+  /* GET meters whose userId contains search term */
   searchMetersByUser(userId: number): Observable<Meter[]> {
-    return this.http.get<ServerMeter[]>(`${this.APIURL + this.METERURL}/?meterUserId=${userId}`).pipe(
+    return this.http.get<ServerMeter[]>(`${this.APIURL + this.METERURL}/?meterUserId=${userId}`, this.httpOptions).pipe(
       map(serverMeters => this.serverMeters2Meters(serverMeters)),
       catchError(this.handleError<Meter[]>('searchMetersByUser', []))
     );
   }
 
-  /* GET meters whose name contains search term */
+  /* GET meters whose lanId contains search term */
   searchMetersByLanId(lanId: string): Observable<Meter[]> {
-    return this.http.get<ServerMeter[]>(`${this.APIURL + this.METERURL}/?meterLanId=${lanId}`).pipe(
+    return this.http.get<ServerMeter[]>(`${this.APIURL + this.METERURL}/?meterLanId=${lanId}`, this.httpOptions).pipe(
       map(serverMeters => this.serverMeters2Meters(serverMeters)),
       catchError(this.handleError<Meter[]>('searchMetersByLanId', []))
     );
@@ -474,7 +574,7 @@ export class MeterTheaterDBService {
   /** GET meter by id. Will 404 if id not found */
   getMeterById(id: number): Observable<Meter> {
     const url = `${this.APIURL + this.METERURL}/${id}`;
-    return this.http.get<ServerMeter>(url).pipe(
+    return this.http.get<ServerMeter>(url, this.httpOptions).pipe(
       map(serverMeter => this.serverMeter2Meter(serverMeter)),
       catchError(this.handleError<Meter>(`getMeterById id=${id}`))
     );
@@ -482,7 +582,7 @@ export class MeterTheaterDBService {
 
   /** GET meters from the server */
   getMeters(): Observable<Meter[]> {
-    return this.http.get<ServerMeter[]>(this.APIURL + this.METERURL)
+    return this.http.get<ServerMeter[]>(this.APIURL + this.METERURL, this.httpOptions)
       .pipe(
         map(serverMeters => this.serverMeters2Meters(serverMeters)),
         catchError(this.handleError<Meter[]>('getMeters', []))
@@ -526,11 +626,12 @@ export class MeterTheaterDBService {
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
 
+      if (error.status === 0) {
+        this.router.navigateByUrl('net-error');
+      }
+
       // TODO: send the error to remote logging infrastructure
       console.error(error); // log to console instead
-
-      // TODO: better job of transforming error for user consumption
-      // this.log(`${operation} failed: ${error.message}`);
 
       // Let the app keep running by returning an empty result.
       return of(result as T);
