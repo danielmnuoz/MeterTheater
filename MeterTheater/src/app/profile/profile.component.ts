@@ -26,6 +26,7 @@ export class ProfileComponent implements OnInit {
         this.meterTheaterDBService.getLoginUser().subscribe(users => {
           if (users == undefined || users.length == 0) {
             this.router.navigateByUrl('login');
+            return;
           } else {
             // assumes unique
             this.loginUser = users[0];
@@ -34,6 +35,7 @@ export class ProfileComponent implements OnInit {
         });
       } else {
         this.router.navigateByUrl('login');
+        return;
       }
     });
   }
@@ -98,9 +100,23 @@ export class ProfileComponent implements OnInit {
     this.checkInDisable = true;
     this.meterTheaterDBService.getCheckLogin().subscribe(ret => {
       if (ret == true) {
-        this.checkIn(data.socket, data.meter);
+        this.meterTheaterDBService.getLoginUser().subscribe(users => {
+          if (users == undefined || users.length == 0) {
+            this.router.navigateByUrl('login');
+            return;
+          } else {
+            // assumes unique
+            if(this.loginUser.id != users[0].id){
+              this.router.navigateByUrl('login');
+              return;
+            }
+            this.loginUser = users[0];
+            this.checkIn(data.socket, data.meter);
+          }
+        });
       } else {
         this.router.navigateByUrl('login');
+        return;
       }
     });
   }

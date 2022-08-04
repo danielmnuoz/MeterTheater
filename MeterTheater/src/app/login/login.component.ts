@@ -52,6 +52,7 @@ export class LoginComponent implements OnInit {
         this.disableLogin = false;
         this.meterTheaterDBService.addLog(log).subscribe();
         this.router.navigateByUrl('home');
+        return;
       }
     });
   }
