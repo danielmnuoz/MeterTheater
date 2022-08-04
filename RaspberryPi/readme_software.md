@@ -5,17 +5,17 @@ What to change for implementation on the 6th floor lab and beyond:
 
 Change the value of the row sizes to match the amount of sockets for each row (lines 10-15)
 
-Change the expression to calculate metTotal (line 170)
+Change the expression to calculate metTotal (line 177)
 
-Below is a snippit of the formatted JSON file from the API call on line 161.
+Below is a snippit of the formatted JSON file from the API call on line 168.
 
-To get metTotal for the 6th floor, right wall, replace line 170 with:
+To get metTotal for the 6th floor, right wall, replace line 177 with:
 metTotal=len(aList[1]['tables'][0]['locations'])
 
 You will also need to change the expression on line 173, lets do the 6th floor right wall as an example:
 stateList[i]=aList[1]['tables'][0]['locations'][i]['sockets'][0]['socketUserId']
 
-This line esentially fills the stateList with the socketUserId's of all of the meters on a wall. If the socketUserId is NULL (in python, 'None') then no one owns the meter so the corresponding LEDs should be green. If the socketUserId is not NULL, then someone is occupying the socket so the corresponding LEDs should be red.
+This for loop esentially fills the stateList with the socketUserId's of all of the meters on a wall. If the socketUserId is 'null' in the API call (converted to 'None' in python) then no one owns the socket so the corresponding LEDs should be green. If the socketUserId is not 'null', then someone is occupying the socket so the corresponding LEDs should be red.
 
 If you cannot figure out how to properly parse the JSON file for further implemetation in other labs, use Postman to view the JSON file from an API call. 
 
