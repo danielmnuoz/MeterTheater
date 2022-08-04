@@ -1,1 +1,17 @@
+#service file to run kiosk at boot
+[Unit]
+Description=Chromium Kiosk
+Wants=graphical.target
+After=graphical.target
 
+[Service]
+Environment=DISPLAY=:0.0
+Environment=XAUTHORITY=/home/theaterbusser/.Xauthority
+Type=simple
+ExecStart=/bin/bash /home/theaterbusser/kiosk.sh
+Restart=on-abort
+User=theaterbusser
+Group=theaterbusser
+
+[Install]
+WantedBy=graphical.target
