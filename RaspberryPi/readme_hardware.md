@@ -1,7 +1,8 @@
 KIOSK MODE:
 
-/home/theaterbusser/kiosk.sh
+$sudo nano /home/theaterbusser/kiosk.sh
 
+----begin---
 #!/bin/bash
 #stops the Pi from blanking out 
 xset s noblank
@@ -17,7 +18,7 @@ sed -i 's/"exit_type":"Crashed"/"exit_type":"Normal"/' /home/theaterbusser/.conf
 
 #launches metertheater in chromium in Kiosk
 /usr/bin/chromium-browser  --kiosk https://metertheater &
-
+-----end----
 
 
 $sudo systemctl stop kiosk.serivce
@@ -30,7 +31,9 @@ Enable theater.py at boot:
 $sudo nano /home/theaterbusser/ .bashrc
 Scroll all the way down to find the startup script.
 
-Hardware list:
+
+HARDWARE LIST
+
 Raspberry Pi 4
 22 AWG solid core wire 
 WS2812B LED strips
