@@ -275,54 +275,75 @@ export class DetailsComponent implements OnChanges, OnDestroy {
     this.disableCheck = true;
     this.meterTheaterDBService.getCheckLogin().subscribe(ret => {
       if (ret == true) {
-        if (this.out == false) {
-          this.countError = false;
-          if (this.snackBarRef != undefined) {
-            this.snackBarRef.dismiss();
-          }
-          this.checkIn();
-          return;
-        }
-        var duration: number | undefined = this.detailsForm.get('duration')?.value?.valueOf();
-        var meterLanId = this.detailsForm.get('meterLanId')?.value?.toString();
-        var comment: string | undefined = this.detailsForm.get('comment')?.value?.toString();
-        if (meterLanId?.length == 0) {
-          meterLanId = undefined;
-        }
-        if (comment?.length == 0) {
-          comment = undefined;
-        }
-        if (this.loginUser.id != undefined) {
-          this.meterTheaterDBService.getUserSockets(this.loginUser.id).subscribe(sockets => {
-            if (sockets.length >= 5) {
-              this.countError = true;
-              this.snackBarRef = this._snackBar.open("You already have 5 sockets. Remember to check-in sockets you are not using.", "Close");
-            } else {
+        this.meterTheaterDBService.getLoginUser().subscribe(users => {
+          if (users == undefined || users.length == 0) {
+            this.router.navigateByUrl('login');
+            return;
+          } else {
+            // assumes unique
+            if(this.loginUser.id != users[0].id){
+              this.router.navigateByUrl('login');
+              return;
+            }
+            this.loginUser = users[0];
+            if (this.out == false) {
               this.countError = false;
               if (this.snackBarRef != undefined) {
                 this.snackBarRef.dismiss();
               }
+              this.checkIn();
+              return;
             }
-            if (meterLanId != undefined) {
-              this.meterTheaterDBService.searchMetersByLanId(meterLanId).subscribe(meters => {
-                //assumes unique
-                if (meters.length > 0) {
-                  if (meters[0].userId != undefined) {
-                    this.meterUseError = true;
-                    this.meterTheaterDBService.getUserById(meters[0].userId).subscribe(user => {
-                      this.errorMeterUser = user;
-                      this.disableCheck = false;
-                    });
-                    return;
-                  } else {
-                    this.meterUseError = false;
+            var duration: number | undefined = this.detailsForm.get('duration')?.value?.valueOf();
+            var meterLanId = this.detailsForm.get('meterLanId')?.value?.toString();
+            var comment: string | undefined = this.detailsForm.get('comment')?.value?.toString();
+            if (meterLanId?.length == 0) {
+              meterLanId = undefined;
+            }
+            if (comment?.length == 0) {
+              comment = undefined;
+            }
+            if (this.loginUser.id != undefined) {
+              this.meterTheaterDBService.getUserSockets(this.loginUser.id).subscribe(sockets => {
+                if (sockets.length >= 5) {
+                  this.countError = true;
+                  this.snackBarRef = this._snackBar.open("You already have 5 sockets. Remember to check-in sockets you are not using.", "Close");
+                } else {
+                  this.countError = false;
+                  if (this.snackBarRef != undefined) {
+                    this.snackBarRef.dismiss();
                   }
-                  if (this.out == true) {
-                    this.checkOut(duration, meterLanId, comment);
-                    return;
-                  } else {
-                    this.disableCheck = false;
-                  }
+                }
+                if (meterLanId != undefined) {
+                  this.meterTheaterDBService.searchMetersByLanId(meterLanId).subscribe(meters => {
+                    //assumes unique
+                    if (meters.length > 0) {
+                      if (meters[0].userId != undefined) {
+                        this.meterUseError = true;
+                        this.meterTheaterDBService.getUserById(meters[0].userId).subscribe(user => {
+                          this.errorMeterUser = user;
+                          this.disableCheck = false;
+                        });
+                        return;
+                      } else {
+                        this.meterUseError = false;
+                      }
+                      if (this.out == true) {
+                        this.checkOut(duration, meterLanId, comment);
+                        return;
+                      } else {
+                        this.disableCheck = false;
+                      }
+                    } else {
+                      this.meterUseError = false;
+                      if (this.out == true) {
+                        this.checkOut(duration, meterLanId, comment);
+                        return;
+                      } else {
+                        this.disableCheck = false;
+                      }
+                    }
+                  });
                 } else {
                   this.meterUseError = false;
                   if (this.out == true) {
@@ -334,20 +355,13 @@ export class DetailsComponent implements OnChanges, OnDestroy {
                 }
               });
             } else {
-              this.meterUseError = false;
-              if (this.out == true) {
-                this.checkOut(duration, meterLanId, comment);
-                return;
-              } else {
-                this.disableCheck = false;
-              }
+              this.disableCheck = false;
             }
-          });
-        } else {
-          this.disableCheck = false;
-        }
+          }
+        });
       } else {
         this.router.navigateByUrl('login');
+        return;
       }
     });
   }

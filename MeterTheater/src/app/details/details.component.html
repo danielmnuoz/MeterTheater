@@ -54,13 +54,14 @@
     <div class="item-align" *ngIf="socket">
       <div *ngIf="out == false">
         <button [disabled]="disableCheck" type="submit" class="btn btn-primary">Check-in</button>
+        <mat-error *ngIf="refreshCheckinError">That socket is no longer available for check-in.</mat-error>
       </div>
       <div *ngIf="out == true">
         <button [disabled]="!detailsForm.valid || disableCheck" type="submit" class="btn btn-primary">Checkout</button>
-        <mat-error *ngIf="meterUseError">{{errorMeterUser ? loginUser.id == errorMeterUser.id ? sameUserText :
+        <mat-error class="overflow" *ngIf="meterUseError">{{errorMeterUser ? loginUser.id == errorMeterUser.id ?
+          sameUserText :
           errorMeterUser.name + useText : 'An unknown user' + useText}}</mat-error>
         <mat-error *ngIf="refreshCheckoutError">That socket is no longer available for checkout.</mat-error>
-        <mat-error *ngIf="refreshCheckinError">That socket is no longer available for check-in.</mat-error>
       </div>
     </div>
   </form>

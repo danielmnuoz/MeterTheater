@@ -23,6 +23,7 @@ export class HomeComponent implements OnInit {
         this.meterTheaterDBService.getLoginUser().subscribe(users => {
           if (users == undefined || users.length == 0) {
             this.router.navigateByUrl('login');
+            return;
           } else {
             // assumes unique
             this.loginUser = users[0];
@@ -30,6 +31,7 @@ export class HomeComponent implements OnInit {
         });
       } else {
         this.router.navigateByUrl('login');
+        return;
       }
     });
 

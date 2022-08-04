@@ -35,4 +35,5 @@ strong {
   overflow:auto;
   text-align: center;
   line-height: 50px;
+  max-width: 200px;
 }
