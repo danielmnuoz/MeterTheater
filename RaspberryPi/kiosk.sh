@@ -1,3 +1,4 @@
+#shell script for kiosk mode for Chromium
 #located at home/theaterbusser/kiosk.sh
 #!/bin/bash
 #stops the Pi from blanking out 
