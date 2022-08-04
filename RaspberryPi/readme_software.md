@@ -7,7 +7,7 @@ Change the value of the row sizes to match the amount of sockets for each row (l
 
 Change the expression to calculate metTotal (line 177)
 
-Below is a snippit of the formatted JSON file from the API call on line 168.
+Below is a snippit of the JSON file from the API call on line 168.
 
 To get metTotal for the 6th floor, right wall, replace line 177 with:
 metTotal=len(aList[1]['tables'][0]['locations'])
