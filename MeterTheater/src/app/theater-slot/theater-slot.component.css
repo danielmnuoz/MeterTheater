@@ -1,58 +1,50 @@
-.container{
+.container {
   border-width: 2px;
   border-style: solid;
 }
-.socketbutton{
+
+.socketbutton {
   background-color: #7ab800;
   height: 80px;
   width: 70px;
   margin: 5px;
-  border-radius:15px;
-  font-size:15px;
+  border-radius: 15px;
+  font-size: 15px;
   text-align: center;
   display: flex;
   justify-content: center;
-  position:relative;
-  /* padding: 20px; */
+  position: relative;
 }
- .wholecircle{
-  width:55px;
+
+.wholecircle {
+  width: 55px;
   height: 55px;
   position: absolute;
-  bottom:5px;
+  bottom: 5px;
   border-radius: 50%;
   border: 3px outset #3a4957;
-} 
- /* .topcircle{
-  width: 55px;
-  height: 25px;
-  border-top-left-radius: 100px;
-  border-top-right-radius: 100px;
-  border: 3px solid black;
-  border-bottom: 0;
+}
 
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box; 
-} 
- .bottomcircle{
-  width: 55px;
-  height: 25px;
-  border-bottom-left-radius: 100px;
-  border-bottom-right-radius: 100px;
-  border: 3px solid black;
-  border-top: 0;
-} */
-.socketbutton.owned{
+.socketbutton.owned {
   background-color: #33647f;
 }
-.socketbutton.occupied{
+
+.socketbutton.occupied {
   background-color: #636466;
 }
-.socketbutton:hover{
+
+.socketbutton:hover {
   transform: scale(1.2);
   cursor: pointer;
 }
-.socketbutton:focus, .selected{
+
+.socketbutton:focus,
+.selected {
   background-color: #568002;
+}
+
+.overflow {
+  padding: 0;
+  margin: 0;
+  overflow: auto;
 }
