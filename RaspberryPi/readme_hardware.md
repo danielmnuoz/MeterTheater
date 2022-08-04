@@ -18,11 +18,7 @@ sed -i 's/"exit_type":"Crashed"/"exit_type":"Normal"/' /home/theaterbusser/.conf
 #launches metertheater in chromium in Kiosk
 /usr/bin/chromium-browser  --kiosk https://metertheater &
 
-#infinity loop that refresh the page every 10 second
-while true; do
-   xdotool keydown ctrl+r; xdotool keyup ctrl+r;
-   sleep 10
-done
+
 
 $sudo systemctl stop kiosk.serivce
 Enable kiosk mode (running at boot)
