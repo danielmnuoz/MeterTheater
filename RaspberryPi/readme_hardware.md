@@ -33,7 +33,8 @@ What we would have bought/ done differently:
 	22 AWG stranded wire 3pin LED strip wire
 	Soldering the wires
 	12” Pi touchscreen ?
-
+## LED Strip
+The project uses a W2812B RGB Addressable LED Strip. The Pi has a library called NeoPixel that allows users to change a specific LED at a designated location. The library only works with 2811/2812 RGB LED strips.
 ## SSH into the Pi using PuTTY
 
 Hostname: theaterbusser
