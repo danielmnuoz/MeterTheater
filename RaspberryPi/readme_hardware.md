@@ -1,7 +1,8 @@
 ## Kiosk Mode
-
+Shell script located at
         $sudo nano /home/theaterbusser/kiosk.sh
-
+       
+Stop kiosk mode
         $sudo systemctl stop kiosk.serivce
 Enable kiosk mode (running at boot)
 
